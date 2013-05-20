@@ -2,33 +2,25 @@ using UnityEngine;
 using System.Collections;
 using UFLT.DataTypes.Enums;
 using System.IO;
+using System.Text;
 
 namespace UFLT.Records
 {
     /// <summary>
-    /// The base class for all OpenFlight records.
+    /// The base class for all OpenFlight records that have a id/name field.
     /// </summary>
-    public class RecordBase
+    public class NamedRecord : RecordBase
     {
         #region Properties
 
         /// <summary>
-        /// The type of record
+        /// The name/id of the record. Max 8 chars, if set value is longer it will be truncated during encode.
         /// </summary>
-        public Opcodes Opcode
+        public string Name
         {
             get;
             set;
-        }
-
-        /// <summary>
-        /// The size of the entire record in bytes.
-        /// </summary>
-        public ushort Length
-        {
-            get;
-            set;
-        }
+        }   
         
         #endregion Properties
         
@@ -38,10 +30,10 @@ namespace UFLT.Records
         /// </summary>
         /// <param name="br"></param>
         //////////////////////////////////////////////////////////////////
-        public virtual void Decode( BinaryReader br )
+        public override void Decode( BinaryReader br )
         {
-            Opcode = ( Opcodes )br.ReadInt16();
-            Length = br.ReadUInt16();
+            base.Decode( br );
+            Name = Encoding.ASCII.GetString( br.ReadBytes( 8 ) );
         }
 
         //////////////////////////////////////////////////////////////////
@@ -50,10 +42,10 @@ namespace UFLT.Records
         /// </summary>
         /// <param name="bw"></param>
         //////////////////////////////////////////////////////////////////
-        public virtual void Encode( BinaryWriter bw )
+        public override void Encode( BinaryWriter bw )
         {
-            bw.Write( ( short )Opcode );
-            bw.Write( Length );
+            base.Encode( bw );
+            bw.Write( Encoding.ASCII.GetBytes( FixedString.GenerateFixedString( Name, 8 ) ) );
         }
 
         //////////////////////////////////////////////////////////////////
@@ -64,7 +56,7 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         public override string ToString()
         {
-            return string.Format( "Opcode: {0}\n Length: {1}\n", Opcode, Length );
+            return string.Format( "{0}\nName: {1}\n", base.ToString(), Name );
         }
     }
 }

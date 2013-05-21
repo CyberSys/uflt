@@ -7,15 +7,96 @@ using System.Text;
 namespace UFLT.Records
 {
     /// <summary>
-    /// Header record
+    /// Header record for an OpenFlight file.
     /// </summary>
     public class Header : NamedRecord
     {
         #region Properties
 
-  
+        /// <summary>
+        /// The version of OpenFlight, e.g 1640 = 16.4
+        /// </summary>
+        public int FormatRevisionLevel
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The edit revision level
+        /// </summary>
+        public int EditRevisionLevel
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The date and time the file was last updated.
+        /// </summary>
+        public string DateTimeLastRevision
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// ID number of the next group node.
+        /// </summary>
+        public short NextGroupNodeID
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// ID number of the next Level Of Detail node.
+        /// </summary>
+        public short NextLODNodeID
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// ID number of the next object node.
+        /// </summary>
+        public short NextObjectNodeID
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// ID number of the next face node.
+        /// </summary>
+        public short NextFaceNodeID
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Unit multiplier.
+        /// </summary>
+        public short UnitMultiplier
+        {
+            get;
+            set;
+        }
+
         #endregion Properties
-        
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        //////////////////////////////////////////////////////////////////
+        public Header()
+        {
+            Opcode = Opcodes.Header;
+        }
+
         //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Decode binary data.

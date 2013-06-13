@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using UFLT.DataTypes.Enums;
 using System.IO;
+using System.Text;
+
+// TODO: extensions
 
 namespace UFLT.Records
 {
@@ -31,14 +34,32 @@ namespace UFLT.Records
         }
 
         /// <summary>
-        /// Optional value, some records may have comments included. E.G DIS Enums for DOF records etc.
+        /// How deep this record is in the tree.
         /// </summary>
-        public string Comment
+        public int Level
+        {
+            get;
+            set;
+        }
+        
+        /// <summary>
+        /// The name/id of the record. 8 chars in length or a long id record will need to be included. Not all nodes have id's.
+        /// </summary>
+        public string ID
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Optional value included as a comment record.
+        /// </summary>
+        public string Comment
+        {
+            get;
+            set;
+        }        
+        
         /// <summary>
         /// Record parent if one exists.
         /// </summary>
@@ -106,6 +127,16 @@ namespace UFLT.Records
             set;
         }
 
+        /// <summary>
+        /// The current active handler for this record, initially this will be the RootHandler however when a
+        /// push record is hit the active handler will become the ChildHandler and revert back when a pop occurs.
+        /// </summary>
+        protected RecordHandler ActiveHandler
+        {
+            get;
+            set;
+        }
+
         #endregion Handlers
 
         //////////////////////////////////////////////////////////////////
@@ -120,6 +151,7 @@ namespace UFLT.Records
             ExtensionHandler = new RecordHandler();
             GlobalHandler = new RecordHandler();
             Children = new List<Record>();
+            ActiveHandler = RootHandler;
         }
 
         //////////////////////////////////////////////////////////////////
@@ -140,37 +172,101 @@ namespace UFLT.Records
 
         //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Decode binary data.
+        /// Parses the streams records.
         /// </summary>
-        /// <param name="br"></param>
         //////////////////////////////////////////////////////////////////
-        public virtual void Decode( BinaryReader br )
+        public virtual void Parse()
         {
-            Opcode = ( Opcodes )br.ReadInt16();
-            Length = br.ReadUInt16();
+            while( Header.Stream.BeginRecord() )
+            {
+                Opcodes op = Header.Stream.Opcode;
+
+                if( GlobalHandler.Handles( op ) ) // Check global handler
+                {
+                    if( !GlobalHandler.Handle( op ) )
+                    {
+                        return;
+                    }
+                }
+                else if( ActiveHandler.Handles( op ) ) // Try the active handler
+                {
+                    if( !ActiveHandler.Handle( op ) )
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    if( ActiveHandler.ThrowBackUnhandled || ActiveHandler.ThrowBacks.Contains( op ) ) // Do we throw back the record to be handled by the parent?
+                    {
+                        // Mark the record to be repeated by our parent.
+                        Header.Stream.Repeat = true;
+                        return;
+                    }
+                    else
+                    {
+                        // Just ignore the record.
+                        Debug.Log( "Ignored Record - " + op );
+                    }
+                }
+            }
         }
+
+        #region Record Handlers
 
         //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Encode binary data writing to file
-        /// </summary>
-        /// <param name="bw"></param>
-        //////////////////////////////////////////////////////////////////
-        public virtual void Encode( BinaryWriter bw )
-        {
-            bw.Write( ( short )Opcode );
-            bw.Write( Length );
-        }
-
-        //////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Returns a string representation.
+        /// Handle push records.
         /// </summary>
         /// <returns></returns>
         //////////////////////////////////////////////////////////////////
-        public override string ToString()
+        protected bool HandlePush()
         {
-            return string.Format( "Opcode: {0}\n Length: {1}\n", Opcode, Length );
+            Header.Stream.Level++;
+            ActiveHandler = ChildHandler; // Don't do child records that might overwrite parent info. eg. longid.
+            return true;
         }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Handle pop records.
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        protected bool HandlePop()
+        {
+            Header.Stream.Level--;
+            if( Header.Stream.Level == Level )
+            {
+                return false;
+            }            
+            return true;
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Parses a long id record.
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        protected bool HandleLongID()
+        {
+            ID = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( Header.Stream.Length - 4 ) ); // The id is the length of the record minus its header of 4 bytes.
+            return true;
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Parses a long id record.
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        protected bool HandleComment()
+        {
+            Comment = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( Header.Stream.Length - 4 ) ); // The comment is the length of the record minus its header of 4 bytes.
+            return true;
+        }
+
+        #endregion Record Handlers
     }
 }

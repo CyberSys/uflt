@@ -65,5 +65,17 @@ namespace UFLT.Records
         {
             return Handler[opcode]();
         }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Checks if the opcode is handled by this handler.
+        /// </summary>
+        /// <param name="opcode"></param>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        public bool Handles( Opcodes opcode )
+        {
+            return Handler.ContainsKey( opcode ) ? true : false;            
+        }
     }
 }

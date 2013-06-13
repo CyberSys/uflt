@@ -37,7 +37,7 @@ namespace UFLT.Streams
         /// <summary>
         /// Repeat the current record on the next BeginRecord?
         /// </summary>
-        private bool Repeat
+        public bool Repeat
         {
             get;
             set;
@@ -56,6 +56,15 @@ namespace UFLT.Streams
         /// The length of the current record being processed.
         /// </summary>
         public int Length
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The current level in the tree.
+        /// </summary>
+        public int Level
         {
             get;
             set;

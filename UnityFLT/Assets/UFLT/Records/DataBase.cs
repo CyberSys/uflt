@@ -121,41 +121,31 @@ namespace UFLT.Records
             Header = this;
             Parent = parent;
             Opcode = Opcodes.DB;
+
+            // Record the path for when we need to search for textures etc.
+            FileFinder.Instance.AddPath( file );
+
+            // Register handlers for this record type
+            RootHandler.Handler[Opcodes.Header] = HandleHeader;
         }
+
+        #region Record Handlers
 
         //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Decode binary data.
-        /// </summary>
-        /// <param name="br"></param>
-        //////////////////////////////////////////////////////////////////
-        public override void Decode( BinaryReader br )
-        {
-            base.Decode( br );
-            //Name = Encoding.ASCII.GetString( br.ReadBytes( 8 ) );
-        }
-
-        //////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Encode binary data writing to file
-        /// </summary>
-        /// <param name="bw"></param>
-        //////////////////////////////////////////////////////////////////
-        public override void Encode( BinaryWriter bw )
-        {
-            base.Encode( bw );
-            //bw.Write( Encoding.ASCII.GetBytes( FixedString.GenerateFixedString( Name, 8 ) ) );
-        }
-
-        //////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Returns a string representation.
+        /// Parses a header record.
         /// </summary>
         /// <returns></returns>
         //////////////////////////////////////////////////////////////////
-        public override string ToString()
-        {
-            return "";
+        private bool HandleHeader()
+        {            
+            ID = Encoding.ASCII.GetString( Stream.Reader.ReadBytes( 8 ) );
+
+
+
+            return true;
         }
+
+        #endregion Record Handlers
     }
 }

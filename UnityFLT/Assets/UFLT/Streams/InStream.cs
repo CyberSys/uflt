@@ -1,0 +1,124 @@
+
+using System.IO;
+using UFLT.DataTypes.Enums;
+using System;
+using UnityEngine;
+namespace UFLT.Streams
+{
+    /// <summary>
+    /// Stream for reading an OpenFlight file.
+    /// </summary>
+    public class InStream
+    {
+        #region Properties
+
+        #region Private
+
+        /// <summary>
+        /// Current position in file
+        /// </summary>
+        private long CurrentPosition
+        {
+            get;
+            set;
+        }
+
+        #endregion Private
+
+        /// <summary>
+        /// Reader for the file.
+        /// </summary>
+        public BinaryReader Reader
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Repeat the current record on the next BeginRecord?
+        /// </summary>
+        private bool Repeat
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The current record being processed
+        /// </summary>
+        public Opcodes Opcode
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The length of the current record being processed.
+        /// </summary>
+        public int Length
+        {
+            get;
+            set;
+        }
+
+        #endregion Properties
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Creates a new binary stream.
+        /// </summary>
+        /// <param name="file"></param>
+        //////////////////////////////////////////////////////////////////
+        public InStream( string file )
+        {
+            Stream s = new FileStream( file, FileMode.Open );
+            Reader = BitConverter.IsLittleEndian ? new BinaryReaderBigEndian( s ) : new BinaryReader( s );
+            Repeat = false;
+            CurrentPosition = 0;
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Attempts to read the next record in the stream. Returns true if successful
+        /// or false if no data is left or an error occured.
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        public bool BeginRecord()
+        {
+            if( Repeat )
+            {
+                // We need to repeat this record so do nothing this time.
+                Repeat = false;
+            }
+            else
+            {
+                // Move to next record
+                CurrentPosition += Length;
+            }
+
+            if( Reader.BaseStream.Length - CurrentPosition < 4 )
+            {
+                // Not enough data left, close the file
+                Reader.Close();
+                return false;
+            }
+            
+            try
+            {
+                Reader.BaseStream.Seek( CurrentPosition, SeekOrigin.Begin );
+
+                // Read record header
+                Opcode = ( Opcodes )Reader.ReadInt16();
+                Length = Reader.ReadUInt16();
+            }
+            catch( Exception e )
+            {
+                Debug.LogError( "Parse Error!\n" + e.ToString() );
+                return false;
+            }
+
+            return true;
+        }        
+    }
+}

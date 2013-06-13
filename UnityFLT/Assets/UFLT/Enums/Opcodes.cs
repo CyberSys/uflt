@@ -4,7 +4,7 @@ namespace UFLT.DataTypes.Enums
     /// <summary>
     /// The type of record.
     /// </summary>
-    public enum Opcodes
+    public enum Opcodes : short
     {
         DB                            = 0,
         Header                        = 1,

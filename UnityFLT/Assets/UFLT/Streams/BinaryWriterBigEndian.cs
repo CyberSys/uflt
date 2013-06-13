@@ -4,7 +4,7 @@ using System.IO;
 using System.Net;
 using System;
 
-namespace UFLT
+namespace UFLT.Streams
 {
     /// <summary>
     /// BinaryWriter that supports writing little-endian to big-endian data.

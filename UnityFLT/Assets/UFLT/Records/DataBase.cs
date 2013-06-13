@@ -1,17 +1,27 @@
-using UnityEngine;
-using System.Collections;
 using UFLT.DataTypes.Enums;
 using System.IO;
 using System.Text;
+using UFLT.Streams;
 
 namespace UFLT.Records
 {
     /// <summary>
-    /// Header record for an OpenFlight file.
+    /// Primary record for an OpenFlight file.
     /// </summary>
-    public class Header : NamedRecord
+    public class DataBase : InterRecord
     {
         #region Properties
+
+        /// <summary>
+        /// Stream for this file
+        /// </summary>
+        public InStream Stream
+        {
+            get;
+            set;
+        }
+
+        #region Header
 
         /// <summary>
         /// The version of OpenFlight, e.g 1640 = 16.4
@@ -85,6 +95,8 @@ namespace UFLT.Records
             set;
         }
 
+        #endregion
+        
         #endregion Properties
 
         //////////////////////////////////////////////////////////////////
@@ -92,9 +104,23 @@ namespace UFLT.Records
         /// Ctor
         /// </summary>
         //////////////////////////////////////////////////////////////////
-        public Header()
+        public DataBase( string file ) :
+            this( file, null )
         {
-            Opcode = Opcodes.Header;
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Ctor, a DataBase may have a parent if it is part of an external reference node.
+        /// </summary>
+        /// <param name="file"></param>
+        //////////////////////////////////////////////////////////////////
+        public DataBase( string file, Record parent ) 
+        {
+            Stream = new InStream( file );
+            Header = this;
+            Parent = parent;
+            Opcode = Opcodes.DB;
         }
 
         //////////////////////////////////////////////////////////////////

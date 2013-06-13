@@ -8,12 +8,14 @@ namespace UFLT
     /// </summary>
     public class FixedString
     {
+        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Creates a string of a fixed length.
         /// </summary>
         /// <param name="s">The string to fix.</param>
         /// <param name="fixedLength">Length of output string in chars.</param>
         /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
         public static string GenerateFixedString( string s, int fixedLength )
         {            
             if( s.Length > fixedLength )

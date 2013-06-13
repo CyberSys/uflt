@@ -4,7 +4,7 @@ using System.IO;
 using System.Net;
 using System;
 
-namespace UFLT
+namespace UFLT.Streams
 {
     /// <summary>
     /// BinaryReader that supports reading big-endian data.

@@ -4,8 +4,6 @@ using UFLT.DataTypes.Enums;
 using System.IO;
 using System.Text;
 
-// TODO: extensions
-
 namespace UFLT.Records
 {
     /// <summary>
@@ -81,7 +79,7 @@ namespace UFLT.Records
         /// <summary>
         /// The database that this record belongs to.
         /// </summary>
-        public DataBase Header
+        public Database Header
         {
             get;
             set;
@@ -137,6 +135,15 @@ namespace UFLT.Records
             set;
         }
 
+        /// <summary>
+        /// Saved handler for when dealing with extensions.
+        /// </summary>
+        protected RecordHandler SavedHandler
+        {
+            get;
+            set;
+        }
+
         #endregion Handlers
 
         //////////////////////////////////////////////////////////////////
@@ -152,6 +159,9 @@ namespace UFLT.Records
             GlobalHandler = new RecordHandler();
             Children = new List<Record>();
             ActiveHandler = RootHandler;
+
+            GlobalHandler.Handler[Opcodes.PushExtension] = HandlePushExtension;
+
         }
 
         //////////////////////////////////////////////////////////////////
@@ -161,13 +171,17 @@ namespace UFLT.Records
         /// <param name="parent">The record creating this record.</param>
         /// <param name="header">The file header including palettes etc.</param>
         //////////////////////////////////////////////////////////////////
-        public Record( Record parent, DataBase header ) :
+        public Record( Record parent, Database header ) :
             this()
         {
-            Header = header;
-            Parent = parent;
             Opcode = Header.Opcode;
             Length = Header.Length;
+            Header = header;
+            Parent = parent;
+            if( parent != null )
+            {
+                parent.Children.Add( this );
+            }            
         }
 
         //////////////////////////////////////////////////////////////////
@@ -245,6 +259,31 @@ namespace UFLT.Records
 
         //////////////////////////////////////////////////////////////////
         /// <summary>
+        /// Handle push extension records. 
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        protected bool HandlePushExtension()
+        {
+            SavedHandler = ActiveHandler;
+            ActiveHandler = ExtensionHandler;
+            return true;
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Handle pop  extension records. 
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        protected bool HandlePopExtension()
+        {
+            ActiveHandler = SavedHandler;
+            return true;
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
         /// Parses a long id record.
         /// </summary>
         /// <returns></returns>
@@ -257,7 +296,7 @@ namespace UFLT.Records
 
         //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Parses a long id record.
+        /// Parses a record comment.
         /// </summary>
         /// <returns></returns>
         //////////////////////////////////////////////////////////////////

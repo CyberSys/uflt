@@ -27,7 +27,7 @@ namespace UFLT.Records
         /// <param name="parent"></param>
         /// <param name="header"></param>
         //////////////////////////////////////////////////////////////////
-        public InterRecord( Record parent, DataBase header ) :
+        public InterRecord( Record parent, Database header ) :
             base( parent, header )
         {    
         }      

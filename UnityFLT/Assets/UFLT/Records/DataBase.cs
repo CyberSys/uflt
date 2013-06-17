@@ -8,7 +8,7 @@ namespace UFLT.Records
     /// <summary>
     /// Primary record for an OpenFlight file.
     /// </summary>
-    public class DataBase : InterRecord
+    public class Database : InterRecord
     {
         #region Properties
 
@@ -104,7 +104,7 @@ namespace UFLT.Records
         /// Ctor
         /// </summary>
         //////////////////////////////////////////////////////////////////
-        public DataBase( string file ) :
+        public Database( string file ) :
             this( file, null )
         {
         }
@@ -115,11 +115,16 @@ namespace UFLT.Records
         /// </summary>
         /// <param name="file"></param>
         //////////////////////////////////////////////////////////////////
-        public DataBase( string file, Record parent ) 
+        public Database( string file, Record parent )            
         {
             Stream = new InStream( file );
             Header = this;
             Parent = parent;
+            if( parent != null )
+            {
+                parent.Children.Add( this );
+            }           
+
             Opcode = Opcodes.DB;
 
             // Record the path for when we need to search for textures etc.
@@ -127,6 +132,13 @@ namespace UFLT.Records
 
             // Register handlers for this record type
             RootHandler.Handler[Opcodes.Header] = HandleHeader;
+            RootHandler.Handler[Opcodes.PushLevel] = HandlePush;
+            RootHandler.Handler[Opcodes.LongID] = HandleLongID;
+            RootHandler.Handler[Opcodes.Comment] = HandleComment;
+
+            ChildHandler.Handler[Opcodes.PushLevel] = HandlePush;
+            ChildHandler.Handler[Opcodes.PopLevel] = HandlePop;
+
         }
 
         #region Record Handlers
@@ -140,7 +152,17 @@ namespace UFLT.Records
         private bool HandleHeader()
         {            
             ID = Encoding.ASCII.GetString( Stream.Reader.ReadBytes( 8 ) );
+            FormatRevisionLevel = Stream.Reader.ReadInt32();
+            EditRevisionLevel = Stream.Reader.ReadInt32();
+            DateTimeLastRevision = Encoding.ASCII.GetString( Stream.Reader.ReadBytes( 32 ) );
+            NextGroupNodeID = Stream.Reader.ReadInt16();
+            NextLODNodeID = Stream.Reader.ReadInt16();
+            NextObjectNodeID = Stream.Reader.ReadInt16();
+            NextFaceNodeID = Stream.Reader.ReadInt16();
+            UnitMultiplier = Stream.Reader.ReadInt16();
 
+            // TODO: vertexCoordUnits
+            
 
 
             return true;

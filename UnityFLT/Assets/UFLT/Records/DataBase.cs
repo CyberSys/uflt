@@ -218,7 +218,7 @@ namespace UFLT.Records
         }
 
         /// <summary>
-        ///  Delta to place the database (x,y).
+        ///  Delta to place the database (x,y,z).
         /// </summary>
         public double[] DeltaToPlaceDatabase
         {
@@ -275,6 +275,150 @@ namespace UFLT.Records
         /// ID number of the next switch node.
         /// </summary>
         public short NextSwitchNodeID
+        {
+            get;
+            set;
+        }
+        
+        /// <summary>
+        /// South west corner latitude and longitude.
+        /// </summary>
+        public double[] SouthWestCornerLatLon
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// North east corner latitude and longitude.
+        /// </summary>
+        public double[] NorthEastCornerLatLon
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Origin latitude and longitude.
+        /// </summary>
+        public double[] OriginLatLon
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Lambert upper latitude and longitude.
+        /// </summary>
+        public double[] LambertLatLon
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// ID number of the next light source node.
+        /// </summary>
+        public short NextLightSourceNodeID
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// ID number of the next light point node.
+        /// </summary>
+        public short NextLightPointNodeID
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// ID number of the next road node.
+        /// </summary>
+        public short NextRoadNodeID
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// ID number of the next Continuously Adaptive Terrain node.
+        /// </summary>
+        public short NextCATNodeID
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Earth Ellipsoid Model.
+        /// </summary>
+        public EarthEllipsoidModel EarthEllipsoidModel
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// ID number of the next adaptive node.
+        /// </summary>
+        public short NextAdaptiveNodeID
+        {
+            get;
+            set;
+        }
+        
+        /// <summary>
+        /// ID number of the next curve node.
+        /// </summary>
+        public short NextCurveNodeID
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// UTM zone (for UTM projections - negative value means Southern hemisphere)
+        /// </summary>
+        public short UTMZone
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Radius (distance from database origin to farthest corner)
+        /// </summary>
+        public double Radius
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// ID number of the next curve node.
+        /// </summary>
+        public ushort NextMeshNodeID
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// ID number of the next curve node.
+        /// </summary>
+        public ushort NextLightPointSystemNodeID
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Earth major and minor axis (for user defined ellipsoid) in meters.
+        /// </summary>
+        public double[] EarthAxis
         {
             get;
             set;
@@ -344,41 +488,53 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         private bool HandleHeader()
         {            
-            ID = Encoding.ASCII.GetString( Stream.Reader.ReadBytes( 8 ) );
-            FormatRevisionLevel = Stream.Reader.ReadInt32();
-            EditRevisionLevel = Stream.Reader.ReadInt32();
-            DateTimeLastRevision = Encoding.ASCII.GetString( Stream.Reader.ReadBytes( 32 ) );
-            NextGroupNodeID = Stream.Reader.ReadInt16();
-            NextLODNodeID = Stream.Reader.ReadInt16();
-            NextObjectNodeID = Stream.Reader.ReadInt16();
-            NextFaceNodeID = Stream.Reader.ReadInt16();
-            UnitMultiplier = Stream.Reader.ReadInt16();
-            VertexCoordinateUnits = ( VertexCoordinateUnits )Stream.Reader.ReadByte();
-            TexWhite = Stream.Reader.ReadBoolean();
-            Flags = Stream.Reader.ReadInt32();
-            Stream.Reader.BaseStream.Seek( 24, SeekOrigin.Current ); // Skip reserved bytes
-            ProjectionType = ( Projection )Stream.Reader.ReadInt32();
-            Stream.Reader.BaseStream.Seek( 28, SeekOrigin.Current ); // Skip reserved bytes
-            NextDegreeOfFreedomNodeID = Stream.Reader.ReadInt16();
-            VertexStorageType = ( VertexStorageType )Stream.Reader.ReadInt16();
-            DatabaseOrigin = ( DatabaseOrigin )Stream.Reader.ReadInt32();
+            ID                          = Encoding.ASCII.GetString( Stream.Reader.ReadBytes( 8 ) );
+            FormatRevisionLevel         = Stream.Reader.ReadInt32();
+            EditRevisionLevel           = Stream.Reader.ReadInt32();
+            DateTimeLastRevision        = Encoding.ASCII.GetString( Stream.Reader.ReadBytes( 32 ) );
+            NextGroupNodeID             = Stream.Reader.ReadInt16();
+            NextLODNodeID               = Stream.Reader.ReadInt16();
+            NextObjectNodeID            = Stream.Reader.ReadInt16();
+            NextFaceNodeID              = Stream.Reader.ReadInt16();
+            UnitMultiplier              = Stream.Reader.ReadInt16();
+            VertexCoordinateUnits       = ( VertexCoordinateUnits )Stream.Reader.ReadByte();
+            TexWhite                    = Stream.Reader.ReadBoolean();
+            Flags                       = Stream.Reader.ReadInt32();
+            /* Skip reserved bytes*/      Stream.Reader.BaseStream.Seek( 24, SeekOrigin.Current ); 
+            ProjectionType              = ( Projection )Stream.Reader.ReadInt32();
+            /* Skip reserved bytes*/    Stream.Reader.BaseStream.Seek( 28, SeekOrigin.Current ); 
+            NextDegreeOfFreedomNodeID   = Stream.Reader.ReadInt16();
+            VertexStorageType           = ( VertexStorageType )Stream.Reader.ReadInt16();
+            DatabaseOrigin              = ( DatabaseOrigin )Stream.Reader.ReadInt32();
             SouthwestDatabaseCoordinate = new double[] { Stream.Reader.ReadDouble(), Stream.Reader.ReadDouble() };
-            DeltaToPlaceDatabase = new double[] { Stream.Reader.ReadDouble(), Stream.Reader.ReadDouble() };
-            NextSoundNodeID = Stream.Reader.ReadInt16();
-            NextPathNodeID = Stream.Reader.ReadInt16();
-            Stream.Reader.BaseStream.Seek( 8, SeekOrigin.Current ); // Skip reserved bytes
-            NextClipNodeID = Stream.Reader.ReadInt16();
-            NextTextNodeID = Stream.Reader.ReadInt16();
-            NextBSPNodeID = Stream.Reader.ReadInt16();
-            NextSwitchNodeID = Stream.Reader.ReadInt16();
-            Stream.Reader.BaseStream.Seek( 4, SeekOrigin.Current ); // Skip reserved bytes
-
-
-            // TODO: sw corner lat/lon
-
-
-            // TODO: Check it is safe to create a Vector in a seperate thread, we want the parsing part to be thread safe for future performance improvements. E.G load async etc.
-  
+            DeltaToPlaceDatabase        = new double[] { Stream.Reader.ReadDouble(), Stream.Reader.ReadDouble(), 0 }; // z is read later in the stream
+            NextSoundNodeID             = Stream.Reader.ReadInt16();
+            NextPathNodeID              = Stream.Reader.ReadInt16();
+            /* Skip reserved bytes*/    Stream.Reader.BaseStream.Seek( 8, SeekOrigin.Current ); 
+            NextClipNodeID              = Stream.Reader.ReadInt16();
+            NextTextNodeID              = Stream.Reader.ReadInt16();
+            NextBSPNodeID               = Stream.Reader.ReadInt16();
+            NextSwitchNodeID            = Stream.Reader.ReadInt16();
+            /* Skip reserved bytes*/    Stream.Reader.BaseStream.Seek( 4, SeekOrigin.Current ); 
+            SouthWestCornerLatLon       = new double[] { Stream.Reader.ReadDouble(), Stream.Reader.ReadDouble() };
+            NorthEastCornerLatLon       = new double[] { Stream.Reader.ReadDouble(), Stream.Reader.ReadDouble() };
+            OriginLatLon                = new double[] { Stream.Reader.ReadDouble(), Stream.Reader.ReadDouble() };
+            LambertLatLon               = new double[] { Stream.Reader.ReadDouble(), Stream.Reader.ReadDouble() };
+            NextLightSourceNodeID       = Stream.Reader.ReadInt16();
+            NextLightPointNodeID        = Stream.Reader.ReadInt16();
+            NextRoadNodeID              = Stream.Reader.ReadInt16();
+            NextCATNodeID               = Stream.Reader.ReadInt16();
+            /* Skip reserved bytes*/    Stream.Reader.BaseStream.Seek( 8, SeekOrigin.Current );
+            EarthEllipsoidModel         = ( EarthEllipsoidModel )Stream.Reader.ReadInt32();
+            NextAdaptiveNodeID          = Stream.Reader.ReadInt16();
+            NextCurveNodeID             = Stream.Reader.ReadInt16();
+            UTMZone                     = Stream.Reader.ReadInt16();
+            /* Skip reserved bytes*/    Stream.Reader.BaseStream.Seek( 6, SeekOrigin.Current ); 
+            DeltaToPlaceDatabase[2]     = Stream.Reader.ReadDouble(); // Read z
+            NextMeshNodeID              = Stream.Reader.ReadUInt16();
+            NextLightPointSystemNodeID  = Stream.Reader.ReadUInt16();
+            /* Skip reserved bytes*/    Stream.Reader.BaseStream.Seek( 4, SeekOrigin.Current ); 
+            EarthAxis                   = new double[] { Stream.Reader.ReadDouble(), Stream.Reader.ReadDouble() };  
             return true;
         }
 

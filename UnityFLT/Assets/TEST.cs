@@ -15,10 +15,10 @@ public class TEST : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
-        //db = new Database( file );
-        //db.Parse();
-        t = new Thread( ThreadStart );
-        t.Start();
+        db = new Database( file );
+        db.Parse();
+        //t = new Thread( ThreadStart );
+        //t.Start();
 
 	}
 

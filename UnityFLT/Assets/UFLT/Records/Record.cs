@@ -174,10 +174,11 @@ namespace UFLT.Records
         public Record( Record parent, Database header ) :
             this()
         {
-            Opcode = Header.Opcode;
-            Length = Header.Length;
             Header = header;
             Parent = parent;
+            Opcode = Header.Stream.Opcode;
+            Length = Header.Stream.Length;
+
             if( parent != null )
             {
                 parent.Children.Add( this );

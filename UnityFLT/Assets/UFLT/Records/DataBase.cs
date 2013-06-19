@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using UFLT.Streams;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace UFLT.Records
 {
@@ -17,6 +18,24 @@ namespace UFLT.Records
         /// Stream for this file
         /// </summary>
         public InStream Stream
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Color palette for this database.
+        /// </summary>
+        public ColorPalette ColorPalette
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Material Paletters with index as key.
+        /// </summary>
+        public Dictionary<int, MaterialPalette> MaterialPalettes
         {
             get;
             set;
@@ -453,7 +472,9 @@ namespace UFLT.Records
             if( parent != null )
             {
                 parent.Children.Add( this );
-            }           
+            }
+
+            MaterialPalettes = new Dictionary<int, MaterialPalette>();
 
             Opcode = Opcodes.DB;
 
@@ -465,10 +486,11 @@ namespace UFLT.Records
             RootHandler.Handler[Opcodes.PushLevel] = HandlePush;
             RootHandler.Handler[Opcodes.LongID] = HandleLongID;
             RootHandler.Handler[Opcodes.Comment] = HandleComment;
+            RootHandler.Handler[Opcodes.ColorPalette] = HandleColorPalette;
+            RootHandler.Handler[Opcodes.MaterialPalette] = HandleMaterialPalette;
 
             ChildHandler.Handler[Opcodes.PushLevel] = HandlePush;
             ChildHandler.Handler[Opcodes.PopLevel] = HandlePop;
-
         }
         
         /*
@@ -478,7 +500,7 @@ namespace UFLT.Records
         }
         */
 
-        #region Record Handlers
+        #region Record Handlers        
 
         //////////////////////////////////////////////////////////////////
         /// <summary>
@@ -535,6 +557,33 @@ namespace UFLT.Records
             NextLightPointSystemNodeID  = Stream.Reader.ReadUInt16();
             /* Skip reserved bytes*/    Stream.Reader.BaseStream.Seek( 4, SeekOrigin.Current ); 
             EarthAxis                   = new double[] { Stream.Reader.ReadDouble(), Stream.Reader.ReadDouble() };  
+            return true;
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Handles the color palette.
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        private bool HandleColorPalette()
+        {
+            ColorPalette = new ColorPalette( this );
+            ColorPalette.Parse();
+            return true;
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Handle a material paletee, adds it to our collection.
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        private bool HandleMaterialPalette()
+        {
+            MaterialPalette m = new MaterialPalette( this );
+            m.Parse();
+            MaterialPalettes[m.Index] = m;
             return true;
         }
 

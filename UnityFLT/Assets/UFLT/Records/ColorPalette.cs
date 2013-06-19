@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System.IO;
+using System.Text;
 
 namespace UFLT.Records
 {
@@ -18,11 +20,11 @@ namespace UFLT.Records
 		#region Properties
 
         /// <summary>
-        /// 
+        /// Holds a color and color name.
         /// </summary>
         public struct PaletteColor
         {
-            public Color32 Color = new Color32();
+            public Color32 Color;
             public string Name;
         }
 
@@ -60,7 +62,7 @@ namespace UFLT.Records
             
             for( int i = 0; i < 1024; ++i )
             {
-                Colors[i] = new PaletteColor();
+                //Colors[i] = new PaletteColor();
                 Colors[i].Color.a = Header.Stream.Reader.ReadByte();
                 Colors[i].Color.b = Header.Stream.Reader.ReadByte();
                 Colors[i].Color.g = Header.Stream.Reader.ReadByte();
@@ -73,7 +75,11 @@ namespace UFLT.Records
                 int numColNames = Header.Stream.Reader.ReadInt32();
                 for( int i = 0; i < numColNames; ++i )
                 {
-                    // TODO: Col names
+                    short len = Header.Stream.Reader.ReadInt16();
+                    Header.Stream.Reader.BaseStream.Seek( 2, SeekOrigin.Current ); // Skip reserved
+                    short index = Header.Stream.Reader.ReadInt16();
+                    Header.Stream.Reader.BaseStream.Seek( 2, SeekOrigin.Current ); // Skip reserved
+                    Colors[index].Name = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( len - 8 ) );
                 }
             }
         }

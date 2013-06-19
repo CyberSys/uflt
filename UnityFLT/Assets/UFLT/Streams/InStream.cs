@@ -55,7 +55,7 @@ namespace UFLT.Streams
         /// <summary>
         /// The length of the current record being processed.
         /// </summary>
-        public int Length
+        public ushort Length
         {
             get;
             set;

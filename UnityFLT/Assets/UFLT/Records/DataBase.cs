@@ -23,6 +23,8 @@ namespace UFLT.Records
             set;
         }
 
+        #region Palettes
+
         /// <summary>
         /// Color palette for this database.
         /// </summary>
@@ -33,13 +35,34 @@ namespace UFLT.Records
         }
 
         /// <summary>
-        /// Material Paletters with index as key.
+        /// Vertex palette for this database.
+        /// </summary>
+        public VertexPalette VertexPalette
+        {
+            get;
+            set;
+        }
+        
+        /// <summary>
+        /// Texture palettes with index as key.
+        /// </summary>
+        public Dictionary<int, TexturePalette> TexturePalettes
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Material palettes with index as key.
         /// </summary>
         public Dictionary<int, MaterialPalette> MaterialPalettes
         {
             get;
             set;
         }
+
+
+        #endregion Palettes
 
         #region Header
 
@@ -473,8 +496,9 @@ namespace UFLT.Records
             {
                 parent.Children.Add( this );
             }
-
+            
             MaterialPalettes = new Dictionary<int, MaterialPalette>();
+            TexturePalettes = new Dictionary<int, TexturePalette>();
 
             Opcode = Opcodes.DB;
 
@@ -487,6 +511,8 @@ namespace UFLT.Records
             RootHandler.Handler[Opcodes.LongID] = HandleLongID;
             RootHandler.Handler[Opcodes.Comment] = HandleComment;
             RootHandler.Handler[Opcodes.ColorPalette] = HandleColorPalette;
+            RootHandler.Handler[Opcodes.TexturePalette] = HandleTexturePalette;
+            RootHandler.Handler[Opcodes.VertexPalette] = HandleVertexPalette;
             RootHandler.Handler[Opcodes.MaterialPalette] = HandleMaterialPalette;
 
             ChildHandler.Handler[Opcodes.PushLevel] = HandlePush;
@@ -575,7 +601,34 @@ namespace UFLT.Records
 
         //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Handle a material paletee, adds it to our collection.
+        /// Handle a texture palette, adds it to our collection.
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        private bool HandleTexturePalette()
+        {
+            TexturePalette t = new TexturePalette( this );
+            t.Parse();
+            TexturePalettes[t.Index] = t;
+            return true;
+        }
+                
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Handle a vertex palette.
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        private bool HandleVertexPalette()
+        {
+            VertexPalette = new VertexPalette( this );
+            VertexPalette.Parse();            
+            return true;
+        }       
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Handle a material palete, adds it to our collection.
         /// </summary>
         /// <returns></returns>
         //////////////////////////////////////////////////////////////////

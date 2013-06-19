@@ -41,6 +41,50 @@ namespace UFLT.Records
             set;
         }
 
+        /// <summary>
+        /// Opcodes that indicate its time to return control to parent.
+        /// </summary>
+        public static readonly Opcodes[] ThrowBackOpcodes = new Opcodes[] {
+                        Opcodes.Group,
+                        Opcodes.LevelOfDetail,
+                        Opcodes.Object,
+                        Opcodes.PopLevel,
+                        Opcodes.Switch,
+                        Opcodes.DegreeOfFreedom,
+                        Opcodes.Sound,
+                        Opcodes.ClipRegion,
+                        Opcodes.ExternalReference
+                    };
+
+        /// <summary>
+        /// Do not report opcodes.
+        /// </summary>
+        public static readonly Opcodes[] DoNotReportOpcodes = new Opcodes[] {
+                        Opcodes.RotateAboutEdge,
+                        Opcodes.Translate,
+                        Opcodes.Scale,
+                        Opcodes.RotateAboutPoint,
+                        Opcodes.RotateAndOrScaleToPoint,
+                        Opcodes.Put,
+                        Opcodes.GeneralMatrix,
+                        Opcodes.EyepointAndTrackplanePalette,
+                        Opcodes.LongID,
+                        Opcodes.TextureMappingPalette,
+                        Opcodes.Extension,
+                        Opcodes.LightSource,
+                        Opcodes.LightSourcePalette,
+                        Opcodes.LineStylePalette,
+                        Opcodes.Comment,
+                        ( Opcodes )103,
+                        ( Opcodes )104,
+                        ( Opcodes )117,
+                        ( Opcodes )118,
+                        ( Opcodes )120,
+                        ( Opcodes )121,
+                        ( Opcodes )124,
+                        ( Opcodes )125
+                    };
+
         #endregion Properties
 
         //////////////////////////////////////////////////////////////////

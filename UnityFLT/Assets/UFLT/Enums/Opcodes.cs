@@ -13,7 +13,7 @@ namespace UFLT.DataTypes.Enums
         Face                          = 5,
         PushLevel                     = 10,
         PopLevel                      = 11,
-        DgreeOfFreedom                = 14,
+        DegreeOfFreedom               = 14,
         PushSubface                   = 19,
         PopSubface                    = 20,
         PushExtension                 = 21,

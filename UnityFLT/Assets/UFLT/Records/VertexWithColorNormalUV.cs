@@ -15,7 +15,7 @@ namespace UFLT.Records
         /// <summary>
         /// x,y,z normal of vertex.
         /// </summary>
-        public double[] Normal
+        public Vector3 Normal
         {
             get;
             set;
@@ -44,8 +44,8 @@ namespace UFLT.Records
             ColorNameIndex = Header.Stream.Reader.ReadUInt16();
             Flags = Header.Stream.Reader.ReadInt16();
             Coordinate = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
-            Normal = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
-            UV = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
+            Normal.Set( Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle() );
+            UV.Set( Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle() );
             
             Color32 c = new Color32();
             c.a = Header.Stream.Reader.ReadByte();
@@ -55,6 +55,7 @@ namespace UFLT.Records
             PackedColor = c;
 
             VertexColorIndex = Header.Stream.Reader.ReadUInt32();
+            // Last 4 bytes are reserved
         }
 	}
 }

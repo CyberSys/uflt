@@ -15,7 +15,7 @@ namespace UFLT.Records
         /// <summary>
         /// x,y uv texture coordinates.
         /// </summary>
-        public double[] UV
+        public Vector2 UV
         {
             get;
             set;
@@ -44,7 +44,7 @@ namespace UFLT.Records
             ColorNameIndex = Header.Stream.Reader.ReadUInt16();
             Flags = Header.Stream.Reader.ReadInt16();
             Coordinate = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
-            UV = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
+            UV.Set( Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle() );
             
             Color32 c = new Color32();
             c.a = Header.Stream.Reader.ReadByte();
@@ -54,6 +54,7 @@ namespace UFLT.Records
             PackedColor = c;
 
             VertexColorIndex = Header.Stream.Reader.ReadUInt32();
+            // Last 4 bytes are reserved
         }
 	}
 }

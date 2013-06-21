@@ -7,23 +7,17 @@ using UFLT.DataTypes.Enums;
 namespace UFLT.Records
 {
     /// <summary>
-    /// A single object.
+    /// A record that is not fully handled but required in order to access child records.
     /// </summary>
-	public class Object : InterRecord
+	public class Unhandled : InterRecord
 	{
-		#region Properties
-
-        // TODO: props
-    
-		#endregion Properties
-
         //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Ctr
         /// </summary>
         /// <param name="parent"></param>
         //////////////////////////////////////////////////////////////////
-        public Object( Record parent ) :
+        public Unhandled( Record parent ) :
 			base( parent, parent.Header )
 		{
             RootHandler.Handler[Opcodes.PushLevel] = HandlePush;
@@ -33,7 +27,16 @@ namespace UFLT.Records
             
             RootHandler.ThrowBacks.UnionWith( RecordHandler.ThrowBackOpcodes );
 
-            // TODO: Handle children
+            //ChildHandler.Handler[Opcodes.Group] =
+            //ChildHandler.Handler[Opcodes.LevelOfDetail] =
+            //ChildHandler.Handler[Opcodes.Object] = 
+            ChildHandler.Handler[Opcodes.PushLevel] = HandlePush;
+            ChildHandler.Handler[Opcodes.PopLevel] = HandlePop;
+            ChildHandler.Handler[Opcodes.Switch] = HandleUnhandled;
+            ChildHandler.Handler[Opcodes.DegreeOfFreedom] = HandleUnhandled;
+            ChildHandler.Handler[Opcodes.Sound] = HandleUnhandled;
+            ChildHandler.Handler[Opcodes.ClipRegion] = HandleUnhandled;
+            //ChildHandler.Handler[Opcodes.ExternalReference] =
 		}
 
         //////////////////////////////////////////////////////////////////
@@ -43,7 +46,8 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         public override void Parse()
         {
-            // TODO: You are here!!!!!!!!!!!!!!!!
+            ID = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( 8 ) );
+            base.Parse();
         }
 	}
 }

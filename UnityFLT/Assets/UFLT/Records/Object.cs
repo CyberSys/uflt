@@ -144,7 +144,7 @@ namespace UFLT.Records
         }
 
         /// <summary>
-        /// Relative priorityspecifies a fixed ordering of the object relative to its sibling nodes. Ordering is 
+        /// Relative priority specifies a fixed ordering of the object relative to its sibling nodes. Ordering is 
         /// from left (lesser values) to right (higher values). Nodes of equal priority may be arbitrarily ordered.
         /// All nodes have an implicit (default) value of zero.
         /// </summary>

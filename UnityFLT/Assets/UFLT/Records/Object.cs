@@ -203,7 +203,7 @@ namespace UFLT.Records
             
             RootHandler.ThrowBacks.UnionWith( RecordHandler.ThrowBackOpcodes );
             
-            // ChildHandler.Handler[Opcodes.Face] = HandleFace;
+            ChildHandler.Handler[Opcodes.Face] = HandleFace;
             // TODO: index light point
             // TODO: inline light point
             ChildHandler.Handler[Opcodes.PushLevel] = HandlePush;

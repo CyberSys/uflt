@@ -523,6 +523,9 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.ClipRegion] = HandleUnhandled;
             ChildHandler.Handler[Opcodes.DegreeOfFreedom] = HandleUnhandled;
             ChildHandler.Handler[Opcodes.Group] = HandleGroup;
+
+            ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleUnhandled;
+
             // TODO: lod, external ref
         }
         

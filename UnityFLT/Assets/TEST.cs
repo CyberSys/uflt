@@ -17,6 +17,7 @@ public class TEST : MonoBehaviour
     {
         db = new Database( file );
         db.Parse();
+        db.ImportIntoScene();
         //t = new Thread( ThreadStart );
         //t.Start();
 
@@ -28,15 +29,15 @@ public class TEST : MonoBehaviour
     void ThreadStart()
     {
         Vector2 v = new Vector2( 0, 0 );
-        Debug.Log( v );
+        //Debug.Log( v );
 
         Color c = new Color();
-        Debug.Log( c );
+        //Debug.Log( c );
 
         //Texture2D t = new Texture2D( 1024, 1024 ); // can not be created
-        //Debug.Log( t );
+        ////Debug.Log( t );
 
         Matrix4x4 m = new Matrix4x4();
-        Debug.Log( m );
+        //Debug.Log( m );
     }
 }

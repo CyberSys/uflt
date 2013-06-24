@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UFLT.DataTypes.Enums;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace UFLT.Records
 {
@@ -219,11 +220,23 @@ namespace UFLT.Records
                     }
                     else
                     {
+                        
                         // Just ignore the record.
-                        Debug.Log( "Ignored Record - " + op );
+                        //Debug.LogWarning( GetType().ToString() + " Ignored Record - " + op );
                     }
                 }
             }
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Converts the record/s into a Unity GameObject structure with meshes, 
+        /// materials etc and imports into the scene.
+        /// </summary>
+        //////////////////////////////////////////////////////////////////
+        public virtual void ImportIntoScene()
+        {
+            Children.ForEach( o => o.ImportIntoScene() );
         }
 
         #region Record Handlers
@@ -236,6 +249,7 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandlePush()
         {
+            //Debug.Log( "Handle " + Header.Stream.Opcode );
             Header.Stream.Level++;
             ActiveHandler = ChildHandler; // Don't do child records that might overwrite parent info. eg. longid.
             return true;
@@ -249,6 +263,7 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandlePop()
         {
+            //Debug.Log( "Handle " + Header.Stream.Opcode );
             Header.Stream.Level--;
             if( Header.Stream.Level == Level )
             {
@@ -265,6 +280,7 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandlePushExtension()
         {
+            //Debug.Log( "Handle " + Header.Stream.Opcode );
             SavedHandler = ActiveHandler;
             ActiveHandler = ExtensionHandler;
             return true;
@@ -278,6 +294,7 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandlePopExtension()
         {
+            //Debug.Log( "Handle " + Header.Stream.Opcode );
             ActiveHandler = SavedHandler;
             return true;
         }
@@ -290,6 +307,7 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandleVertexList()
         {
+            //Debug.Log( "Handle " + Header.Stream.Opcode );
             VertexList vl = new VertexList( this );
             vl.Parse();
 
@@ -300,12 +318,27 @@ namespace UFLT.Records
 
         //////////////////////////////////////////////////////////////////
         /// <summary>
+        /// Handles a face record
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        protected bool HandleFace()
+        {
+            //Debug.Log( "Handle " + Header.Stream.Opcode );
+            Face f = new Face( this );
+            f.Parse();
+            return true;
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
         /// Parses a long id record.
         /// </summary>
         /// <returns></returns>
         //////////////////////////////////////////////////////////////////
         protected bool HandleLongID()
         {
+            //Debug.Log( "Handle " + Header.Stream.Opcode );
             ID = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( Header.Stream.Length - 4 ) ); // The id is the length of the record minus its header of 4 bytes.
             return true;
         }
@@ -318,6 +351,7 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandleComment()
         {
+            //Debug.Log( "Handle " + Header.Stream.Opcode );
             Comment = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( Header.Stream.Length - 4 ) ); // The comment is the length of the record minus its header of 4 bytes.
             return true;
         }

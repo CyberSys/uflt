@@ -314,10 +314,41 @@ namespace UFLT.Records
             set;
         }
 
-        // TODO: You are here
-   
+        /// <summary>
+        /// Texture mapping index or -1 if none.
+        /// </summary>
+        public short TextureMappingIndex
+        {
+            get;
+            set;
+        }
 
+        /// <summary>
+        /// Primary color index or -1 if none.
+        /// </summary>
+        public uint PrimaryColorIndex
+        {
+            get;
+            set;
+        }
 
+        /// <summary>
+        /// Alternate color index or -1 if none.
+        /// </summary>
+        public uint AlternateColorIndex
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Shader index or -1 if none.
+        /// </summary>
+        public short ShaderIndex
+        {
+            get;
+            set;
+        }
 
 		#endregion Properties
 
@@ -347,13 +378,44 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         public override void Parse()
         {
-            //ID = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( 8 ) );
-            //Flags = Header.Stream.Reader.ReadInt32();
-            //RelativePriority = Header.Stream.Reader.ReadInt16();
-            //Transparency = Header.Stream.Reader.ReadUInt16();
-            //SpecialEffectID1 = Header.Stream.Reader.ReadInt16();
-            //SpecialEffectID2 = Header.Stream.Reader.ReadInt16();
-            //// Ignore last 2 reserved bytes.            
+            ID                        = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( 8 ) );
+            IRColorCode               = Header.Stream.Reader.ReadInt32();
+            RelativePriority          = Header.Stream.Reader.ReadInt16();
+            DrawType                  = ( DrawType )Header.Stream.Reader.ReadSByte();
+            TexWhite                  = Header.Stream.Reader.ReadBoolean();
+            ColorNameIndex            = Header.Stream.Reader.ReadUInt16();
+            AlternateColorIndex       = Header.Stream.Reader.ReadUInt16();
+            /* Skip reserved bytes*/  Header.Stream.Reader.BaseStream.Seek( 1, SeekOrigin.Current );
+            TemplateBillboard         = ( TemplateBillboard )Header.Stream.Reader.ReadSByte();
+            DetailTexturePattern      = Header.Stream.Reader.ReadInt16();
+            TexturePattern            = Header.Stream.Reader.ReadInt16();
+            MaterialIndex             = Header.Stream.Reader.ReadInt16();
+            SurfaceMaterialCode       = Header.Stream.Reader.ReadInt16();
+            FeatureID                 = Header.Stream.Reader.ReadInt16();
+            IRMaterialCode            = Header.Stream.Reader.ReadInt32();
+            Transperancey             = Header.Stream.Reader.ReadUInt16();
+            LODGenerationControl      = Header.Stream.Reader.ReadByte();
+            LineStyleIndex            = Header.Stream.Reader.ReadByte();
+            Flags                     = Header.Stream.Reader.ReadInt32();
+            LightMode                 = ( LightMode )Header.Stream.Reader.ReadByte();
+            /* Skip reserved bytes*/  Header.Stream.Reader.BaseStream.Seek( 7, SeekOrigin.Current );
+            Color32 c                 = new Color32();                        
+            c.a                       = Header.Stream.Reader.ReadByte();
+            c.b                       = Header.Stream.Reader.ReadByte();
+            c.g                       = Header.Stream.Reader.ReadByte();
+            c.r                       = Header.Stream.Reader.ReadByte();
+            PackedColorPrimary        = c;
+            c.a                       = Header.Stream.Reader.ReadByte();
+            c.b                       = Header.Stream.Reader.ReadByte();
+            c.g                       = Header.Stream.Reader.ReadByte();
+            c.r                       = Header.Stream.Reader.ReadByte();
+            PackedColorAlternate      = c;
+            TextureMappingIndex       = Header.Stream.Reader.ReadInt16();
+            /* Skip reserved bytes*/  Header.Stream.Reader.BaseStream.Seek( 2, SeekOrigin.Current );
+            PrimaryColorIndex         = Header.Stream.Reader.ReadUInt32();
+            AlternateColorIndex       = Header.Stream.Reader.ReadUInt32();
+            /* Skip reserved bytes*/  Header.Stream.Reader.BaseStream.Seek( 2, SeekOrigin.Current );
+            ShaderIndex               = Header.Stream.Reader.ReadInt16();           
         }
 	}
 }

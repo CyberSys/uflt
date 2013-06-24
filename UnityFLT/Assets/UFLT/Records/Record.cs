@@ -161,7 +161,6 @@ namespace UFLT.Records
             ActiveHandler = RootHandler;
 
             GlobalHandler.Handler[Opcodes.PushExtension] = HandlePushExtension;
-
         }
 
         //////////////////////////////////////////////////////////////////
@@ -281,6 +280,22 @@ namespace UFLT.Records
         {
             ActiveHandler = SavedHandler;
             return true;
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Handles a vertex list record
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        protected bool HandleVertexList()
+        {
+            VertexList vl = new VertexList( this );
+            vl.Parse();
+
+            // TODO: If face
+
+            return true;          
         }
 
         //////////////////////////////////////////////////////////////////

@@ -27,9 +27,9 @@ namespace UFLT.Records
             
             RootHandler.ThrowBacks.UnionWith( RecordHandler.ThrowBackOpcodes );
 
-            //ChildHandler.Handler[Opcodes.Group] =
+            ChildHandler.Handler[Opcodes.Group] = HandleGroup;
             //ChildHandler.Handler[Opcodes.LevelOfDetail] =
-            //ChildHandler.Handler[Opcodes.Object] = 
+            ChildHandler.Handler[Opcodes.Object] = HandleObject;
             ChildHandler.Handler[Opcodes.PushLevel] = HandlePush;
             ChildHandler.Handler[Opcodes.PopLevel] = HandlePop;
             ChildHandler.Handler[Opcodes.Switch] = HandleUnhandled;

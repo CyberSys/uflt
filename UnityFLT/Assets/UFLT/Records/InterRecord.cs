@@ -99,6 +99,32 @@ namespace UFLT.Records
             return true;
         }
 
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Handles object records.
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        protected bool HandleObject()
+        {
+            Object o = new Object( this );
+            o.Parse();
+            return true;
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Handles Group records.
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        protected bool HandleGroup()
+        {
+            Group g = new Group( this );
+            g.Parse();
+            return true;
+        }
+
         #endregion Record Handlers
     }
 }

@@ -1,8 +1,9 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using UFLT.DataTypes.Enums;
 using System.IO;
 using System.Text;
+
 
 namespace UFLT.Records
 {
@@ -22,14 +23,27 @@ namespace UFLT.Records
             set;
         }
 
+        #region Mesh Params
+
         /// <summary>
-        /// Mesh data for this object.
+        /// Position of vertices if this record contains a mesh
         /// </summary>
-        public Mesh Mesh
+        public List<Vector3> VertexPositions
         {
             get;
             set;
         }
+
+        /// <summary>
+        /// Triangle index list if this record contains a mesh.
+        /// </summary>
+        public List<int> Triangles
+        {
+            get;
+            set;
+        }
+
+        #endregion Mesh Params
 
         /// <summary>
         /// This objects matrix(tansform, rotation and scale)
@@ -82,6 +96,21 @@ namespace UFLT.Records
 
             // Processes children
             base.ImportIntoScene();
+
+            // Finalise mesh
+            if( VertexPositions != null )
+            {    
+                Mesh m = new Mesh();                
+                m.vertices = VertexPositions.ToArray();
+                m.triangles = Triangles.ToArray();
+
+                MeshRenderer mr = Object.AddComponent<MeshRenderer>();
+                MeshFilter mf = Object.AddComponent<MeshFilter>();
+                mf.mesh = m;
+
+                // TODO: use Mesh.SetTriangles if more than 1 material.
+
+            }
         }
 
         #region Record Handlers

@@ -432,29 +432,57 @@ namespace UFLT.Records
         {
             if( Parent is InterRecord )
             {
-                InterRecord ir = Parent as InterRecord;
+
+                // TODO: Have a seperate set of triangles for each material.
                 
-                // Does the record have a mesh?
-                if( ir.Mesh == null )
+
+
+
+
+                InterRecord ir = Parent as InterRecord;
+                                
+                if( ir.VertexPositions == null )
                 {
-                    ir.Mesh = new Mesh();
+                    ir.VertexPositions = new List<Vector3>();
+                }
+
+                if( ir.Triangles == null )
+                {
+                    ir.Triangles = new List<int>();
                 }
 
                 // Find vertex list
                 VertexList vl = Children.Find( o => o is VertexList ) as VertexList;
                 if( vl != null )
                 {
-                    List<VertexWithColor> vertices = new List<VertexWithColor>( vl.Offsets.Count );
-                    vl.Offsets.ForEach( o => vertices.Add( Header.VertexPalette.Vertices[o] ) );
+                    int startIndex = ir.VertexPositions.Count;
+
+                    // Collect verts from the palette                    
+                    foreach( int offset in vl.Offsets )
+                    {
+                        VertexWithColor vwc = Header.VertexPalette.Vertices[offset];
+
+                        // Extract position
+                        ir.VertexPositions.Add( new Vector3( ( float )vwc.Coordinate[0], ( float )vwc.Coordinate[1], ( float )vwc.Coordinate[2] ) ); // We lose precision here 
+
+                        // TODO: uv, etc
+                    }                    
+
+                    if( vl.Offsets.Count != 3 )
+                    {
+                        // Its not a triangle, trianglulate it
+                        Debug.LogError( "Not Triangle" );
+
+                        ir.Triangles.AddRange( new int[] { startIndex, startIndex + 1, startIndex + 2, startIndex + 2, startIndex + 3, startIndex } );                        
+                    }
+                    else
+                    {
+                        ir.Triangles.AddRange( new int[] { startIndex, startIndex + 1, startIndex + 2 } );                        
+                    }
 
                     // TODO: Trianglulate. Can we do most of the work in a seperate thread?
                     // TODO: Create verts and triangles first and then finalise the mesh in the object or do it all in the object?
-
-
                     
-
-
-
                 }
                 else
                 {

@@ -1,8 +1,9 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UFLT.DataTypes.Enums;
+using System.Linq;
 
 namespace UFLT.Records
 {
@@ -419,6 +420,54 @@ namespace UFLT.Records
 
             // Parse children
             base.Parse();
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Converts the record/s into a Unity GameObject structure with meshes, 
+        /// materials etc and imports into the scene.
+        /// </summary>
+        //////////////////////////////////////////////////////////////////
+        public override void ImportIntoScene()
+        {
+            if( Parent is InterRecord )
+            {
+                InterRecord ir = Parent as InterRecord;
+                
+                // Does the record have a mesh?
+                if( ir.Mesh == null )
+                {
+                    ir.Mesh = new Mesh();
+                }
+
+                // Find vertex list
+                VertexList vl = Children.Find( o => o is VertexList ) as VertexList;
+                if( vl != null )
+                {
+                    List<VertexWithColor> vertices = new List<VertexWithColor>( vl.Offsets.Count );
+                    vl.Offsets.ForEach( o => vertices.Add( Header.VertexPalette.Vertices[o] ) );
+
+                    // TODO: Trianglulate. Can we do most of the work in a seperate thread?
+                    // TODO: Create verts and triangles first and then finalise the mesh in the object or do it all in the object?
+
+
+                    
+
+
+
+                }
+                else
+                {
+                    Debug.LogWarning( "Could not find vertex list for face" );
+                }                              
+            }
+            else
+            {
+                Debug.LogWarning( "Face is not a child of a InterRecord, can not create face." );
+            }
+
+
+            //base.ImportIntoScene();
         }
 	}
 }

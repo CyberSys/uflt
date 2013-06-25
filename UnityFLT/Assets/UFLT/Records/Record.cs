@@ -200,14 +200,16 @@ namespace UFLT.Records
                 {
                     if( !GlobalHandler.Handle( op ) )
                     {
-                        return;
+                        Debug.LogWarning( "FAIL " + op );
+                        break;                        
                     }
                 }
                 else if( ActiveHandler.Handles( op ) ) // Try the active handler
                 {
                     if( !ActiveHandler.Handle( op ) )
                     {
-                        return;
+                        Debug.LogWarning( "1FAIL " + op );
+                        break;
                     }
                 }
                 else
@@ -216,13 +218,12 @@ namespace UFLT.Records
                     {
                         // Mark the record to be repeated by our parent.
                         Header.Stream.Repeat = true;
-                        return;
+                        break;
                     }
                     else
-                    {
-                        
+                    {                        
                         // Just ignore the record.
-                        Debug.Log( GetType().ToString() + " Ignored Record - " + op );
+                        Debug.Log( GetType().ToString() + " Not handled record - " + op );
                     }
                 }
             }
@@ -250,6 +251,7 @@ namespace UFLT.Records
         protected bool HandlePush()
         {
             Header.Stream.Level++;
+
             ActiveHandler = ChildHandler; // Don't do child records that might overwrite parent info. eg. longid.
             return true;
         }

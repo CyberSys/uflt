@@ -119,7 +119,7 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         public bool Handles( Opcodes opcode )
         {
-            return Handler.ContainsKey( opcode ) ? true : false;            
+            return Handler.ContainsKey( opcode );          
         }
     }
 }

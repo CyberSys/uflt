@@ -246,7 +246,6 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.Face] = HandleFace;
             // TODO: index light point
             // TODO: inline light point
-            // TODO: Face
             // TODO: External ref
             ChildHandler.Handler[Opcodes.Group] = HandleGroup;
             ChildHandler.Handler[Opcodes.PushLevel] = HandlePush;
@@ -256,6 +255,8 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.Sound] = HandleUnhandled;
             ChildHandler.Handler[Opcodes.ClipRegion] = HandleUnhandled;
             ChildHandler.Handler[Opcodes.DegreeOfFreedom] = HandleUnhandled;
+
+            ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleUnhandled;
 		}
 
         //////////////////////////////////////////////////////////////////

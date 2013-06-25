@@ -473,7 +473,12 @@ namespace UFLT.Records
                         // Its not a triangle, trianglulate it
                         Debug.LogError( "Not Triangle" );
 
-                        ir.Triangles.AddRange( new int[] { startIndex, startIndex + 1, startIndex + 2, startIndex + 2, startIndex + 3, startIndex } );                        
+                        Triangulator triangulator = new Triangulator();
+
+                        triangulator.initTriangulator( ir.VertexPositions.GetRange( startIndex, vl.Offsets.Count ), Vector3.one );
+                        ir.Triangles.AddRange( triangulator.Triangulate( startIndex ) );
+
+                        //ir.Triangles.AddRange( new int[] { startIndex, startIndex + 1, startIndex + 2, startIndex + 2, startIndex + 3, startIndex } );                        
                     }
                     else
                     {

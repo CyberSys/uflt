@@ -108,8 +108,8 @@ namespace UFLT.Streams
 
             if( Reader.BaseStream.Length - CurrentPosition < 4 )
             {
-                // Not enough data left, close the file
-                Reader.Close();
+                // Not enough data left, close the file				
+                //Reader.Close(); // TODO: Need to check if stream is null if we close it here.
                 return false;
             }
             

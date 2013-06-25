@@ -104,7 +104,7 @@ namespace UFLT.Streams
             {
                 // Move to next record
                 CurrentPosition += Length;
-            }
+            }            
 
             if( Reader.BaseStream.Length - CurrentPosition < 4 )
             {
@@ -123,7 +123,7 @@ namespace UFLT.Streams
             }
             catch( Exception e )
             {
-                //Debug.LogError( "Parse Error!\n" + e.ToString() );
+                Debug.LogError( "Parse Error!\n" + e.ToString() );
                 return false;
             }
 

@@ -222,7 +222,7 @@ namespace UFLT.Records
                     {
                         
                         // Just ignore the record.
-                        //Debug.LogWarning( GetType().ToString() + " Ignored Record - " + op );
+                        Debug.Log( GetType().ToString() + " Ignored Record - " + op );
                     }
                 }
             }
@@ -249,7 +249,6 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandlePush()
         {
-            //Debug.Log( "Handle " + Header.Stream.Opcode );
             Header.Stream.Level++;
             ActiveHandler = ChildHandler; // Don't do child records that might overwrite parent info. eg. longid.
             return true;
@@ -263,7 +262,6 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandlePop()
         {
-            //Debug.Log( "Handle " + Header.Stream.Opcode );
             Header.Stream.Level--;
             if( Header.Stream.Level == Level )
             {
@@ -280,7 +278,6 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandlePushExtension()
         {
-            //Debug.Log( "Handle " + Header.Stream.Opcode );
             SavedHandler = ActiveHandler;
             ActiveHandler = ExtensionHandler;
             return true;
@@ -294,7 +291,6 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandlePopExtension()
         {
-            //Debug.Log( "Handle " + Header.Stream.Opcode );
             ActiveHandler = SavedHandler;
             return true;
         }
@@ -307,7 +303,6 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandleVertexList()
         {
-            //Debug.Log( "Handle " + Header.Stream.Opcode );
             VertexList vl = new VertexList( this );
             vl.Parse();
 
@@ -324,7 +319,6 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandleFace()
         {
-            //Debug.Log( "Handle " + Header.Stream.Opcode );
             Face f = new Face( this );
             f.Parse();
             return true;
@@ -338,7 +332,6 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandleLongID()
         {
-            //Debug.Log( "Handle " + Header.Stream.Opcode );
             ID = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( Header.Stream.Length - 4 ) ); // The id is the length of the record minus its header of 4 bytes.
             return true;
         }
@@ -351,7 +344,6 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandleComment()
         {
-            //Debug.Log( "Handle " + Header.Stream.Opcode );
             Comment = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( Header.Stream.Length - 4 ) ); // The comment is the length of the record minus its header of 4 bytes.
             return true;
         }

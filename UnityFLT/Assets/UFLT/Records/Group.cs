@@ -276,7 +276,10 @@ namespace UFLT.Records
             Header.Stream.Reader.BaseStream.Seek( 5, SeekOrigin.Current ); // Skip reserved            
             LoopCount = Header.Stream.Reader.ReadInt32();
             LoopDuration = Header.Stream.Reader.ReadSingle();
-            LastFrameDuration = Header.Stream.Reader.ReadSingle();            
+            LastFrameDuration = Header.Stream.Reader.ReadSingle();
+
+            // Parse children
+            base.Parse();
         }
 	}
 }

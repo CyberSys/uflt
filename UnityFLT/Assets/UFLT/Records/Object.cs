@@ -223,7 +223,10 @@ namespace UFLT.Records
             Transparency = Header.Stream.Reader.ReadUInt16();
             SpecialEffectID1 = Header.Stream.Reader.ReadInt16();
             SpecialEffectID2 = Header.Stream.Reader.ReadInt16();
-            // Ignore last 2 reserved bytes.            
+            // Ignore last 2 reserved bytes.    
+        
+            // Parse children
+            base.Parse();
         }
 	}
 }

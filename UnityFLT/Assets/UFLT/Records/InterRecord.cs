@@ -95,7 +95,6 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandleMatrix()
         {
-            //Debug.Log( "Handle " + Header.Stream.Opcode );
             Matrix4x4 m = new Matrix4x4();
             for( int i = 0; i < 4; i++ )
             {
@@ -116,7 +115,6 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandleUnhandled()
         {
-            //Debug.Log( "Handle " + Header.Stream.Opcode );
             Unhandled uh = new Unhandled( this );
             uh.Parse();
             return true;
@@ -130,7 +128,6 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandleObject()
         {
-            //Debug.Log( "Handle " + Header.Stream.Opcode );
             Object o = new Object( this );
             o.Parse();
             return true;
@@ -144,7 +141,6 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandleGroup()
         {
-            //Debug.Log( "Handle " + Header.Stream.Opcode );
             Group g = new Group( this );
             g.Parse();
             return true;

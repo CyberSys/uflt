@@ -415,7 +415,10 @@ namespace UFLT.Records
             PrimaryColorIndex         = Header.Stream.Reader.ReadUInt32();
             AlternateColorIndex       = Header.Stream.Reader.ReadUInt32();
             /* Skip reserved bytes*/  Header.Stream.Reader.BaseStream.Seek( 2, SeekOrigin.Current );
-            ShaderIndex               = Header.Stream.Reader.ReadInt16();           
+            ShaderIndex               = Header.Stream.Reader.ReadInt16();
+
+            // Parse children
+            base.Parse();
         }
 	}
 }

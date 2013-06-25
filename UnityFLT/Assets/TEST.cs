@@ -28,16 +28,13 @@ public class TEST : MonoBehaviour
     /// </summary>
     void ThreadStart()
     {
-        Vector2 v = new Vector2( 0, 0 );
+        //Vector2 v = new Vector2( 0, 0 );
         //Debug.Log( v );
 
-        Color c = new Color();
+        //Color c = new Color();
         //Debug.Log( c );
 
         //Texture2D t = new Texture2D( 1024, 1024 ); // can not be created
         ////Debug.Log( t );
-
-        Matrix4x4 m = new Matrix4x4();
-        //Debug.Log( m );
     }
 }

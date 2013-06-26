@@ -101,6 +101,15 @@ namespace UFLT.Records
             get;
             set;
         }
+		
+		/// <summary>
+		/// The Unity material.
+		/// </summary>		
+		public Material UnityMaterial
+		{
+			get;
+			set;
+		}
 				
 		#endregion Properties
 
@@ -132,5 +141,20 @@ namespace UFLT.Records
             Shininess = Header.Stream.Reader.ReadSingle();
             Alpha = Header.Stream.Reader.ReadSingle();
         }
+		
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Creates a unity material.
+        /// </summary>
+        //////////////////////////////////////////////////////////////////
+		//public override void ImportIntoScene()
+		//{
+		//	UnityMaterial = new Material();
+		//	UnityMaterial.color = Diffuse;
+		//	UnityMaterial.name = ID;
+		//	
+		//	// TODO: Determine what type of shader to use. Maybe check face or properties?
+		//	
+		//}
 	}
 }

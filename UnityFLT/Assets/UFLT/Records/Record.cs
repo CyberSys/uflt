@@ -310,9 +310,6 @@ namespace UFLT.Records
         {
             VertexList vl = new VertexList( this );
             vl.Parse();
-
-            // TODO: If face
-
             return true;          
         }
 

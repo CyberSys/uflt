@@ -10,4 +10,21 @@ External Ref
 
 Level field could be used to set level in model?
 
-blah
+Use the face lit field to set the shader that the material uses..
+e.g flat, lit, gourad etc.
+
+Need a way to create a material based on:
+
+-Material Palette
+-Texture
+-Face properties
+--DrawType
+--TexWhite? or database value if not set? 
+--ColorNameIndex
+--DetailTexturePattern
+--Transperancey
+--FlagsHidden - dont draw!ignore it
+--LightMode
+--ShaderIndex?
+
+Where to store? Database?

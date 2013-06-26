@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -42,6 +42,15 @@ namespace UFLT.Records
             get;
             set;
         }
+		
+		/// <summary>
+		/// Materials that use this texture. Key is material id, -1 for default material.
+		/// </summary>		
+		private Dictionary<int, Material> Materials
+		{
+			get;
+			set;
+		}
 
 		#endregion Properties
 
@@ -67,5 +76,39 @@ namespace UFLT.Records
             Index = Header.Stream.Reader.ReadInt32();
             Location = new int[] { Header.Stream.Reader.ReadInt32(), Header.Stream.Reader.ReadInt32() };            
         }
+		
+		//////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Returns a material that uses the texture. Material id of -1 indicates a default material.
+		/// </summary>		
+		/// <param name='materialID'>Material ID</param>
+		//////////////////////////////////////////////////////////////////
+		public Material GetOfCreateMaterial( int materialID )
+		{
+			// Does one exist?
+			if( Materials.ContainsKey( materialID ) )
+			{
+				return Materials[materialID];	
+			}
+			
+			// Create a new material for this texture
+			// TODO: you are here
+			return null;
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		}
 	}
 }

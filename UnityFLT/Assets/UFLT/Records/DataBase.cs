@@ -488,8 +488,7 @@ namespace UFLT.Records
         /// <param name="file"></param>
         //////////////////////////////////////////////////////////////////
         public Database( string file, Record parent )            
-        {
-			Log.Write( "Loading file: " + file );
+        {			
             Stream = new InStream( file );
             Header = this;
             Parent = parent;
@@ -497,6 +496,13 @@ namespace UFLT.Records
             {
                 parent.Children.Add( this );
             }
+			else
+			{
+				// Init log
+				Log.Init();				
+			}
+			
+			Log.Write( "Loading file: " + file );
             
             MaterialPalettes = new Dictionary<int, MaterialPalette>();
             TexturePalettes = new Dictionary<int, TexturePalette>();

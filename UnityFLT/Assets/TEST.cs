@@ -20,6 +20,12 @@ public class TEST : MonoBehaviour
         db.Parse();
         db.ImportIntoScene();
 		
+		//RecordHandler rh = new RecordHandler();				
+		//rh.ThrowBacks.UnionWith( RecordHandler.ThrowBackOpcodes );
+		
+		//Debug.Log( rh.ThrowBacks.Contains( UFLT.DataTypes.Enums.Opcodes.PopLevel ) );
+		
+		
 		// print out log and clear for next time
 		Debug.Log( Log.ToString() );		
 

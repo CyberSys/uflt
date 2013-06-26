@@ -162,7 +162,8 @@ namespace UFLT.Records
             Children = new List<Record>();
             ActiveHandler = RootHandler;
 
-            GlobalHandler.Handler[Opcodes.PushExtension] = HandlePushExtension;
+            GlobalHandler.Handler[Opcodes.PushExtension] = HandlePushExtension;			
+			ExtensionHandler.Handler[Opcodes.PopExtension] = HandlePopExtension;							
         }
 
         //////////////////////////////////////////////////////////////////
@@ -177,8 +178,10 @@ namespace UFLT.Records
         {
             Header = header;
             Parent = parent;
+			
             Opcode = Header.Stream.Opcode;
             Length = Header.Stream.Length;
+			Level = Header.Stream.Level;
 
             if( parent != null )
             {
@@ -215,6 +218,7 @@ namespace UFLT.Records
                 {
                     if( ActiveHandler.ThrowBackUnhandled || ActiveHandler.ThrowBacks.Contains( op ) ) // Do we throw back the record to be handled by the parent?
                     {
+						Log.WriteWarning( string.Format( "{0} throwing back - {1}", GetType(), op ) );
                         // Mark the record to be repeated by our parent.
                         Header.Stream.Repeat = true;
                         break;
@@ -222,7 +226,7 @@ namespace UFLT.Records
                     else
                     {                        
                         // Just ignore the record.
-						Log.Write( GetType().ToString() + " Not handled record - " + op );
+						Log.Write( string.Format( "{0} not handled record - {1}", GetType(), op ) );
                     }
                 }
             }

@@ -195,7 +195,7 @@ namespace UFLT.Records
             while( Header.Stream.BeginRecord() )
             {
                 Opcodes op = Header.Stream.Opcode;
-
+				Debug.Log( op );
                 if( GlobalHandler.Handles( op ) ) // Check global handler
                 {
                     if( !GlobalHandler.Handle( op ) )

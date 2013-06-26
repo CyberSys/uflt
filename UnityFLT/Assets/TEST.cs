@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using UFLT.Records;
 using System.Threading;
+using UFLT;
 
 public class TEST : MonoBehaviour 
 {
@@ -18,6 +19,12 @@ public class TEST : MonoBehaviour
         db = new Database( file );
         db.Parse();
         db.ImportIntoScene();
+		
+		// print out log and clear for next time
+		Debug.Log( Log.ToString() );		
+
+		
+		
         //t = new Thread( ThreadStart );
         //t.Start();
 

@@ -57,7 +57,7 @@ namespace UFLT.Records
                 }
                 else
                 {
-                    Debug.LogWarning( string.Format( "Warning: Unable to find vertex for byte offset {0} in the palette, this vertex will be ignored.", v ) );
+					Log.WriteWarning( string.Format( "Unable to find vertex for byte offset {0} in the palette, this vertex will be ignored.", v ) );
                 }
             }
         }

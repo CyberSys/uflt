@@ -496,6 +496,11 @@ namespace UFLT.Records
             {
                 parent.Children.Add( this );
             }
+			else
+			{
+				// Init log
+				Log.Init();
+			}
             
             MaterialPalettes = new Dictionary<int, MaterialPalette>();
             TexturePalettes = new Dictionary<int, TexturePalette>();

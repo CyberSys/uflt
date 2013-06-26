@@ -14,6 +14,7 @@ namespace UFLT.Records
     {
         #region Properties
 
+
         /// <summary>
         /// The type of record
         /// </summary>
@@ -153,7 +154,7 @@ namespace UFLT.Records
         /// </summary>
         //////////////////////////////////////////////////////////////////
         public Record()
-        {
+        {		
             RootHandler = new RecordHandler();
             ChildHandler = new RecordHandler();
             ExtensionHandler = new RecordHandler();
@@ -195,20 +196,18 @@ namespace UFLT.Records
             while( Header.Stream.BeginRecord() )
             {
                 Opcodes op = Header.Stream.Opcode;
-				Debug.Log( op );
+				
                 if( GlobalHandler.Handles( op ) ) // Check global handler
                 {
                     if( !GlobalHandler.Handle( op ) )
-                    {
-                        Debug.LogWarning( "FAIL " + op );
+                    {                        
                         break;                        
                     }
                 }
                 else if( ActiveHandler.Handles( op ) ) // Try the active handler
                 {
                     if( !ActiveHandler.Handle( op ) )
-                    {
-                        Debug.LogWarning( "1FAIL " + op );
+                    {                        
                         break;
                     }
                 }
@@ -223,7 +222,7 @@ namespace UFLT.Records
                     else
                     {                        
                         // Just ignore the record.
-                        Debug.Log( GetType().ToString() + " Not handled record - " + op );
+						Log.Write( GetType().ToString() + " Not handled record - " + op );
                     }
                 }
             }

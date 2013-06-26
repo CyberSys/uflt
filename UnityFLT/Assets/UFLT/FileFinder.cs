@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UFLT.Records;
 
 namespace UFLT
 {
@@ -115,8 +116,8 @@ namespace UFLT
                     return combPath;
                 }
             }
-
-            //Debug.LogWarning( "Could not find file: " + fullPath );
+			
+			Log.WriteWarning( "Could not find file: " + fullPath );            
 
             return string.Empty;
         }

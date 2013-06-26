@@ -3,6 +3,7 @@ using System.IO;
 using UFLT.DataTypes.Enums;
 using System;
 using UnityEngine;
+using UFLT.Records;
 namespace UFLT.Streams
 {
     /// <summary>
@@ -108,8 +109,7 @@ namespace UFLT.Streams
 
             if( Reader.BaseStream.Length - CurrentPosition < 4 )
             {
-                // Not enough data left, close the file				
-                //Reader.Close(); // TODO: Need to check if stream is null if we close it here.
+                // TODO: Not enough data left, close the file                
                 return false;
             }
             
@@ -123,7 +123,7 @@ namespace UFLT.Streams
             }
             catch( Exception e )
             {
-                Debug.LogError( "Parse Error!\n" + e.ToString() );
+				Log.WriteError( "Parse Error!\n" + e.ToString() );			
                 return false;
             }
 

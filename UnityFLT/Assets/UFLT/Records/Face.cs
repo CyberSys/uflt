@@ -470,8 +470,7 @@ namespace UFLT.Records
 
                     if( vl.Offsets.Count != 3 )
                     {
-                        // Its not a triangle, trianglulate it
-                        Debug.LogError( "Not Triangle" );
+                        // Its not a triangle, trianglulate it                        
 
                         Triangulator triangulator = new Triangulator();
 
@@ -491,12 +490,12 @@ namespace UFLT.Records
                 }
                 else
                 {
-                    Debug.LogWarning( "Could not find vertex list for face" );
+					Log.WriteWarning( "Could not find vertex list for face" );
                 }                              
             }
             else
             {
-                Debug.LogWarning( "Face is not a child of a InterRecord, can not create face." );
+				Log.WriteWarning( "Face is not a child of a InterRecord, can not create face." );
             }
 
 

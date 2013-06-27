@@ -28,3 +28,5 @@ Need a way to create a material based on:
 --ShaderIndex?
 
 Where to store? Database?
+
+Swap coordinates so world up is y and not z. This could be done when parsing the file to keep things simple?

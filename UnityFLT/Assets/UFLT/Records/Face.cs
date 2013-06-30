@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using UFLT.DataTypes.Enums;
 using System.Linq;
+using UFLT.Utils;
 
 namespace UFLT.Records
 {
@@ -432,8 +433,14 @@ namespace UFLT.Records
         {
             if( Parent is InterRecord )
             {
+				// Do we draw this face?
+				if( FlagsHidden )
+				{
+					return;	
+				}
 
                 // TODO: Have a seperate set of triangles for each material.
+				// TODO: Calc face normal. Normal = sum of points normals then normalised.
                 
 
 

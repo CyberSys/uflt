@@ -12,8 +12,7 @@ namespace UFLT.Records
     /// </summary>
     public class Record
     {
-        #region Properties
-
+        #region Properties	
 
         /// <summary>
         /// The type of record
@@ -231,11 +230,22 @@ namespace UFLT.Records
                 }
             }
         }
+		
+		//////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Prepares the record for importing into the scene. Everything that 
+		/// can be done outside of the main unity thread is dont here.
+		/// </summary>
+		//////////////////////////////////////////////////////////////////
+		public virtual void PrepareForImport()
+		{
+			Children.ForEach( o => o.PrepareForImport() );
+		}
 
         //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Converts the record/s into a Unity GameObject structure with meshes, 
-        /// materials etc and imports into the scene.
+        /// materials etc and imports into the scene. Should be called from the main unity thread.
         /// </summary>
         //////////////////////////////////////////////////////////////////
         public virtual void ImportIntoScene()

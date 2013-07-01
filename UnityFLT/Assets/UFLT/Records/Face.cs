@@ -425,12 +425,11 @@ namespace UFLT.Records
 
         //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Converts the record/s into a Unity GameObject structure with meshes, 
-        /// materials etc and imports into the scene.
+        /// Prepares the vertices and triangulates the faces ready for creating a mesh.
         /// </summary>
         //////////////////////////////////////////////////////////////////
-        public override void ImportIntoScene()
-        {
+        public override void PrepareForImport()
+		{
             if( Parent is InterRecord )
             {
 				// Do we draw this face?

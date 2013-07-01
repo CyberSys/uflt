@@ -12,6 +12,16 @@ namespace UFLT.Utils
     public class IntermediateMaterial
     {
         #region Properties
+		
+		/// <summary>
+		/// Gets or sets the unity material.
+		/// This could be null if the material has not been imported into the scene yet.
+		/// </summary>		
+		public Material UnityMaterial
+		{
+			get;
+			set;
+		}
 
         /// <summary>
         /// The material palette if one exists, this contains the standard material 

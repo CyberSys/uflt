@@ -4,6 +4,7 @@ using System.Text;
 using UFLT.Streams;
 using UnityEngine;
 using System.Collections.Generic;
+using UFLT.Utils;
 
 namespace UFLT.Records
 {

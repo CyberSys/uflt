@@ -79,36 +79,27 @@ namespace UFLT.Records
 		
 		//////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Returns a material that uses the texture. Material id of -1 indicates a default material.
-		/// </summary>		
-		/// <param name='materialID'>Material ID</param>
+		/// Determines whether the specified <see cref="TexturePalette"/> is equal to the current <see cref="UFLT.Records.TexturePalette"/>.
+		/// </summary>
+		/// <param name='other'>
+		/// The <see cref="TexturePalette"/> to compare with the current <see cref="UFLT.Records.TexturePalette"/>.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if the specified <see cref="TexturePalette"/> is equal to the current
+		/// <see cref="UFLT.Records.TexturePalette"/>; otherwise, <c>false</c>.
+		/// </returns>
 		//////////////////////////////////////////////////////////////////
-		public Material GetOfCreateMaterial( int materialID )
+		public bool Equals( TexturePalette other )
 		{
-			// Does one exist?
-			if( Materials.ContainsKey( materialID ) )
-			{
-				return Materials[materialID];	
-			}
+			// First check index, if it matches and we both belong to the same db then we are the same.
+			if( Index  != other.Index  ) return false;
+			if( Header == other.Header ) return true; // Same index and same db, no need to check the rest.
+						
+			// TODO: Filename could be relative for the current db, e.g if we are supporting multiple db using the same file. Need a way to check if this is so. Maybe convert to absolute addresses?
 			
-			// Create a new material for this texture
-			// TODO: you are here
-			return null;
+			if( !FileName.Equals( other.FileName ) ) return false;
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+			return true;					
 		}
 	}
 }

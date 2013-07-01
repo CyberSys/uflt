@@ -6,20 +6,12 @@ using UFLT.DataTypes.Enums;
 namespace UFLT.Utils
 {
     /// <summary>
-    /// Represents a material created from the many penFlight fields.
+    /// Represents a material created from various OpenFlight records/fields. 
+    /// We want to defer creating the actual unity material as long as possible as this has to be done in the main thread.
     /// </summary>
-    public class Material
+    public class IntermediateMaterial
     {
         #region Properties
-
-        /// <summary>
-        /// The unity material that was created based on all the attributes.
-        /// </summary>
-        public Material UnityMaterial
-        {
-            get;
-            set;
-        }
 
         /// <summary>
         /// The material palette if one exists, this contains the standard material 

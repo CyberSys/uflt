@@ -1,5 +1,6 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using UFLT.Records;
 
 namespace UFLT.Utils
 {
@@ -13,7 +14,7 @@ namespace UFLT.Utils
     public class MaterialBank
     {
         #region Properties
-
+		
         private static MaterialBank instance;
 
         /// <summary>
@@ -41,6 +42,6 @@ namespace UFLT.Utils
         private MaterialBank()
         {
         }
-
+		
     }
 }

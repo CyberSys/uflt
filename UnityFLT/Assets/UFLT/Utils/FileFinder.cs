@@ -3,7 +3,7 @@ using System.IO;
 using UnityEngine;
 using UFLT.Records;
 
-namespace UFLT
+namespace UFLT.Utils
 {
 /// <summary>
 /// Stores all file paths used in an openflight in order to help locate files that are not where they are supposed to be, e.g textures.

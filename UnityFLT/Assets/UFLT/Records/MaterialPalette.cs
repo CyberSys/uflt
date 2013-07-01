@@ -142,19 +142,37 @@ namespace UFLT.Records
             Alpha = Header.Stream.Reader.ReadSingle();
         }
 		
-        //////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Creates a unity material.
-        /// </summary>
-        //////////////////////////////////////////////////////////////////
-		//public override void ImportIntoScene()
-		//{
-		//	UnityMaterial = new Material();
-		//	UnityMaterial.color = Diffuse;
-		//	UnityMaterial.name = ID;
-		//	
-		//	// TODO: Determine what type of shader to use. Maybe check face or properties?
-		//	
-		//}
+		//////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Determines whether the specified <see cref="MaterialPalette"/> is equal to the current <see cref="UFLT.Records.MaterialPalette"/>.
+		/// </summary>
+		/// <param name='other'>
+		/// The <see cref="MaterialPalette"/> to compare with the current <see cref="UFLT.Records.MaterialPalette"/>.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if the specified <see cref="MaterialPalette"/> is equal to the current
+		/// <see cref="UFLT.Records.MaterialPalette"/>; otherwise, <c>false</c>.
+		/// </returns>
+		//////////////////////////////////////////////////////////////////
+		public bool Equals( MaterialPalette other )
+		{
+			// First check index, if it matches and we both belong to the same db then we are the same.
+			if( Index  != other.Index  )return false;
+			if( Header == other.Header )return true; // Same index and same db, no need to check the rest.
+			
+			// Name is not important, if 2 materials have different names but the same values it makes more sense to combine them at this stage.
+			// Flags also has no impact on appearance so lets ignore that too.
+			
+			// Check color fields
+			if( !Ambient.Equals( other.Ambient )   ) return false;
+			if( !Diffuse.Equals( other.Diffuse )   ) return false;
+			if( !Specular.Equals( other.Specular ) ) return false;
+			if( !Emissive.Equals( other.Emissive ) ) return false;
+			
+			if( Mathf.Approximately( Shininess, other.Shininess ) ) return false;
+			if( Mathf.Approximately( Alpha, other.Alpha )         ) return false;			
+				
+			return true;					
+		}		
 	}
 }

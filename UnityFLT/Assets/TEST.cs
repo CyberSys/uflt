@@ -16,9 +16,9 @@ public class TEST : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
-        db = new Database( file );
-        db.Parse();
-        db.ImportIntoScene();
+        //db = new Database( file );
+        //db.Parse();
+        //db.ImportIntoScene();
 		
 		//RecordHandler rh = new RecordHandler();				
 		//rh.ThrowBacks.UnionWith( RecordHandler.ThrowBackOpcodes );
@@ -27,12 +27,12 @@ public class TEST : MonoBehaviour
 		
 		
 		// print out log and clear for next time
-		Debug.Log( Log.ToString() );		
+		//Debug.Log( Log.ToString() );		
 
 		
 		
-        //t = new Thread( ThreadStart );
-        //t.Start();
+        t = new Thread( ThreadStart );
+        t.Start();
 
 	}
 
@@ -41,6 +41,9 @@ public class TEST : MonoBehaviour
     /// </summary>
     void ThreadStart()
     {
+		// Materials can only be created from main thread.
+		//Material m = new Material("Diffuse");
+		//Debug.Log( m );
         //Vector2 v = new Vector2( 0, 0 );
         //Debug.Log( v );
 

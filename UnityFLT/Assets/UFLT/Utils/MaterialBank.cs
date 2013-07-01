@@ -8,8 +8,8 @@ namespace UFLT.Utils
     /// <summary>
     /// Class for storing materials that are created based on multiple records from the OpenFlight file/s.
     /// We cannot rely on the Material palette to provide our materials, it does not take into account the texture or lighting used.
-    /// Advanced materials such as relfective ones require additional data from extended materials.
-    /// All of these different records/fields can impact the type of material we need, this class brings it all together.
+    /// Advanced materials such as reflective, cube maps etc require additional data from extended materials.
+    /// All of these different records/fields can impact the type of material/shader we need, this class brings it all together.
     /// Helps reduce the number of materials used by re-using materials.
     /// </summary>
     public class MaterialBank
@@ -19,8 +19,7 @@ namespace UFLT.Utils
         private static MaterialBank instance;
 		
 		/// <summary>
-		/// Current materials.
-		/// TODO: A faster lookup data structure, currently using a linear search.
+		/// Current materials.		
 		/// </summary>		
 		public List<IntermediateMaterial> Materials
 		{
@@ -64,42 +63,31 @@ namespace UFLT.Utils
 		/// <param name='f'>The face to find a material for.</param>
 		//////////////////////////////////////////////////////////////////
 		public IntermediateMaterial FindOrCreateMaterial( Face f )
-		{
-			// MaterialPalette mp, TexturePalette texture, TexturePalette detail,  ushort Transparency, LightMode lm )
-			IntermediateMaterial im = null;
-	
-			// Check materials first						
-			MaterialPalette mp = f.MaterialIndex == -1 ? f.Header.MaterialPalettes[f.MaterialIndex] : null;						
+		{	
+			// TODO: A faster lookup data structure, currently using a linear search.
 			
-			//List<IntermediateMaterial> searchList = Materials.FindAll( o => o.Palette != null ? o.Palette.Equals( mp ) : o.Palette  );
+			// Fetch palettes
+			MaterialPalette mp = f.MaterialIndex != -1 ? f.Header.MaterialPalettes[f.MaterialIndex] : null;									
+			TexturePalette mainTex = f.TexturePattern != -1 ? f.Header.TexturePalettes[f.TexturePattern] : null;
+			TexturePalette detailTex = f.TexturePattern != -1 ? f.Header.TexturePalettes[f.DetailTexturePattern] : null;
+								
+			foreach( IntermediateMaterial current in Materials )
+			{
+				if( current.Palette == mp && 
+					current.MainTexture.Equals( mainTex ) &&
+					current.DetailTexture.Equals( detailTex ) &&
+					current.Transparency == f.Transparency &&
+					current.LightMode == f.LightMode )
+				{
+					// We found a matching material
+					return current;
+				}				
+			}
 			
-			//if( searchList.Count > 0 )
-			//{
-				// Next main texture
-			//	TexturePalette
-				
-			//}
-			
-			
-			
-			
-			//foreach( IntermediateMaterial current in Materials )
-			//{
-				// Check material
-			//	MaterialPalette mp = 
-			//	if( f.MaterialIndex = -1 && f.Header.MaterialPalettes[f.MaterialIndex
-				
-				
-				
-				/*if( current.Palette.Equals( mp ) && 
-					current.MainTexture.Equals( texture ) &&
-					current.DetailTexture.Equals( detail ) &&
-					current.Transparency == Transparency &&
-					current.LightMode == lm*/
-			//}
-					
-			return null;
+			// Create a new material
+			IntermediateMaterial im = new IntermediateMaterial( mp, mainTex, detailTex, f.Transparency, f.LightMode );
+			Materials.Add( im );
+			return im;				
 		}
-		
     }
 }

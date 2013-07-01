@@ -435,9 +435,10 @@ namespace UFLT.Records
 				// Do we draw this face?
 				if( FlagsHidden )
 				{
-					return;	
-				}
-
+					return;										
+				}											
+				
+				/*
                 // TODO: Have a seperate set of triangles for each material.
 				// TODO: Calc face normal. Normal = sum of points normals then normalised.
                 
@@ -506,6 +507,8 @@ namespace UFLT.Records
 
 
             //base.ImportIntoScene();
+            */
+			}
         }
 	}
 }

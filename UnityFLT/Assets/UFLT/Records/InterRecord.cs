@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UFLT.DataTypes.Enums;
 using System.IO;
 using System.Text;
+using UFLT.Utils;
 
 
 namespace UFLT.Records
@@ -33,15 +34,19 @@ namespace UFLT.Records
             get;
             set;
         }
-
-        /// <summary>
-        /// Triangle index list if this record contains a mesh.
-        /// </summary>
-        public List<int> Triangles
-        {
-            get;
-            set;
-        }
+		
+		// TODO: Uvs
+		
+		// TODO: Normals
+		
+		/// <summary>
+		/// Materials paired with their triangles.
+		/// </summary>		
+		public KeyValuePair<IntermediateMaterial, List<int>> Triangles
+		{
+			get;
+			set;
+		}
 
         #endregion Mesh Params
 
@@ -85,6 +90,7 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         public override void ImportIntoScene()
         {
+			/*
             // Create an empty gameobject
             Object = new GameObject( ID );
 
@@ -111,6 +117,7 @@ namespace UFLT.Records
                 // TODO: use Mesh.SetTriangles if more than 1 material.
 
             }
+            */
         }
 
         #region Record Handlers

@@ -13,7 +13,7 @@ public class TextureSGI : MonoBehaviour
 {
 	#region Properties
 	
-	// TODO: Testing
+	// HACK: Remove me after testing.
 	public string file = "";
 	
 	/// <summary>

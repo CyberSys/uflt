@@ -17,10 +17,18 @@ namespace UFLT.Utils
 		/// Gets or sets the unity material.
 		/// This could be null if the material has not been imported into the scene yet.
 		/// </summary>		
+		private Material unityMaterial;
 		public Material UnityMaterial
 		{
-			get;
-			set;
+			get
+			{
+				if( unityMaterial == null )
+				{
+					unityMaterial = CreateUnityMaterial();
+				}
+				
+				return unityMaterial;
+			}
 		}
 
         /// <summary>
@@ -72,6 +80,36 @@ namespace UFLT.Utils
             set;
         }
 
-        #endregion Properties       
+        #endregion Properties     
+		
+		//////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Initializes a new instance of the <see cref="UFLT.Utils.IntermediateMaterial"/> class.
+		/// </summary>
+		/// <param name='mp'>Material palette or null.</param>
+		/// <param name='main'>Main texture or null.</param>
+		/// <param name='detail'>Detail texture or null.</param>
+		/// <param name='transparancy'>Transparancy</param>
+		/// <param name='lm'>Light mode.</param>
+		//////////////////////////////////////////////////////////////////
+		public IntermediateMaterial( MaterialPalette mp, TexturePalette main, TexturePalette detail, ushort transparancy, LightMode lm )
+		{
+			Palette = mp;
+			MainTexture = main;
+			DetailTexture = detail;
+			Transparency = transparancy;
+			LightMode = lm;			
+		}
+		
+		//////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Creates the unity material.
+		/// </summary>		
+		//////////////////////////////////////////////////////////////////
+		protected virtual Material CreateUnityMaterial()
+		{
+			// TODO: create material
+			return null;
+		}
     }
 }

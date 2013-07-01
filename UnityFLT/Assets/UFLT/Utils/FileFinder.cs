@@ -81,6 +81,8 @@ namespace UFLT.Utils
         //////////////////////////////////////////////////////////////////
         public string Find( string fullPath )
         {        
+			// TODO: Always return an absolute path, we can then check if a texture is already loaded without
+			// worrying about relative paths which may be different but point to the same file.
             string file = Path.GetFileName( fullPath );
             
             // Is the path absolute?

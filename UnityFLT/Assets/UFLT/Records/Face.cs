@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using UFLT.DataTypes.Enums;
 using System.Linq;
+using UFLT.Utils;
 
 namespace UFLT.Records
 {
@@ -139,7 +140,7 @@ namespace UFLT.Records
         /// 0 = Opaque
         /// 65535 = Totally clear
         /// </summary>
-        public ushort Transperancey
+        public ushort Transparency
         {
             get;
             set;
@@ -394,7 +395,7 @@ namespace UFLT.Records
             SurfaceMaterialCode       = Header.Stream.Reader.ReadInt16();
             FeatureID                 = Header.Stream.Reader.ReadInt16();
             IRMaterialCode            = Header.Stream.Reader.ReadInt32();
-            Transperancey             = Header.Stream.Reader.ReadUInt16();
+            Transparency             = Header.Stream.Reader.ReadUInt16();
             LODGenerationControl      = Header.Stream.Reader.ReadByte();
             LineStyleIndex            = Header.Stream.Reader.ReadByte();
             Flags                     = Header.Stream.Reader.ReadInt32();
@@ -432,8 +433,14 @@ namespace UFLT.Records
         {
             if( Parent is InterRecord )
             {
+				// Do we draw this face?
+				if( FlagsHidden )
+				{
+					return;	
+				}
 
                 // TODO: Have a seperate set of triangles for each material.
+				// TODO: Calc face normal. Normal = sum of points normals then normalised.
                 
 
 

@@ -23,9 +23,12 @@ Need a way to create a material based on:
 --ColorNameIndex
 --DetailTexturePattern
 --Transperancey
---FlagsHidden - dont draw!ignore it
 --LightMode
 --ShaderIndex?
+--Support for extended materials
+
+Taken into account:
+--Face hidden flag
 
 Where to store? Database?
 

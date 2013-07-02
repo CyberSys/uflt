@@ -134,14 +134,13 @@ namespace UFLT.Records
                     {
                         VertexPositions.Add( new Vector3( ( float )vwc.Coordinate[0], ( float )vwc.Coordinate[1], ( float )vwc.Coordinate[2] ) );
 
-                        // Normals
-                        // TODO: if no normals use re-calulate normals?
+                        // Normals                        
                         if( vwc is VertexWithColorNormal )
                         {
                             Normals.Add( ( vwc as VertexWithColorNormal ).Normal );
                         }
                         else
-                        {
+                        {                            
                             Normals.Add( Vector3.zero );
                         }
 
@@ -190,7 +189,7 @@ namespace UFLT.Records
             // Create mesh
             if( Vertices != null && Vertices.Count > 0 )
             {    
-                Mesh m = new Mesh();
+                Mesh m = new Mesh();                
                 m.name = ID;
                 m.vertices = VertexPositions.ToArray();
                 m.normals = Normals.ToArray();
@@ -201,13 +200,14 @@ namespace UFLT.Records
                 MeshFilter mf = Object.AddComponent<MeshFilter>();                    
      
                 // Set submeshes
+                m.subMeshCount = SubMeshes.Count;
                 for( int i = 0; i < SubMeshes.Count; i++ )
                 {
                     mr.materials[i] = SubMeshes[i].Key.UnityMaterial;
                     m.SetTriangles( SubMeshes[i].Value.ToArray(), i );
-                }
+                }                
 
-                m.RecalculateNormals();
+                //m.RecalculateNormals(); // TODO: if no normals then recalculate?
                 mf.mesh = m;                 
             }
         }

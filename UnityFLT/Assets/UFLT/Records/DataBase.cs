@@ -543,6 +543,17 @@ namespace UFLT.Records
             // TODO: seperate thread to load file, callback function or flag to indicate finished, maybe work as a Coroutine?
         }
         */
+		
+		public override void ImportIntoScene ()
+		{
+			base.ImportIntoScene();
+			
+			if( Parent == null )
+			{
+				// Rotate so z is up
+				Object.transform.Rotate( new Vector3( 270, 180, 0 ) );
+			}
+		}
 
         #region Record Handlers        
 

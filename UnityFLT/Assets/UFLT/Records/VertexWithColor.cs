@@ -144,8 +144,8 @@ namespace UFLT.Records
         {
             ColorNameIndex = Header.Stream.Reader.ReadUInt16();
             Flags = Header.Stream.Reader.ReadInt16();
-            Coordinate = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
-            
+			Coordinate = new double[3]{ Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };					
+			
             Color32 c = new Color32();
             c.a = Header.Stream.Reader.ReadByte();
             c.b = Header.Stream.Reader.ReadByte();

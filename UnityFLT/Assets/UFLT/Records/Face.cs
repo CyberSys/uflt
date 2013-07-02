@@ -497,7 +497,7 @@ namespace UFLT.Records
                     }                    
 
                     // We now have our triangles. Lets find the correct submesh to add them to.
-                    KeyValuePair<IntermediateMaterial, List<int>> submesh = ir.FindOrCreateSubMesh( this );
+                    KeyValuePair<IntermediateMaterial, List<int>> submesh = ir.FindOrCreateSubMesh( this );								
                     submesh.Value.AddRange( triangles );           
                 }
                 else

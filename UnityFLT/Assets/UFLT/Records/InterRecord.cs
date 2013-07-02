@@ -136,11 +136,11 @@ namespace UFLT.Records
 
                         // Normals                        
                         if( vwc is VertexWithColorNormal )
-                        {
+                        {							
                             Normals.Add( ( vwc as VertexWithColorNormal ).Normal );
                         }
                         else
-                        {                            
+                        {                 							
                             Normals.Add( Vector3.zero );
                         }
 
@@ -189,9 +189,9 @@ namespace UFLT.Records
             // Create mesh
             if( Vertices != null && Vertices.Count > 0 )
             {    
-                Mesh m = new Mesh();                
+                Mesh m = new Mesh();       				
                 m.name = ID;
-                m.vertices = VertexPositions.ToArray();
+                m.vertices = VertexPositions.ToArray();				
                 m.normals = Normals.ToArray();
                 m.uv = UVS.ToArray();
 				
@@ -205,10 +205,10 @@ namespace UFLT.Records
                 {
                     mr.materials[i] = SubMeshes[i].Key.UnityMaterial;                    
                     m.SetTriangles( SubMeshes[i].Value.ToArray(), i );
-                }                
-
-                //m.RecalculateNormals(); // TODO: if no normals then recalculate?
-                mf.mesh = m;                 
+                }                		
+				
+				m.Optimize();
+                mf.mesh = m;                							
             }
         }
 

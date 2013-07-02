@@ -119,6 +119,27 @@ namespace UFLT.Utils
             }
             
 			return m;
-		}		
+		}
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Compares various material attrbiutes to see if this material matches.
+        /// </summary>
+        /// <param name="mp"></param>
+        /// <param name="main"></param>
+        /// <param name="detail"></param>
+        /// <param name="trans"></param>
+        /// <param name="lm"></param>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        public bool Equals( MaterialPalette mp, TexturePalette main, TexturePalette detail, ushort trans, LightMode lm )
+        {
+            if( !MaterialPalette.Equals( Palette, mp ) ) return false;
+            if( !TexturePalette.Equals( MainTexture, main ) )return false;
+            if( !TexturePalette.Equals( DetailTexture, detail ) )return false;
+            if( Transparency != trans )return false;
+            if( LightMode != lm )return false;
+            return true;
+        }
     }
 }

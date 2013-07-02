@@ -74,11 +74,7 @@ namespace UFLT.Utils
 								
 			foreach( IntermediateMaterial current in Materials )
 			{
-				if( TexturePalette.Equals( current.Palette, mp ) &&
-					TexturePalette.Equals( current.MainTexture, mainTex ) &&
-                    TexturePalette.Equals( current.DetailTexture, detailTex ) &&	
-					current.Transparency == f.Transparency &&
-					current.LightMode == f.LightMode )
+                if( current.Equals( mp, mainTex, detailTex, f.Transparency, f.LightMode ) )
 				{
 					// We found a matching material
 					return current;

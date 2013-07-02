@@ -174,13 +174,7 @@ namespace UFLT.Records
         /// </summary>
         //////////////////////////////////////////////////////////////////
         public override void ImportIntoScene()
-        {                        		
-	
-
-
-
-
-
+        {                        			
             // Create an empty gameobject
             Object = new GameObject( ID );
 
@@ -213,7 +207,8 @@ namespace UFLT.Records
                     m.SetTriangles( SubMeshes[i].Value.ToArray(), i );
                 }
 
-                mf.mesh = m;                
+                m.RecalculateNormals();
+                mf.mesh = m;                 
             }
         }
 
@@ -232,13 +227,8 @@ namespace UFLT.Records
 
             // Check locally
             foreach( KeyValuePair<IntermediateMaterial, List<int>> mesh in SubMeshes )
-            {
-				
-                if( TexturePalette.Equals( mesh.Key.Palette, mp ) &&
-					TexturePalette.Equals( mesh.Key.MainTexture, mainTex ) &&
-                    TexturePalette.Equals( mesh.Key.DetailTexture, detailTex ) &&					
-                    mesh.Key.Transparency == f.Transparency &&
-                    mesh.Key.LightMode == f.LightMode )
+            {				
+                if( mesh.Key.Equals( mp, mainTex, detailTex, f.Transparency, f.LightMode ) )
                 {
                     return mesh;
                 }

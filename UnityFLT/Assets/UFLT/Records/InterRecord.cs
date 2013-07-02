@@ -196,17 +196,18 @@ namespace UFLT.Records
                 m.uv = UVS.ToArray();
 				
                 MeshRenderer mr = Object.AddComponent<MeshRenderer>();
-                mr.materials = new Material[SubMeshes.Count];
+                Material[] mats = new Material[SubMeshes.Count];
                 MeshFilter mf = Object.AddComponent<MeshFilter>();                    
      
                 // Set submeshes
                 m.subMeshCount = SubMeshes.Count;
                 for( int i = 0; i < SubMeshes.Count; i++ )
-                {
-                    mr.materials[i] = SubMeshes[i].Key.UnityMaterial;                    
+                {				
+					mats[i] = SubMeshes[i].Key.UnityMaterial;                    										
                     m.SetTriangles( SubMeshes[i].Value.ToArray(), i );
-                }                		
+                }             
 				
+				mr.materials = mats;				
 				m.Optimize();
                 mf.mesh = m;                							
             }

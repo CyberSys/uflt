@@ -550,6 +550,7 @@ namespace UFLT.Records
 			
 			if( Parent == null )
 			{
+				// TODO: Convert between left and right hand coordinate systems
 				// Rotate so z is up
 				Object.transform.Rotate( new Vector3( 270, 180, 0 ) );
 			}

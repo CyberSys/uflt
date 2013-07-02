@@ -44,7 +44,7 @@ namespace UFLT.Records
             ColorNameIndex = Header.Stream.Reader.ReadUInt16();
             Flags = Header.Stream.Reader.ReadInt16();
             Coordinate = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
-            UV.Set( Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle() );
+            UV = new Vector2( Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle() );
             
             Color32 c = new Color32();
             c.a = Header.Stream.Reader.ReadByte();

@@ -27,6 +27,15 @@ namespace UFLT.Records
         #region Mesh Params
 
         /// <summary>
+        /// The vertices used in our mesh.
+        /// </summary>
+        public List<VertexWithColor> Vertices
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Position of vertices if this record contains a mesh
         /// </summary>
         public List<Vector3> VertexPositions
@@ -34,15 +43,29 @@ namespace UFLT.Records
             get;
             set;
         }
-		
-		// TODO: Uvs
-		
-		// TODO: Normals
+
+        /// <summary>
+        /// Mesh vertex normals
+        /// </summary>
+        public List<Vector3> Normals
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Mesh vertex Uvs
+        /// </summary>
+        public List<Vector2> UVS
+        {
+            get;
+            set;
+        }
 		
 		/// <summary>
 		/// Materials paired with their triangles.
 		/// </summary>		
-		public KeyValuePair<IntermediateMaterial, List<int>> Triangles
+		public List<KeyValuePair<IntermediateMaterial, List<int>>> SubMeshes
 		{
 			get;
 			set;
@@ -79,7 +102,36 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         public InterRecord( Record parent, Database header ) :
             base( parent, header )
-        {    
+        {            
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Sets up record for importing into scene, if its a mesh creates the mesh structures.
+        /// </summary>
+        //////////////////////////////////////////////////////////////////
+        public override void PrepareForImport()
+        {
+            // Do we have any faces?
+            if( Children.Find( o => o is Face ) != null )
+            {
+                Vertices = new List<VertexWithColor>();
+                SubMeshes = new List<KeyValuePair<IntermediateMaterial, List<int>>>();
+                VertexPositions = new List<Vector3>( Vertices.Count );
+
+                base.PrepareForImport();
+
+                // TODO: Remove doubles. Check for duplicate verts and merge if possible. dont forget to change triangle indexes.
+
+                // Now setup for mesh                
+                //Normals = new List<Vector3>( Vertices.Count );
+                //UVS = new List<Vector2>( Vertices.Count );
+            }
+            else
+            {
+                // Just Processes the children
+                base.PrepareForImport();
+            }
         }
 
         //////////////////////////////////////////////////////////////////
@@ -89,7 +141,7 @@ namespace UFLT.Records
         /// </summary>
         //////////////////////////////////////////////////////////////////
         public override void ImportIntoScene()
-        {
+        {                        
 			/*
             // Create an empty gameobject
             Object = new GameObject( ID );
@@ -118,6 +170,39 @@ namespace UFLT.Records
 
             }
             */
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Returns the submesh for this face based on material info.
+        /// </summary>        
+        /// <param name='f'>The face to find a submesh for.</param>
+        //////////////////////////////////////////////////////////////////
+        public KeyValuePair<IntermediateMaterial, List<int>> FindOrCreateSubMesh( Face f )
+        {            
+            // Fetch palettes
+            MaterialPalette mp = f.MaterialIndex != -1 ? f.Header.MaterialPalettes[f.MaterialIndex] : null;
+            TexturePalette mainTex = f.TexturePattern != -1 ? f.Header.TexturePalettes[f.TexturePattern] : null;
+            TexturePalette detailTex = f.TexturePattern != -1 ? f.Header.TexturePalettes[f.DetailTexturePattern] : null;
+
+            // Check locally
+            foreach( KeyValuePair<IntermediateMaterial, List<int>> mesh in SubMeshes )
+            {
+                if( mesh.Key.Palette == mp &&
+                    mesh.Key.MainTexture.Equals( mainTex ) &&
+                    mesh.Key.DetailTexture.Equals( detailTex ) &&
+                    mesh.Key.Transparency == f.Transparency &&
+                    mesh.Key.LightMode == f.LightMode )
+                {
+                    return mesh;
+                }
+            }
+
+            // Create a new submesh
+            IntermediateMaterial im = MaterialBank.Instance.FindOrCreateMaterial( f );
+            KeyValuePair<IntermediateMaterial, List<int>> newMesh = new KeyValuePair<IntermediateMaterial, List<int>>( im, new List<int>() );
+            SubMeshes.Add( newMesh );
+            return newMesh;
         }
 
         #region Record Handlers

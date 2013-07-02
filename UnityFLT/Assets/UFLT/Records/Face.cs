@@ -430,85 +430,90 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         public override void PrepareForImport()
 		{
-            if( Parent is InterRecord )
+            // Do we draw this face?
+            if( FlagsHidden )
             {
-				// Do we draw this face?
-				if( FlagsHidden )
-				{
-					return;										
-				}											
-				
-				/*
-                // TODO: Have a seperate set of triangles for each material.
-				// TODO: Calc face normal. Normal = sum of points normals then normalised.
-                
+                return;
+            }
 
-
-
-
+            if( Parent is InterRecord )
+            {                			
                 InterRecord ir = Parent as InterRecord;
-                                
-                if( ir.VertexPositions == null )
-                {
-                    ir.VertexPositions = new List<Vector3>();
-                }
-
-                if( ir.Triangles == null )
-                {
-                    ir.Triangles = new List<int>();
-                }
 
                 // Find vertex list
                 VertexList vl = Children.Find( o => o is VertexList ) as VertexList;
                 if( vl != null )
                 {
-                    int startIndex = ir.VertexPositions.Count;
+                    int startIndex = ir.Vertices.Count;
 
-                    // Collect verts from the palette                    
-                    foreach( int offset in vl.Offsets )
-                    {
-                        VertexWithColor vwc = Header.VertexPalette.Vertices[offset];
+                    List<VertexWithColor> verts = new List<VertexWithColor>( vl.Offsets.Count );
 
-                        // Extract position
-                        ir.VertexPositions.Add( new Vector3( ( float )vwc.Coordinate[0], ( float )vwc.Coordinate[1], ( float )vwc.Coordinate[2] ) ); // We lose precision here 
+                    int[] triangles = null;
 
-                        // TODO: uv, etc
-                    }                    
+                    //////////////////////////
+                    // Triangle
+                    //////////////////////////                    
+                    if( vl.Offsets.Count == 3 )
+                    {             
 
-                    if( vl.Offsets.Count != 3 )
-                    {
-                        // Its not a triangle, trianglulate it                        
+                        triangles = new int[] { startIndex, startIndex + 1, startIndex + 2 };
 
-                        Triangulator triangulator = new Triangulator();
-
-                        triangulator.initTriangulator( ir.VertexPositions.GetRange( startIndex, vl.Offsets.Count ), Vector3.one );
-                        ir.Triangles.AddRange( triangulator.Triangulate( startIndex ) );
-
-                        //ir.Triangles.AddRange( new int[] { startIndex, startIndex + 1, startIndex + 2, startIndex + 2, startIndex + 3, startIndex } );                        
+                        // Extract verts for this triangle
+                        foreach( int vwcI in vl.Offsets )
+                        {
+                            VertexWithColor vwc = Header.VertexPalette.Vertices[vwcI];
+                            ir.Vertices.Add( vwc );
+                            ir.VertexPositions.Add( new Vector3( ( float )vwc.Coordinate[0], ( float )vwc.Coordinate[1], ( float )vwc.Coordinate[2] ) );
+                        }                        
                     }
+                    //////////////////////////
+                    // Polygon
+                    //////////////////////////
                     else
                     {
-                        ir.Triangles.AddRange( new int[] { startIndex, startIndex + 1, startIndex + 2 } );                        
-                    }
+                        // Extract verts and positions for triangulation of this face
+                        List<Vector3> positions = new List<Vector3>( vl.Offsets.Count ); 
+                        Vector3 faceNormal = Vector3.zero; // Need the normal to convert the positions to 2d for triangulation.
+                        foreach( int vwcI in vl.Offsets )
+                        {
+                            VertexWithColor vwc = Header.VertexPalette.Vertices[vwcI];
+                            verts.Add( vwc );
+                            positions.Add( new Vector3( ( float )vwc.Coordinate[0], ( float )vwc.Coordinate[1], ( float )vwc.Coordinate[2] ) );
 
-                    // TODO: Trianglulate. Can we do most of the work in a seperate thread?
-                    // TODO: Create verts and triangles first and then finalise the mesh in the object or do it all in the object?
-                    
+                            if( vwc is VertexWithColorNormal )
+                            {
+                                faceNormal += ( vwc as VertexWithColorNormal ).Normal;
+                            }
+                        }
+                        faceNormal.Normalize();
+
+                        // Triangulate the face
+                        Triangulator triangulator = new Triangulator();
+                        triangulator.initTriangulator( positions, faceNormal );
+                        triangles = triangulator.Triangulate( 0 );
+
+                        // Apply index offset
+                        for( int i = 0; i < triangles.Length; ++i )
+                        {
+                            triangles[i] += startIndex;
+                        }
+                    }                    
+
+                    // We now have our triangles. Lets find the correct submesh to add them to.
+                    KeyValuePair<IntermediateMaterial, List<int>> submesh = ir.FindOrCreateSubMesh( this );
+                    submesh.Value.AddRange( triangles );           
                 }
                 else
                 {
-					Log.WriteWarning( "Could not find vertex list for face" );
-                }                              
+                    Log.WriteWarning( ID + "- Could not find vertex list for face" );                    
+                }
             }
             else
             {
 				Log.WriteWarning( "Face is not a child of a InterRecord, can not create face." );
             }
 
-
-            //base.ImportIntoScene();
-            */
-			}
+            base.ImportIntoScene();        			
         }
 	}
 }

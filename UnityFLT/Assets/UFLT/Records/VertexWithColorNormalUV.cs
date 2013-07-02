@@ -8,14 +8,14 @@ namespace UFLT.Records
     /// <summary>
     /// A vertex with color, normal & UV data.
     /// </summary>
-	public class VertexWithColorNormalUV : VertexWithColorUV
+	public class VertexWithColorNormalUV : VertexWithColorNormal
 	{
 		#region Properties
 
         /// <summary>
-        /// x,y,z normal of vertex.
+        /// x,y uv texture coordinates.
         /// </summary>
-        public Vector3 Normal
+        public Vector2 UV
         {
             get;
             set;

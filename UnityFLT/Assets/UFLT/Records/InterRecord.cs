@@ -203,7 +203,7 @@ namespace UFLT.Records
                 m.subMeshCount = SubMeshes.Count;
                 for( int i = 0; i < SubMeshes.Count; i++ )
                 {
-                    mr.materials[i] = SubMeshes[i].Key.UnityMaterial;
+                    mr.materials[i] = SubMeshes[i].Key.UnityMaterial;                    
                     m.SetTriangles( SubMeshes[i].Value.ToArray(), i );
                 }                
 

@@ -79,8 +79,8 @@ namespace UFLT.Utils
 					// We found a matching material
 					return current;
 				}				
-			}
-			
+			}            
+
 			// Create a new material
 			IntermediateMaterial im = new IntermediateMaterial( mp, mainTex, detailTex, f.Transparency, f.LightMode );
 			Materials.Add( im );

@@ -25,8 +25,7 @@ namespace UFLT.Utils
 				if( unityMaterial == null )
 				{
 					unityMaterial = CreateUnityMaterial();
-				}
-				
+				}                
 				return unityMaterial;
 			}
 		}
@@ -111,6 +110,7 @@ namespace UFLT.Utils
 			// TODO: create material
 			
             Material m = new Material( Shader.Find( "Specular" ) );
+            
             m.SetColor( "Main Color", Color.red );            
 
             if( Palette != null )

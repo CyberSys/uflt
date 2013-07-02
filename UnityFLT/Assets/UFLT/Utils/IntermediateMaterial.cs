@@ -106,19 +106,74 @@ namespace UFLT.Utils
 		/// </summary>		
 		//////////////////////////////////////////////////////////////////
 		protected virtual Material CreateUnityMaterial()
-		{
-			// TODO: create material
+		{									
+            Material mat = null;//new Material( Shader.Find( "Specular" ) );
 			
-            Material m = new Material( Shader.Find( "Specular" ) );
+			if( Palette != null )
+			{
+				// Final alpha = material alpha * (1.0- (geometry transparency / 65535))
+				float finalAlpha = Palette.Alpha * ( 1f - ( Transparency / 65535f ) );
+				
+				if( Palette.Emissive.grayscale > 0 )
+				{
+					mat = new Material( Shader.Find( "VertexLit" ) );					
+				}
+				else if( finalAlpha < 1f )
+				{										
+					mat = new Material( Shader.Find( "Transparent/Specular" ) );										
+					Palette.Diffuse = new Color( Palette.Diffuse.r, Palette.Diffuse.g, Palette.Diffuse.b, finalAlpha );
+				}
+				else
+				{
+					mat = new Material( Shader.Find( "Specular" ) );	
+				}
+				
+				mat.color = Palette.Diffuse;					
+				
+				if( mat.HasProperty( "_Emissive" ) ) // Emissive color of a material (used in vertexlit shaders). 
+				{					
+					mat.SetColor( "_Emissive", Palette.Emissive );				
+				}
+				
+				if( mat.HasProperty( "_SpecColor" ) )
+				{					
+					mat.SetColor( "_SpecColor", Palette.Specular );				
+				}
+				
+				if( mat.HasProperty( "_Shininess" ) )
+				{
+					mat.SetFloat( "_Shininess", Palette.Shininess / 128f );
+				}
+			}
+			
+			// Specular
+			
+			// Diffuse
+			
+			// Unlit
+			
+			// Transparent
+			
+			
+			
+			
+			
+			
+			
             
-            m.SetColor( "Main Color", Color.red );            
-
+            if( mat == null )
+			{
+				// Default
+				mat = new Material( Shader.Find( "Specular" ) );
+			}
+					
+			
             if( Palette != null )
             {
-                m.name = Palette.ID;
+                mat.name = Palette.ID;
             }
             
-			return m;
+			return mat;
 		}
 
         //////////////////////////////////////////////////////////////////

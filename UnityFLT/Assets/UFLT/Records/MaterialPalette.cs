@@ -138,7 +138,10 @@ namespace UFLT.Records
             Diffuse = new Color( Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle() );
             Specular = new Color( Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle() );
             Emissive = new Color( Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle() );
-            Shininess = Header.Stream.Reader.ReadSingle();
+			
+			Shininess = Header.Stream.Reader.ReadSingle(); // Also apply it to the alpha channel.
+			Specular = new Color( Specular.r, Specular.g, Specular.b, Shininess / 128f ); // Use the shininess in the specular alpha channel.
+			
             Alpha = Header.Stream.Reader.ReadSingle();
         }
 		

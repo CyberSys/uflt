@@ -434,7 +434,7 @@ namespace UFLT.Records
             if( FlagsHidden )
             {
                 return;
-            }
+            }            
 
             if( Parent is InterRecord )
             {                			
@@ -443,10 +443,8 @@ namespace UFLT.Records
                 // Find vertex list
                 VertexList vl = Children.Find( o => o is VertexList ) as VertexList;
                 if( vl != null )
-                {
+                {                   
                     int startIndex = ir.Vertices.Count;
-
-                    List<VertexWithColor> verts = new List<VertexWithColor>( vl.Offsets.Count );
 
                     int[] triangles = null;
 
@@ -462,8 +460,7 @@ namespace UFLT.Records
                         foreach( int vwcI in vl.Offsets )
                         {
                             VertexWithColor vwc = Header.VertexPalette.Vertices[vwcI];
-                            ir.Vertices.Add( vwc );
-                            ir.VertexPositions.Add( new Vector3( ( float )vwc.Coordinate[0], ( float )vwc.Coordinate[1], ( float )vwc.Coordinate[2] ) );
+                            ir.Vertices.Add( vwc );                            
                         }                        
                     }
                     //////////////////////////
@@ -477,7 +474,7 @@ namespace UFLT.Records
                         foreach( int vwcI in vl.Offsets )
                         {
                             VertexWithColor vwc = Header.VertexPalette.Vertices[vwcI];
-                            verts.Add( vwc );
+                            ir.Vertices.Add( vwc );
                             positions.Add( new Vector3( ( float )vwc.Coordinate[0], ( float )vwc.Coordinate[1], ( float )vwc.Coordinate[2] ) );
 
                             if( vwc is VertexWithColorNormal )

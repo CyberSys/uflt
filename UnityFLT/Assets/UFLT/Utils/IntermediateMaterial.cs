@@ -109,7 +109,16 @@ namespace UFLT.Utils
 		protected virtual Material CreateUnityMaterial()
 		{
 			// TODO: create material
-			return null;
-		}
+			
+            Material m = new Material( Shader.Find( "Specular" ) );
+            m.SetColor( "_Color", Color.red );            
+
+            if( Palette != null )
+            {
+                m.name = Palette.ID;
+            }
+            
+			return m;
+		}		
     }
 }

@@ -116,20 +116,53 @@ namespace UFLT.Records
             if( Children.Find( o => o is Face ) != null )
             {
                 Vertices = new List<VertexWithColor>();
-                SubMeshes = new List<KeyValuePair<IntermediateMaterial, List<int>>>();
-                VertexPositions = new List<Vector3>( Vertices.Count );
+                SubMeshes = new List<KeyValuePair<IntermediateMaterial, List<int>>>();                
 
                 base.PrepareForImport();
 
-                // TODO: Remove doubles. Check for duplicate verts and merge if possible. dont forget to change triangle indexes.
+                // Do we have any verts, we may have just processed hidden faces.
+                if( Vertices.Count > 0 )
+                {                                
+                    // TODO: Remove doubles. Check for duplicate verts and merge if possible. dont forget to change triangle indexes.
 
-                // Now setup for mesh                
-                //Normals = new List<Vector3>( Vertices.Count );
-                //UVS = new List<Vector2>( Vertices.Count );
+                    // Now setup for mesh                
+                    VertexPositions = new List<Vector3>( Vertices.Count );
+                    Normals = new List<Vector3>( Vertices.Count );
+                    UVS = new List<Vector2>( Vertices.Count );
+
+                    foreach( VertexWithColor vwc in Vertices )
+                    {
+                        VertexPositions.Add( new Vector3( ( float )vwc.Coordinate[0], ( float )vwc.Coordinate[1], ( float )vwc.Coordinate[2] ) );
+
+                        // Normals
+                        // TODO: if no normals use re-calulate normals?
+                        if( vwc is VertexWithColorNormal )
+                        {
+                            Normals.Add( ( vwc as VertexWithColorNormal ).Normal );
+                        }
+                        else
+                        {
+                            Normals.Add( Vector3.zero );
+                        }
+
+                        // Uvs
+                        if( vwc is VertexWithColorNormalUV )
+                        {
+                            UVS.Add( ( vwc as VertexWithColorNormalUV ).UV );
+                        }
+                        else if( vwc is VertexWithColorUV )
+                        {
+                            UVS.Add( ( vwc as VertexWithColorUV ).UV );
+                        }
+                        else
+                        {
+                            UVS.Add( Vector2.zero );
+                        }
+                    }
+                }
             }
             else
-            {
-                // Just Processes the children
+            {                
                 base.PrepareForImport();
             }
         }
@@ -141,8 +174,13 @@ namespace UFLT.Records
         /// </summary>
         //////////////////////////////////////////////////////////////////
         public override void ImportIntoScene()
-        {                        
-			/*
+        {                        		
+	
+
+
+
+
+
             // Create an empty gameobject
             Object = new GameObject( ID );
 
@@ -155,21 +193,28 @@ namespace UFLT.Records
             // Processes children
             base.ImportIntoScene();
 
-            // Finalise mesh
-            if( VertexPositions != null )
+            // Create mesh
+            if( Vertices != null && Vertices.Count > 0 )
             {    
-                Mesh m = new Mesh();                
+                Mesh m = new Mesh();
+                m.name = ID;
                 m.vertices = VertexPositions.ToArray();
-                m.triangles = Triangles.ToArray();
-
+                m.normals = Normals.ToArray();
+                m.uv = UVS.ToArray();
+				
                 MeshRenderer mr = Object.AddComponent<MeshRenderer>();
-                MeshFilter mf = Object.AddComponent<MeshFilter>();
-                mf.mesh = m;
+                mr.materials = new Material[SubMeshes.Count];
+                MeshFilter mf = Object.AddComponent<MeshFilter>();                    
+     
+                // Set submeshes
+                for( int i = 0; i < SubMeshes.Count; i++ )
+                {
+                    mr.materials[i] = SubMeshes[i].Key.UnityMaterial;
+                    m.SetTriangles( SubMeshes[i].Value.ToArray(), i );
+                }
 
-                // TODO: use Mesh.SetTriangles if more than 1 material.
-
+                mf.mesh = m;                
             }
-            */
         }
 
         //////////////////////////////////////////////////////////////////
@@ -183,14 +228,15 @@ namespace UFLT.Records
             // Fetch palettes
             MaterialPalette mp = f.MaterialIndex != -1 ? f.Header.MaterialPalettes[f.MaterialIndex] : null;
             TexturePalette mainTex = f.TexturePattern != -1 ? f.Header.TexturePalettes[f.TexturePattern] : null;
-            TexturePalette detailTex = f.TexturePattern != -1 ? f.Header.TexturePalettes[f.DetailTexturePattern] : null;
+            TexturePalette detailTex = f.DetailTexturePattern != -1 ? f.Header.TexturePalettes[f.DetailTexturePattern] : null;
 
             // Check locally
             foreach( KeyValuePair<IntermediateMaterial, List<int>> mesh in SubMeshes )
             {
-                if( mesh.Key.Palette == mp &&
-                    mesh.Key.MainTexture.Equals( mainTex ) &&
-                    mesh.Key.DetailTexture.Equals( detailTex ) &&
+				
+                if( TexturePalette.Equals( mesh.Key.Palette, mp ) &&
+					TexturePalette.Equals( mesh.Key.MainTexture, mainTex ) &&
+                    TexturePalette.Equals( mesh.Key.DetailTexture, detailTex ) &&					
                     mesh.Key.Transparency == f.Transparency &&
                     mesh.Key.LightMode == f.LightMode )
                 {

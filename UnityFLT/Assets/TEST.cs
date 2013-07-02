@@ -16,9 +16,10 @@ public class TEST : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
-        //db = new Database( file );
-        //db.Parse();
-        //db.ImportIntoScene();
+        db = new Database( file );
+        db.Parse();
+        db.PrepareForImport();
+        db.ImportIntoScene();
 		
 		//RecordHandler rh = new RecordHandler();				
 		//rh.ThrowBacks.UnionWith( RecordHandler.ThrowBackOpcodes );
@@ -27,12 +28,12 @@ public class TEST : MonoBehaviour
 		
 		
 		// print out log and clear for next time
-		//Debug.Log( Log.ToString() );		
+		Debug.Log( Log.ToString() );		        
 
 		
 		
-        t = new Thread( ThreadStart );
-        t.Start();
+        //t = new Thread( ThreadStart );
+       // t.Start();
 
 	}
 

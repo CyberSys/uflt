@@ -51,6 +51,7 @@ namespace UFLT.Utils
         //////////////////////////////////////////////////////////////////
         private MaterialBank()
         {
+			Materials = new List<IntermediateMaterial>();
         }
 		
 		//////////////////////////////////////////////////////////////////
@@ -69,13 +70,13 @@ namespace UFLT.Utils
 			// Fetch palettes
 			MaterialPalette mp = f.MaterialIndex != -1 ? f.Header.MaterialPalettes[f.MaterialIndex] : null;									
 			TexturePalette mainTex = f.TexturePattern != -1 ? f.Header.TexturePalettes[f.TexturePattern] : null;
-			TexturePalette detailTex = f.TexturePattern != -1 ? f.Header.TexturePalettes[f.DetailTexturePattern] : null;
+			TexturePalette detailTex = f.DetailTexturePattern != -1 ? f.Header.TexturePalettes[f.DetailTexturePattern] : null;
 								
 			foreach( IntermediateMaterial current in Materials )
 			{
-				if( current.Palette == mp && 
-					current.MainTexture.Equals( mainTex ) &&
-					current.DetailTexture.Equals( detailTex ) &&
+				if( TexturePalette.Equals( current.Palette, mp ) &&
+					TexturePalette.Equals( current.MainTexture, mainTex ) &&
+                    TexturePalette.Equals( current.DetailTexture, detailTex ) &&	
 					current.Transparency == f.Transparency &&
 					current.LightMode == f.LightMode )
 				{

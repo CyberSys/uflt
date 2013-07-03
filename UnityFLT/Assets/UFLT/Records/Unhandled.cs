@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using System.Text;
 using UFLT.DataTypes.Enums;
+using UFLT.Utils;
 
 namespace UFLT.Records
 {
@@ -47,7 +48,7 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         public override void Parse()
         {
-            ID = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( 8 ) );
+            ID = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( 8 ) );
             base.Parse();
         }
 	}

@@ -616,10 +616,10 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         private bool HandleHeader()
         {            
-            ID                          = Encoding.ASCII.GetString( Stream.Reader.ReadBytes( 8 ) );
+            ID                          = NullTerminatedString.GetAsString( Stream.Reader.ReadBytes( 8 ) );
             FormatRevisionLevel         = Stream.Reader.ReadInt32();
             EditRevisionLevel           = Stream.Reader.ReadInt32();
-            DateTimeLastRevision        = Encoding.ASCII.GetString( Stream.Reader.ReadBytes( 32 ) );
+            DateTimeLastRevision        = NullTerminatedString.GetAsString( Stream.Reader.ReadBytes( 32 ) );
             NextGroupNodeID             = Stream.Reader.ReadInt16();
             NextLODNodeID               = Stream.Reader.ReadInt16();
             NextObjectNodeID            = Stream.Reader.ReadInt16();

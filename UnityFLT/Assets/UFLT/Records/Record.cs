@@ -4,6 +4,7 @@ using UFLT.DataTypes.Enums;
 using System.IO;
 using System.Text;
 using System.Linq;
+using UFLT.Utils;
 
 namespace UFLT.Records
 {
@@ -344,7 +345,7 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandleLongID()
         {
-            ID = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( Header.Stream.Length - 4 ) ); // The id is the length of the record minus its header of 4 bytes.
+            ID = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( Header.Stream.Length - 4 ) ); // The id is the length of the record minus its header of 4 bytes.
             return true;
         }
 
@@ -356,7 +357,7 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         protected bool HandleComment()
         {
-            Comment = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( Header.Stream.Length - 4 ) ); // The comment is the length of the record minus its header of 4 bytes.
+            Comment = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( Header.Stream.Length - 4 ) ); // The comment is the length of the record minus its header of 4 bytes.
             return true;
         }
 

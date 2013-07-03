@@ -13,8 +13,15 @@ public class TEST : MonoBehaviour
 
     public Database db;
 	
+	public Texture2D tex;
+	
 	IEnumerator Start ()
-    {
+    {	
+		//WWW www = new WWW( "file://" + @"D:\Desktop\TruckTop.jpg" );
+		//yield return www;
+		//tex = www.texture;
+		
+		
         // How to load a database multithreaded
         db = new Database( file );
 

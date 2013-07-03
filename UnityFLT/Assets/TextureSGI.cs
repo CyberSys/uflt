@@ -4,6 +4,7 @@ using UFLT.Streams;
 using System;
 using System.IO;
 using System.Text;
+using UFLT.Utils;
 
 /// <summary>
 /// Texture SG.
@@ -155,7 +156,7 @@ public class TextureSGI : MonoBehaviour
 		Reader.BaseStream.Seek( 4, SeekOrigin.Current ); 
 		
 		// Null terminated name.
-		Name = Encoding.ASCII.GetString( Reader.ReadBytes( 80 ) );
+		Name = NullTerminatedString.GetAsString( Reader.ReadBytes( 80 ) );
 		ColorMapID = Reader.ReadInt32();
 				
 		// Skip dummy data

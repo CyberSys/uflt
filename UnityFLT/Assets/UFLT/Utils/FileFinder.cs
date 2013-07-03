@@ -82,16 +82,17 @@ namespace UFLT.Utils
         public string Find( string fullPath )
         {        
 			// TODO: Always return an absolute path, we can then check if a texture is already loaded without
-			// worrying about relative paths which may be different but point to the same file.
-            string file = Path.GetFileName( fullPath );
-            
-            // Is the path absolute?
+			// worrying about relative paths which may be different but point to the same file.            							
+			
+		    // Is the path absolute?			
             if( Path.IsPathRooted( fullPath ) )
             {               
                 if( File.Exists( fullPath ) )
                 {
-                    AddPath( fullPath );
-                    return fullPath;
+					// Make sure the path is cleaned up, no ./, ../ etc
+					string clean = Path.GetFullPath( fullPath );
+                    AddPath( clean );
+                    return clean;
                 }                
             }
             else
@@ -101,9 +102,11 @@ namespace UFLT.Utils
                 {
                     string combPath = Path.Combine( currentPath, fullPath );
                     if( File.Exists( combPath ) )
-                    {
-                        AddPath( combPath );
-                        return combPath;
+                    {					
+						// Make sure the path is cleaned up, no ./, ../ etc
+						string clean = Path.GetFullPath( combPath );
+                        AddPath( clean );
+                        return clean;
                     }
                 }
             }
@@ -111,11 +114,14 @@ namespace UFLT.Utils
             // Search previous directories that have worked.
             foreach( string currentPath in Paths )
             {
+	            string file = Path.GetFileName( fullPath );
                 string combPath = Path.Combine( currentPath, file );
                 if( File.Exists( combPath ) )
                 {
-                    AddPath( combPath );
-                    return combPath;
+					// Make sure the path is cleaned up, no ./, ../ etc
+					string clean = Path.GetFullPath( combPath );
+                    AddPath( clean );
+                    return clean;
                 }
             }
 			

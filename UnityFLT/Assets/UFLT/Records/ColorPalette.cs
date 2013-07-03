@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.IO;
 using System.Text;
+using UFLT.Utils;
 
 namespace UFLT.Records
 {
@@ -79,7 +80,7 @@ namespace UFLT.Records
                     Header.Stream.Reader.BaseStream.Seek( 2, SeekOrigin.Current ); // Skip reserved
                     short index = Header.Stream.Reader.ReadInt16();
                     Header.Stream.Reader.BaseStream.Seek( 2, SeekOrigin.Current ); // Skip reserved
-                    Colors[index].Name = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( len - 8 ) );
+                    Colors[index].Name = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( len - 8 ) );
                 }
             }
         }

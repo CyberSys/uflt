@@ -380,7 +380,7 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         public override void Parse()
         {
-            ID                        = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( 8 ) );
+            ID                        = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( 8 ) );
             IRColorCode               = Header.Stream.Reader.ReadInt32();
             RelativePriority          = Header.Stream.Reader.ReadInt16();
             DrawType                  = ( DrawType )Header.Stream.Reader.ReadSByte();

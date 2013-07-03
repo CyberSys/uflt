@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UFLT.Utils;
 
 namespace UFLT.Records
 {
@@ -71,8 +72,8 @@ namespace UFLT.Records
         /// </summary>
         //////////////////////////////////////////////////////////////////
         public override void Parse()
-        {
-            FileName = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( 200 ) ); 
+        {			
+            FileName = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( 200 ) ); 
             Index = Header.Stream.Reader.ReadInt32();
             Location = new int[] { Header.Stream.Reader.ReadInt32(), Header.Stream.Reader.ReadInt32() };            
         }

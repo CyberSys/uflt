@@ -146,6 +146,8 @@ namespace UFLT.Utils
 				}
 			}
 			
+	
+			
 			// Specular
 			
 			// Diffuse
@@ -166,6 +168,18 @@ namespace UFLT.Utils
 				// Default
 				mat = new Material( Shader.Find( "Specular" ) );
 			}
+			
+			if( MainTexture != null )
+			{
+				if( mat.HasProperty( "_MainTex" ) )
+				{
+					Texture2D t = MaterialBank.Instance.FindOrCreateTexture( MainTexture );
+					if( t != null )
+					{
+						mat.SetTexture( "_MainTex", t );
+					}
+				}
+			}			
 					
 			
             if( Palette != null )

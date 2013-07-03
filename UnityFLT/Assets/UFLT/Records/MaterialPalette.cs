@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.IO;
 using System.Text;
+using UFLT.Utils;
 
 namespace UFLT.Records
 {
@@ -132,7 +133,7 @@ namespace UFLT.Records
         public override void Parse()
         {
             Index = Header.Stream.Reader.ReadInt32();
-            ID = Encoding.ASCII.GetString( Header.Stream.Reader.ReadBytes( 12 ) ); // Name of material
+            ID = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( 12 ) ); // Name of material
             Flags = Header.Stream.Reader.ReadInt32();
             Ambient = new Color( Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle() );
             Diffuse = new Color( Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle() );

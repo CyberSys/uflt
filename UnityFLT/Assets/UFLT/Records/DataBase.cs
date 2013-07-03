@@ -562,6 +562,19 @@ namespace UFLT.Records
                 yield return 0;
             }                      
         }
+		
+		//////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Parses the streams records.
+		/// </summary>
+		//////////////////////////////////////////////////////////////////
+		public override void Parse()
+		{
+			base.Parse ();
+			
+			// Close the file
+			Stream.Reader.Close();
+		}
 
         //////////////////////////////////////////////////////////////////
         /// <summary>

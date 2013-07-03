@@ -17,6 +17,9 @@ public class TEST : MonoBehaviour
 	
 	IEnumerator Start ()
     {	
+		// WHY ARE MATERIALS NOT SHARED. E.G load the same file twice, works for textures but not materials.
+		
+		
 		//WWW www = new WWW( "file://" + @"D:\Desktop\TruckTop.jpg" );
 		//yield return www;
 		//tex = www.texture;

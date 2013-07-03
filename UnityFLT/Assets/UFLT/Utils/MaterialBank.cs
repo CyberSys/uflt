@@ -66,7 +66,7 @@ namespace UFLT.Utils
 		
 		//////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Finds the or create material.
+		/// Finds the or create material. Thread safe.
 		/// </summary>
 		/// <returns>
 		/// The found or created material, never returns null.
@@ -81,20 +81,22 @@ namespace UFLT.Utils
 			MaterialPalette mp = f.MaterialIndex != -1 ? f.Header.MaterialPalettes[f.MaterialIndex] : null;									
 			TexturePalette mainTex = f.TexturePattern != -1 ? f.Header.TexturePalettes[f.TexturePattern] : null;
 			TexturePalette detailTex = f.DetailTexturePattern != -1 ? f.Header.TexturePalettes[f.DetailTexturePattern] : null;
-								
-			foreach( IntermediateMaterial current in Materials )
+			lock( this )
 			{
-                if( current.Equals( mp, mainTex, detailTex, f.Transparency, f.LightMode ) )
+				foreach( IntermediateMaterial current in Materials )
 				{
-					// We found a matching material
-					return current;
-				}				
-			}            
-
-			// Create a new material
-			IntermediateMaterial im = new IntermediateMaterial( mp, mainTex, detailTex, f.Transparency, f.LightMode );
-			Materials.Add( im );
-			return im;				
+	                if( current.Equals( mp, mainTex, detailTex, f.Transparency, f.LightMode ) )
+					{
+						// We found a matching material
+						return current;
+					}				
+				}            
+	
+				// Create a new material
+				IntermediateMaterial im = new IntermediateMaterial( mp, mainTex, detailTex, f.Transparency, f.LightMode );
+				Materials.Add( im );
+				return im;				
+			}			
 		}
 		
 		//////////////////////////////////////////////////////////////////
@@ -120,6 +122,7 @@ namespace UFLT.Utils
 				if( Textures.TryGetValue( path, out tex ) )
 				{
 					// We found it!
+					Log.Write( "Reusing a texture: " + tp.FileName );
 					return tex;
 				}
 				

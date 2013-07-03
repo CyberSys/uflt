@@ -18,7 +18,7 @@ namespace UFLT.Records
         /// <summary>
         /// The Unity object for this record.
         /// </summary>
-        public GameObject Object
+        public GameObject UnityGameObject
         {
             get;
             set;
@@ -175,12 +175,12 @@ namespace UFLT.Records
         public override void ImportIntoScene()
         {                        			
             // Create an empty gameobject
-            Object = new GameObject( ID );
+            UnityGameObject = new GameObject( ID );
 
             // Assign parent
             if( Parent != null && Parent is InterRecord )
             {
-                Object.transform.parent = ( Parent as InterRecord ).Object.transform;
+                UnityGameObject.transform.parent = ( Parent as InterRecord ).UnityGameObject.transform;
             }
 
             // Processes children
@@ -195,9 +195,9 @@ namespace UFLT.Records
                 m.normals = Normals.ToArray();
                 m.uv = UVS.ToArray();
 				
-                MeshRenderer mr = Object.AddComponent<MeshRenderer>();
+                MeshRenderer mr = UnityGameObject.AddComponent<MeshRenderer>();
                 Material[] mats = new Material[SubMeshes.Count];
-                MeshFilter mf = Object.AddComponent<MeshFilter>();                    
+                MeshFilter mf = UnityGameObject.AddComponent<MeshFilter>();                    
      
                 // Set submeshes
                 m.subMeshCount = SubMeshes.Count;

@@ -12,30 +12,23 @@ public class TEST : MonoBehaviour
     public Thread t;
 
     public Database db;
-
-	// Use this for initialization
-	void Start ()
+	
+	IEnumerator Start ()
     {
+        // How to load a database multithreaded
         db = new Database( file );
-        db.Parse();
-        db.PrepareForImport();
+
+        // Single-threaded
+        //db.ParsePrepareAndImport();
+
+        // Multi-threaded
+        yield return StartCoroutine( db.ParseAsynchronously() );        
         db.ImportIntoScene();
 		
-		//RecordHandler rh = new RecordHandler();				
-		//rh.ThrowBacks.UnionWith( RecordHandler.ThrowBackOpcodes );
-		
-		//Debug.Log( rh.ThrowBacks.Contains( UFLT.DataTypes.Enums.Opcodes.PopLevel ) );
-		
-		
-		// print out log and clear for next time
+		// Print out log 
 		Debug.Log( Log.ToString() );		        
-
-		
-		
-        //t = new Thread( ThreadStart );
-       // t.Start();
-
 	}
+  
 
     /// <summary>
     /// Testing what is safe to create/use in an other thread.

@@ -194,7 +194,7 @@ namespace UFLT.Records
         /// </summary>
         //////////////////////////////////////////////////////////////////
         public virtual void Parse()
-        {
+        {            
             while( Header.Stream.BeginRecord() )
             {
                 Opcodes op = Header.Stream.Opcode;

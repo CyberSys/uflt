@@ -5,6 +5,8 @@ using UFLT.Streams;
 using UnityEngine;
 using System.Collections.Generic;
 using UFLT.Utils;
+using System.Threading;
+using System.Collections;
 
 namespace UFLT.Records
 {
@@ -536,15 +538,63 @@ namespace UFLT.Records
 
             // TODO: lod, external ref
         }
-        
-        /*
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Coroutine, Loads the db in a seperate thread. Returns once the
+        /// db is loaded and ready to be imported into the scene.
+        /// <example>
+        /// Database db = new Database( file );
+        /// yield return StartCoroutine( db.ParseAsynchronously() ); // Seperate thread
+        /// db.ImportIntoScene();
+        /// </example>
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////        
         public IEnumerator ParseAsynchronously()
-        {
-            // TODO: seperate thread to load file, callback function or flag to indicate finished, maybe work as a Coroutine?
+        {            
+            Thread t = new Thread( ParseAndPrepare );            
+            t.Start();   
+         
+            // Just keep polling the thread.
+            while( t.IsAlive )
+            {
+                yield return 0;
+            }                      
         }
-        */
-		
-		public override void ImportIntoScene ()
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Parse the db and prepare for import, designed to run outside of the
+        /// main unity thread. This is called by ParseAsynchronously outside of
+        /// the main thread however you can also call it in the main unity thread.
+        /// </summary>
+        //////////////////////////////////////////////////////////////////
+        public void ParseAndPrepare()
+        {            
+            System.Diagnostics.Stopwatch timer = System.Diagnostics.Stopwatch.StartNew();            
+            Parse();
+            PrepareForImport();            
+            Log.Write( string.Format( "Finished Parsing & Preparing, total time taken: {0:0.00} seconds", timer.Elapsed.TotalSeconds ) );                        
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Parses db and imports into the scene()
+        /// </summary>
+        //////////////////////////////////////////////////////////////////
+        public void ParsePrepareAndImport()
+        {
+            ParseAndPrepare();
+            ImportIntoScene();
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Imports the db into the current unity scene.
+        /// </summary>
+        //////////////////////////////////////////////////////////////////
+		public override void ImportIntoScene()
 		{
 			base.ImportIntoScene();
 			

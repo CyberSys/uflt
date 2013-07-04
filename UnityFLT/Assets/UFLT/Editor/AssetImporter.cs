@@ -11,20 +11,13 @@ namespace UFLT.Editor
 		public static void AssetsImportOpenFlight()
 		{
 			// TODO: USe collect depends, then save each materials and texture out from the depends. Save it all into a folder with a structure like unity uses.e.g materials folder.
-			
-			
-			
-			
-			
-			
-			string lastPath = EditorPrefs.GetString( "last_flt_dir", Application.dataPath );			
-			string fltPath = EditorUtility.OpenFilePanel( "Import OpenFlight", lastPath, "flt" );
+		
+			string fltPath = EditorUtility.OpenFilePanel( "Import OpenFlight", Application.dataPath, "flt" );
 			
 			Database db = null;
 			
 			if( fltPath.Length != 0 )
 			{
-				EditorPrefs.SetString( "last_flt_dir", fltPath );
 				db = new Database( fltPath );
 				db.ParsePrepareAndImport();
 			}			
@@ -34,17 +27,36 @@ namespace UFLT.Editor
 			{					
 				Object[] depends = EditorUtility.CollectDeepHierarchy( new Object[]{ db.UnityGameObject } );
 				
-				AssetDatabase.CreateAsset( db.UnityGameObject, assetPath );
+				AssetDatabase.CreateAsset( db.UnityGameObject, "Assets/test.asset"/*assetPath*/ );
 				//PrefabUtility.CreatePrefab( path, db.UnityGameObject );
 				
 				foreach( Object o in depends )
 				{
 					if( o != db.UnityGameObject )
 					{
-						Debug.Log( o );
+						if( o is MeshRenderer )
+						{							 
+							foreach( Material m in ( o as MeshRenderer ).materials )
+							{
+								AssetDatabase.AddObjectToAsset( m, db.UnityGameObject );						
+								
+								if( m.mainTexture != null )
+								{
+									//AssetDatabase.AddObjectToAsset( m.mainTexture, db.UnityGameObject );							
+								}
+							}
+						}
+						
+						if( o is MeshFilter )
+						{
+							AssetDatabase.AddObjectToAsset( ( o as MeshFilter ).mesh, db.UnityGameObject );							
+						}
+						
 						AssetDatabase.AddObjectToAsset( o, db.UnityGameObject );
 					}
 				}
+				
+				PrefabUtility.CreatePrefab( "Assets/testp.prefab", db.UnityGameObject );			
 			}
 		}
 	}

@@ -365,6 +365,7 @@ namespace UFLT.Records
 		{
             RootHandler.Handler[Opcodes.PushLevel] = HandlePush;
             RootHandler.Handler[Opcodes.Comment] = HandleComment;
+            RootHandler.Handler[Opcodes.LongID] = HandleLongID;
             
             RootHandler.ThrowBacks.UnionWith( RecordHandler.ThrowBackOpcodes );
             

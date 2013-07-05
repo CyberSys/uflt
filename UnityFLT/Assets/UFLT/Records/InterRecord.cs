@@ -74,9 +74,27 @@ namespace UFLT.Records
         #endregion Mesh Params
 
         /// <summary>
-        /// This objects matrix(tansform, rotation and scale)
+        /// Object position
         /// </summary>
-        public Matrix4x4 Matrix
+        public Vector3 Position
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Object local scale
+        /// </summary>
+        public Vector3 Scale
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Object Rotation.
+        /// </summary>
+        public Quaternion Rotation
         {
             get;
             set;
@@ -90,7 +108,8 @@ namespace UFLT.Records
         /// </summary>
         //////////////////////////////////////////////////////////////////
         public InterRecord()
-        {            
+        {
+            Scale = Vector3.one;
         }
 
         //////////////////////////////////////////////////////////////////
@@ -100,9 +119,10 @@ namespace UFLT.Records
         /// <param name="parent"></param>
         /// <param name="header"></param>
         //////////////////////////////////////////////////////////////////
-        public InterRecord( Record parent, Database header ) :
-            base( parent, header )
-        {            
+        public InterRecord( Record parent, Database header ) :            
+            base( parent, header )            
+        {
+            Scale = Vector3.one;
         }
 
         //////////////////////////////////////////////////////////////////
@@ -176,7 +196,13 @@ namespace UFLT.Records
         {                        			
             // Create an empty gameobject
             UnityGameObject = new GameObject( ID );
+            UnityGameObject.transform.localScale = Vector3.one;
 
+            // Apply transformations    
+            UnityGameObject.transform.localPosition = Position;
+            UnityGameObject.transform.localRotation = Rotation;
+            UnityGameObject.transform.localScale = Scale;
+            
             // Assign parent
             if( Parent != null && Parent is InterRecord )
             {
@@ -247,7 +273,8 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handle matrix records.
-        /// Reads a 4x4 matrix of floats, row major order.
+        /// Reads a 4x4 matrix of floats, row major order and converts them 
+        /// into position, rotation and scale.
         /// </summary>
         /// <returns></returns>
         //////////////////////////////////////////////////////////////////
@@ -261,7 +288,11 @@ namespace UFLT.Records
                     m[i, j] = Header.Stream.Reader.ReadSingle();
                 }
             }
-            Matrix = m;
+            
+            // Convert to position, rotation & scale
+            Position = m.GetPosition();
+            Rotation = m.GetRotation();
+            Scale = m.GetScale();
             return true;
         }
 

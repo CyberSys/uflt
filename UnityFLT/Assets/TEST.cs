@@ -4,6 +4,7 @@ using System.IO;
 using UFLT.Records;
 using System.Threading;
 using UFLT;
+using UFLT.Textures;
 
 public class TEST : MonoBehaviour 
 {
@@ -15,8 +16,11 @@ public class TEST : MonoBehaviour
 	
 	public Texture2D tex;
 	
-	IEnumerator Start ()
+	void Start ()
     {	
+		TextureSGI s = new TextureSGI( file );
+		tex = s.Texture;
+		
 		// WHY ARE MATERIALS NOT SHARED. E.G load the same file twice, works for textures but not materials.
 		
 		
@@ -26,17 +30,17 @@ public class TEST : MonoBehaviour
 		
 		
         // How to load a database multithreaded
-        db = new Database( file );
+        //db = new Database( file );
 
         // Single-threaded
         //db.ParsePrepareAndImport();
 
         // Multi-threaded
-        yield return StartCoroutine( db.ParseAsynchronously() );        
-        db.ImportIntoScene();
+        //yield return StartCoroutine( db.ParseAsynchronously() );        
+        //db.ImportIntoScene();
 		
 		// Print out log 
-		Debug.Log( Log.ToString() );		        
+		//Debug.Log( Log.ToString() );		        
 	}
   
 

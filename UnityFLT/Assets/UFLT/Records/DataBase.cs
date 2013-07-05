@@ -181,10 +181,6 @@ namespace UFLT.Records
             {
                 return ( Flags & -2147483648 ) != 0 ? true : false;
             }
-            set
-            {
-                Flags = ( int )( value ? ( Flags | -2147483648 ) : ( Flags & ~-2147483648 ) );
-            }
         }
 
         /// <summary>
@@ -196,10 +192,6 @@ namespace UFLT.Records
             {
                 return ( Flags & 0x40000000 ) != 0 ? true : false;
             }
-            set
-            {
-                Flags = ( int )( value ? ( Flags | 0x40000000 ) : ( Flags & ~0x40000000 ) );
-            }
         }
 
         /// <summary>
@@ -210,10 +202,6 @@ namespace UFLT.Records
             get
             {
                 return ( Flags & 0x20000000 ) != 0 ? true : false;
-            }
-            set
-            {
-                Flags = ( int )( value ? ( Flags | 0x20000000 ) : ( Flags & ~0x20000000 ) );
             }
         }
 
@@ -531,7 +519,7 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.Switch] = HandleUnhandled;
             ChildHandler.Handler[Opcodes.Sound] = HandleUnhandled;
             ChildHandler.Handler[Opcodes.ClipRegion] = HandleUnhandled;
-            ChildHandler.Handler[Opcodes.DegreeOfFreedom] = HandleUnhandled;
+            ChildHandler.Handler[Opcodes.DegreeOfFreedom] = HandleDOF;
             ChildHandler.Handler[Opcodes.Group] = HandleGroup;
 
             ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleUnhandled;

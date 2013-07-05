@@ -334,6 +334,19 @@ namespace UFLT.Records
             g.Parse();
             return true;
         }
+		
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Handles Degree Of Freedom records.
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        protected bool HandleDOF()
+        {
+            DOF d = new DOF( this );
+            d.Parse();
+            return true;
+        }		
 
         #endregion Record Handlers
     }

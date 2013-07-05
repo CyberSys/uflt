@@ -42,10 +42,6 @@ namespace UFLT.Records
             {
                 return ( Flags & -2147483648 ) != 0 ? true : false;
             }
-            set
-            {
-                Flags = ( int )( value ? ( Flags | -2147483648 ) : ( Flags & ~-2147483648 ) );
-            }
         }
 
         /// <summary>

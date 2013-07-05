@@ -44,10 +44,6 @@ namespace UFLT.Records
             {
                 return ( Flags & -0x8000 ) != 0 ? true : false;
             }
-            set
-            {
-                Flags = ( short )( value ? ( Flags | -0x8000 ) : ( Flags & ~-0x8000 ) );
-            }
         }
 
         /// <summary>
@@ -58,10 +54,6 @@ namespace UFLT.Records
             get
             {
                 return ( Flags & 0x4000 ) != 0 ? true : false;
-            }
-            set
-            {
-                Flags = ( short )( value ? ( Flags | 0x4000 ) : ( Flags & ~0x4000 ) );
             }
         }
 
@@ -74,10 +66,6 @@ namespace UFLT.Records
             {
                 return ( Flags & 0x2000 ) != 0 ? true : false;
             }
-            set
-            {
-                Flags = ( short )( value ? ( Flags | 0x2000 ) : ( Flags & ~0x2000 ) );
-            }
         }
 
         /// <summary>
@@ -88,10 +76,6 @@ namespace UFLT.Records
             get
             {
                 return ( Flags & 0x1000 ) != 0 ? true : false;
-            }
-            set
-            {
-                Flags = ( short )( value ? ( Flags | 0x1000 ) : ( Flags & ~0x1000 ) );
             }
         }
 

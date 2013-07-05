@@ -71,13 +71,187 @@ namespace UFLT.Records
         }
 
         /// <summary>
-        /// Min, Max, Current & Increment of pitch with respect to local coordinate system.
+        /// Min, Max, Current & Increment of pitch 
         /// </summary>
         public double[] MinMaxCurrentIncrementPitch
         {
             get;
             set;
         }
+		
+        /// <summary>
+        /// Min, Max, Current & Increment of roll 
+        /// </summary>
+        public double[] MinMaxCurrentIncrementRoll
+        {
+            get;
+            set;
+        }
+		
+        /// <summary>
+        /// Min, Max, Current & Increment of yaw 
+        /// </summary>
+        public double[] MinMaxCurrentIncrementYaw
+        {
+            get;
+            set;
+        }	
+		
+        /// <summary>
+        /// Min, Max, Current & Increment of yaw 
+        /// </summary>
+        public double[] MinMaxCurrentIncrementScale
+        {
+            get;
+            set;
+        }				
+		
+		/// <summary>
+        /// Min, Max, Current & Increment of scale z
+        /// </summary>
+        public double[] MinMaxCurrentIncrementScaleZ
+        {
+            get;
+            set;
+        }	
+		
+		/// <summary>
+        /// Min, Max, Current & Increment of scale y.
+        /// </summary>
+        public double[] MinMaxCurrentIncrementScaleY
+        {
+            get;
+            set;
+        }	
+		
+		/// <summary>
+        /// Min, Max, Current & Increment of scale x.
+        /// </summary>
+        public double[] MinMaxCurrentIncrementScaleX
+        {
+            get;
+            set;
+        }			
+		
+		/// <summary>
+		/// Flags (bits, from left to right)
+		/// 0 = x translation is limited
+		/// 1 = y translation is limited
+		/// 2 = z translation is limited
+		/// 3 = Pitch rotation is limited
+		/// 4 = Roll rotation is limited
+		/// 5 = Yaw rotation is limited
+		/// 6 = x scale is limited
+		/// 7 = y scale is limited
+		/// 8 = z scale is limited
+		/// 9 = Reserved
+		/// 10 = Reserved
+		/// 11-31 = Spare		
+		/// </summary>		
+		public int Flags
+		{
+			get;
+			set;
+		}
+		
+		/// <summary>
+		/// If true then the X translation should be limited using the relevant Min,Max values.
+		/// </summary>		
+        public bool FlagsXTranslationLimited
+        {
+            get
+            {
+                return ( Flags & -2147483648 ) != 0 ? true : false;
+            }
+        }		
+		
+		/// <summary>
+		/// If true then the Y translation should be limited using the relevant Min,Max values.
+		/// </summary>				
+        public bool FlagsYTranslationLimited
+        {
+            get
+            {
+                return ( Flags & 0x40000000 ) != 0 ? true : false;
+            }
+        }		
+		
+		/// <summary>
+		/// If true then the Z translation should be limited using the relevant Min,Max values.
+		/// </summary>				
+        public bool FlagsZTranslationLimited
+        {
+            get
+            {
+                return ( Flags & 0x20000000 ) != 0 ? true : false;
+            }
+        }		
+		
+		/// <summary>
+		/// If true then the pitch should be limited using the relevant Min,Max values.
+		/// </summary>				
+        public bool FlagsPitchLimited
+        {
+            get
+            {
+                return ( Flags & 0x10000000 ) != 0 ? true : false;
+            }
+        }			
+		
+		/// <summary>
+		/// If true then the roll should be limited using the relevant Min,Max values.
+		/// </summary>					
+        public bool FlagsRollLimited
+        {
+            get
+            {
+                return ( Flags & 0x8000000 ) != 0 ? true : false;
+            }
+        }		
+		
+		/// <summary>
+		/// If true then the yaw should be limited using the relevant Min,Max values.
+		/// </summary>			
+        public bool FlagsYawLimited
+        {
+            get
+            {
+                return ( Flags & 0x4000000 ) != 0 ? true : false;
+            }
+        }		
+		
+		/// <summary>
+		/// If true then the X scale should be limited using the relevant Min,Max values.
+		/// </summary>					
+        public bool FlagsScaleXLimited
+        {
+            get
+            {
+                return ( Flags & 0x2000000 ) != 0 ? true : false;
+            }
+        }			
+
+		/// <summary>
+		/// If true then the Y scale should be limited using the relevant Min,Max values.
+		/// </summary>				
+		public bool FlagsScaleYLimited
+        {
+            get
+            {
+                return ( Flags & 0x1000000 ) != 0 ? true : false;
+            }
+        }		
+		
+		/// <summary>
+		/// If true then the Z scale should be limited using the relevant Min,Max values.
+		/// </summary>						
+        public bool FlagsScaleZLimited
+        {
+            get
+            {
+                return ( Flags & 0x800000 ) != 0 ? true : false;
+            }
+        }			
    
 		#endregion Properties
 
@@ -90,18 +264,23 @@ namespace UFLT.Records
         public DOF( Record parent ) :
 			base( parent, parent.Header )
 		{
-            //RootHandler.Handler[Opcodes.PushLevel] = HandlePush;
-            //RootHandler.Handler[Opcodes.LongID] = HandleLongID;
-            //RootHandler.Handler[Opcodes.Comment] = HandleComment;
-            //RootHandler.Handler[Opcodes.Matrix] = HandleMatrix;
+            RootHandler.Handler[Opcodes.PushLevel] = HandlePush;
+            RootHandler.Handler[Opcodes.LongID] = HandleLongID;
+            RootHandler.Handler[Opcodes.Comment] = HandleComment;
+            RootHandler.Handler[Opcodes.Matrix] = HandleMatrix;
             
-            //RootHandler.ThrowBacks.UnionWith( RecordHandler.ThrowBackOpcodes );
+            RootHandler.ThrowBacks.UnionWith( RecordHandler.ThrowBackOpcodes );           
             
-            //ChildHandler.Handler[Opcodes.Face] = HandleFace;
-            //// TODO: index light point
-            //// TODO: inline light point
-            //ChildHandler.Handler[Opcodes.PushLevel] = HandlePush;
-            //ChildHandler.Handler[Opcodes.PopLevel] = HandlePop;
+            ChildHandler.Handler[Opcodes.Group] = HandleGroup;            
+            ChildHandler.Handler[Opcodes.Object] = HandleObject;
+            ChildHandler.Handler[Opcodes.PushLevel] = HandlePush;
+            ChildHandler.Handler[Opcodes.PopLevel] = HandlePop;
+            ChildHandler.Handler[Opcodes.Switch] = HandleUnhandled;            
+            ChildHandler.Handler[Opcodes.Sound] = HandleUnhandled;
+            ChildHandler.Handler[Opcodes.ClipRegion] = HandleUnhandled;
+
+            ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleUnhandled;
+            ChildHandler.Handler[Opcodes.ExternalReference] = HandleUnhandled;			
 		}
 
         //////////////////////////////////////////////////////////////////
@@ -119,17 +298,21 @@ namespace UFLT.Records
             MinMaxCurrentIncrementZ          = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
             MinMaxCurrentIncrementY          = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
             MinMaxCurrentIncrementX          = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
+            MinMaxCurrentIncrementPitch      = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
+            MinMaxCurrentIncrementRoll       = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
+            MinMaxCurrentIncrementYaw        = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
+            MinMaxCurrentIncrementScaleZ     = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
+            MinMaxCurrentIncrementScaleY     = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
+            MinMaxCurrentIncrementScaleX     = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
+			Flags                            = Header.Stream.Reader.ReadInt32();
+			
+			// Apply the dof origin to our GO position so we can pivot using the GO transform as you would expect to.
+			Position = new Vector3( ( float )Origin[0], ( float )Origin[1], ( float )Origin[2] );
+			
+			// TODO: Can DOF have a matrix? This would mess the origin up if they can, maybe apply in the import function?
 
-
-            //Flags = Header.Stream.Reader.ReadInt32();
-            //RelativePriority = Header.Stream.Reader.ReadInt16();
-            //Transparency = Header.Stream.Reader.ReadUInt16();
-            //SpecialEffectID1 = Header.Stream.Reader.ReadInt16();
-            //SpecialEffectID2 = Header.Stream.Reader.ReadInt16();
-            //// Ignore last 2 reserved bytes.    
-        
-            //// Parse children
-            //base.Parse();
+            // Parse children
+			base.Parse();
         }
 	}
 }

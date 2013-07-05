@@ -33,7 +33,7 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.PushLevel] = HandlePush;
             ChildHandler.Handler[Opcodes.PopLevel] = HandlePop;
             ChildHandler.Handler[Opcodes.Switch] = HandleUnhandled;
-            ChildHandler.Handler[Opcodes.DegreeOfFreedom] = HandleUnhandled;
+            ChildHandler.Handler[Opcodes.DegreeOfFreedom] = HandleDOF;
             ChildHandler.Handler[Opcodes.Sound] = HandleUnhandled;
             ChildHandler.Handler[Opcodes.ClipRegion] = HandleUnhandled;
 

@@ -191,10 +191,6 @@ namespace UFLT.Records
             {
                 return ( Flags & -2147483648 ) != 0 ? true : false;
             }
-            set
-            {
-                Flags = ( int )( value ? ( Flags | -2147483648 ) : ( Flags & ~-2147483648 ) );
-            }
         }
 
         /// <summary>
@@ -205,10 +201,6 @@ namespace UFLT.Records
             get
             {
                 return ( Flags & 0x40000000 ) != 0 ? true : false;
-            }
-            set
-            {
-                Flags = ( int )( value ? ( Flags | 0x40000000 ) : ( Flags & ~0x40000000 ) );
             }
         }
 
@@ -221,11 +213,7 @@ namespace UFLT.Records
             {
                 return ( Flags & 0x20000000 ) != 0 ? true : false;
             }
-            set
-            {
-                Flags = ( int )( value ? ( Flags | 0x20000000 ) : ( Flags & ~0x20000000 ) );
-            }
-        }
+          }
 
         /// <summary>
         /// Flags value        
@@ -236,11 +224,7 @@ namespace UFLT.Records
             {
                 return ( Flags & 0x10000000 ) != 0 ? true : false;
             }
-            set
-            {
-                Flags = ( int )( value ? ( Flags | 0x10000000 ) : ( Flags & ~0x10000000 ) );
-            }
-        }
+		}
         
         /// <summary>
         /// Flags value        
@@ -251,12 +235,8 @@ namespace UFLT.Records
             get
             {
                 return ( Flags & 0x8000000 ) != 0 ? true : false;
-            }
-            set
-            {
-                Flags = ( int )( value ? ( Flags | 0x8000000 ) : ( Flags & ~0x8000000 ) );
-            }
-        }        
+            }     
+		}        
 
         /// <summary>
         /// Flags value
@@ -268,10 +248,6 @@ namespace UFLT.Records
             {
                 return ( Flags & 0x4000000 ) != 0 ? true : false;
             }
-            set
-            {
-                Flags = ( int )( value ? ( Flags | 0x4000000 ) : ( Flags & ~0x4000000 ) );
-            }
         }
 
         /// <summary>
@@ -282,10 +258,6 @@ namespace UFLT.Records
             get
             {
                 return ( Flags & 0x4000000 ) != 0 ? true : false;
-            }
-            set
-            {
-                Flags = ( int )( value ? ( Flags | 0x4000000 ) : ( Flags & ~0x4000000 ) );
             }
         }
                

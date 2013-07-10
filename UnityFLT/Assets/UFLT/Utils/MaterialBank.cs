@@ -145,7 +145,6 @@ namespace UFLT.Utils
 				else
 				{							
 					// We need to load the texture.	
-					// TODO: Check material type, can it be loaded. Do we need a custom loader such as SGI rgb?
 					// TODO: Load textures & create materials in a seperate function that supports coroutines.
 					WWW www = new WWW( "file://" + path );				
 					while( !www.isDone )

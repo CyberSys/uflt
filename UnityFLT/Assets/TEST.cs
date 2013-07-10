@@ -10,11 +10,13 @@ public class TEST : MonoBehaviour
 {
     public string file;
 
-    public Thread t;
+    //public Thread t;
 
     public Database db;
 	
-	public Texture2D tex;
+	public ImportSettings settings = new ImportSettings();
+
+	//public Texture2D tex;
 	
 	IEnumerator Start ()
     {	
@@ -23,6 +25,7 @@ public class TEST : MonoBehaviour
 		
 		// TODO: WHY ARE MATERIALS NOT SHARED. E.G load the same file twice, works for textures but not materials.
 		
+		//gameObject.AddComponent( typ );
 		
 		//WWW www = new WWW( "file://" + @"D:\Desktop\TruckTop.jpg" );
 		//yield return www;
@@ -30,7 +33,7 @@ public class TEST : MonoBehaviour
 		
 		
         // How to load a database multithreaded
-        db = new Database( file );
+        db = new Database( file, null, settings );
 
         // Single-threaded
         //db.ParsePrepareAndImport();

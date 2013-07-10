@@ -16,6 +16,15 @@ namespace UFLT.Records
     public class Database : InterRecord
     {
         #region Properties
+		
+		/// <summary>
+		/// Import settings.
+		/// </summary>		
+		public ImportSettings Settings
+		{
+			get;
+			set;
+		}
 
         /// <summary>
         /// Stream for this file
@@ -463,13 +472,12 @@ namespace UFLT.Records
 
         //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctor
+        /// Ctor, uses default import settings.
         /// </summary>
         //////////////////////////////////////////////////////////////////
         public Database( string file ) :
-            this( file, null )
+            this( file, null, new ImportSettings() )
         {
-            // TODO: Options class. 
         }
 
         //////////////////////////////////////////////////////////////////
@@ -478,8 +486,9 @@ namespace UFLT.Records
         /// </summary>
         /// <param name="file"></param>
         //////////////////////////////////////////////////////////////////
-        public Database( string file, Record parent )            
+        public Database( string file, Record parent, ImportSettings settings )            
         {			
+			Settings = settings;
             Stream = new InStream( file );
             Header = this;
             Parent = parent;
@@ -492,6 +501,10 @@ namespace UFLT.Records
 			{
 				// Init log
 				Log = new Log();		
+				foreach( string s in Settings.AdditionalSearchDirectories )
+				{
+					FileFinder.Instance.AddPath( s );
+				}
 			}
 			
 			Log.Write( "Loading file: " + file );

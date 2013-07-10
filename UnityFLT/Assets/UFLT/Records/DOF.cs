@@ -4,6 +4,8 @@ using System.IO;
 using System.Text;
 using UFLT.DataTypes.Enums;
 using UFLT.Utils;
+using UFLT.MonoBehaviours;
+using System;
 
 namespace UFLT.Records
 {
@@ -95,16 +97,7 @@ namespace UFLT.Records
         {
             get;
             set;
-        }	
-		
-        /// <summary>
-        /// Min, Max, Current & Increment of yaw 
-        /// </summary>
-        public double[] MinMaxCurrentIncrementScale
-        {
-            get;
-            set;
-        }				
+        }		
 		
 		/// <summary>
         /// Min, Max, Current & Increment of scale z
@@ -314,5 +307,45 @@ namespace UFLT.Records
             // Parse children
 			base.Parse();
         }
+		
+		//////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Converts the record/s into a Unity GameObject structure with meshes, materials etc and imports into the scene. 
+		/// Adds a Component to the DOF GameObject is one is assigned in the Settings.
+		/// </summary>
+		//////////////////////////////////////////////////////////////////
+		public override void ImportIntoScene ()
+		{							
+			base.ImportIntoScene ();			
+			if( !string.IsNullOrEmpty( Header.Settings.DegreeOfFreedomComponent ) )
+			{				
+				Component c = UnityGameObject.AddComponent( Header.Settings.DegreeOfFreedomComponent );		
+				if( c != null && c is DegreeOfFreedom )
+				{
+					DegreeOfFreedom dof = c as DegreeOfFreedom;
+					dof.origin = new Vector3( ( float )Origin[0], ( float )Origin[1], ( float )Origin[2] );
+     				dof.pointOnXAxis = new Vector3( ( float )PointOnXAxis[0], ( float )PointOnXAxis[1], ( float )PointOnXAxis[2] );
+					dof.pointInXYPlane = new Vector3( ( float )PointInXYPlane[0], ( float )PointInXYPlane[1], ( float )PointInXYPlane[2] );
+     				dof.minMaxCurrentIncrementX = new Vector4( ( float )MinMaxCurrentIncrementX[0], ( float )MinMaxCurrentIncrementX[1], ( float )MinMaxCurrentIncrementX[2], ( float )MinMaxCurrentIncrementX[3] );
+					dof.minMaxCurrentIncrementY = new Vector4( ( float )MinMaxCurrentIncrementY[0], ( float )MinMaxCurrentIncrementY[1], ( float )MinMaxCurrentIncrementY[2], ( float )MinMaxCurrentIncrementY[3] );
+					dof.minMaxCurrentIncrementZ = new Vector4( ( float )MinMaxCurrentIncrementZ[0], ( float )MinMaxCurrentIncrementZ[1], ( float )MinMaxCurrentIncrementZ[2], ( float )MinMaxCurrentIncrementZ[3] );
+					dof.minMaxCurrentIncrementPitch = new Vector4( ( float )MinMaxCurrentIncrementPitch[0], ( float )MinMaxCurrentIncrementPitch[1], ( float )MinMaxCurrentIncrementPitch[2], ( float )MinMaxCurrentIncrementPitch[3] );
+					dof.minMaxCurrentIncrementRoll = new Vector4( ( float )MinMaxCurrentIncrementRoll[0], ( float )MinMaxCurrentIncrementRoll[1], ( float )MinMaxCurrentIncrementRoll[2], ( float )MinMaxCurrentIncrementRoll[3] );
+					dof.minMaxCurrentIncrementYaw = new Vector4( ( float )MinMaxCurrentIncrementYaw[0], ( float )MinMaxCurrentIncrementYaw[1], ( float )MinMaxCurrentIncrementYaw[2], ( float )MinMaxCurrentIncrementYaw[3] );
+   					dof.minMaxCurrentIncrementScaleZ = new Vector4( ( float )MinMaxCurrentIncrementScaleZ[0], ( float )MinMaxCurrentIncrementScaleZ[1], ( float )MinMaxCurrentIncrementScaleZ[2], ( float )MinMaxCurrentIncrementScaleZ[3] );
+					dof.minMaxCurrentIncrementScaleY = new Vector4( ( float )MinMaxCurrentIncrementScaleY[0], ( float )MinMaxCurrentIncrementScaleY[1], ( float )MinMaxCurrentIncrementScaleY[2], ( float )MinMaxCurrentIncrementScaleY[3] );
+					dof.minMaxCurrentIncrementScaleX = new Vector4( ( float )MinMaxCurrentIncrementScaleX[0], ( float )MinMaxCurrentIncrementScaleX[1], ( float )MinMaxCurrentIncrementScaleX[2], ( float )MinMaxCurrentIncrementScaleX[3] );         
+     				dof.xTranslationLimited = FlagsXTranslationLimited;
+     				dof.yTranslationLimited = FlagsYTranslationLimited;
+					dof.zTranslationLimited = FlagsYTranslationLimited;
+					dof.pitchLimited = FlagsPitchLimited;
+					dof.rollLimited = FlagsRollLimited;
+					dof.yawLimited = FlagsYawLimited;
+					dof.scaleXLimited = FlagsScaleXLimited;
+					dof.scaleYLimited = FlagsScaleYLimited;
+					dof.scaleZLimited = FlagsScaleZLimited;
+				}									
+			}
+		}
 	}
 }

@@ -27,7 +27,8 @@ namespace UFLT.Records
             RootHandler.Handler[Opcodes.Matrix] = HandleMatrix; 
             
             RootHandler.ThrowBacks.UnionWith( RecordHandler.ThrowBackOpcodes );
-
+			
+			ChildHandler.Handler[Opcodes.Face] = HandleFace;
             ChildHandler.Handler[Opcodes.Group] = HandleGroup;            
             ChildHandler.Handler[Opcodes.Object] = HandleObject;
             ChildHandler.Handler[Opcodes.PushLevel] = HandlePush;
@@ -38,7 +39,7 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.ClipRegion] = HandleUnhandled;
 
             ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleUnhandled;
-            ChildHandler.Handler[Opcodes.ExternalReference] = HandleUnhandled;
+            ChildHandler.Handler[Opcodes.ExternalReference] = HandleExternalReference;
 		}
 
         //////////////////////////////////////////////////////////////////

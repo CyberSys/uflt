@@ -159,7 +159,7 @@ namespace UFLT.Textures
 		{
 			get
 			{
-				if( texture == null )
+				if( texture == null && Valid )
 				{
 					texture = new Texture2D( Size[0], Size[1] );			
 					if( BPC == 1 )texture.SetPixels32( PixelsBPC1 );
@@ -183,6 +183,8 @@ namespace UFLT.Textures
 		//////////////////////////////////////////////////////////////////////
 		public TextureSGI( string file )		
 		{
+			Valid = false;
+			
 			// Load file
 			Stream s = new FileStream( file, FileMode.Open );
 			Reader = BitConverter.IsLittleEndian ? new BinaryReaderBigEndian( s ) : new BinaryReader( s );			
@@ -200,13 +202,13 @@ namespace UFLT.Textures
 			// Magic number
 			short magic = Reader.ReadInt16();		
 			if( magic != 474 )
-			{
-				Valid = false;
+			{				
 				Reader.Close();
-				Log.WriteError( "Invalid file, the file header does not contain the correct magic number(474)" );
+				Debug.LogError( "Invalid file, the file header does not contain the correct magic number(474)" );
 				return;
 			}
 			
+			Valid = true;			
 			RLE = Reader.ReadSByte() == 1 ? true : false;		
 			BPC = Reader.ReadSByte();
 			Dimension = Reader.ReadUInt16();

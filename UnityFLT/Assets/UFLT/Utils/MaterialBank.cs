@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using UFLT.Records;
 using UFLT.DataTypes.Enums;
+using System.IO;
+using UFLT.Textures;
 
 namespace UFLT.Utils
 {
@@ -122,27 +124,44 @@ namespace UFLT.Utils
 				if( Textures.TryGetValue( path, out tex ) )
 				{
 					// We found it!
-					Log.Write( "Reusing a texture: " + tp.FileName );
 					return tex;
 				}
 				
-				// We need to load the texture.	
-				// TODO: Check material type, can it be loaded. Do we need a custom loader such as SGI rgb?
-				// TODO: Load textures & create materials in a seperate function that supports coroutines.
-				WWW www = new WWW( "file://" + path );				
-				while( !www.isDone )
-				{
-					// HACK: coroutine me up!									
+				string ext = Path.GetExtension( path );
+				if( ext == ".rgb" ||
+					ext == ".rgba" ||
+					ext == ".int" || 
+					ext == ".inta" || 
+					ext == ".sgi" )
+				{					
+					TextureSGI sgi = new TextureSGI( path );
+					tex = sgi.Texture;
+					if( tex != null )
+					{
+						Textures[path] = tex;	
+						return tex;
+					}
 				}
-
-				if( www.error == null && www.texture != null )
-				{
-					Textures[path] = www.texture;	
-					return www.texture;
-				}							
 				else
-				{
-					Log.WriteError( www.error );	
+				{							
+					// We need to load the texture.	
+					// TODO: Check material type, can it be loaded. Do we need a custom loader such as SGI rgb?
+					// TODO: Load textures & create materials in a seperate function that supports coroutines.
+					WWW www = new WWW( "file://" + path );				
+					while( !www.isDone )
+					{
+						// HACK: coroutine me up!									
+					}
+	
+					if( www.error == null && www.texture != null )
+					{
+						Textures[path] = www.texture;	
+						return www.texture;
+					}							
+					else
+					{
+						Debug.LogError( www.error );	
+					}
 				}
 			}			
 			return null;

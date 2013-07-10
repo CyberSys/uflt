@@ -108,7 +108,7 @@ namespace UFLT.Records
         {
             get
             {
-                return ( Flags & 0x4000000 ) != 0 ? true : false;
+                return ( Flags & 0x2000000 ) != 0 ? true : false;
             }
         }
 
@@ -119,7 +119,7 @@ namespace UFLT.Records
         {
             get
             {
-                return ( Flags & 0x2000000 ) != 0 ? true : false;
+                return ( Flags & 0x1000000 ) != 0 ? true : false;
             }
         }
         
@@ -219,7 +219,7 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.Face] = HandleFace;
             // TODO: index light point
             // TODO: inline light point
-            // TODO: External ref
+            ChildHandler.Handler[Opcodes.ExternalReference] = HandleExternalReference;
             ChildHandler.Handler[Opcodes.Group] = HandleGroup;
             ChildHandler.Handler[Opcodes.PushLevel] = HandlePush;
             ChildHandler.Handler[Opcodes.PopLevel] = HandlePop;

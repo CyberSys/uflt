@@ -486,11 +486,12 @@ namespace UFLT.Records
             if( parent != null )
             {
                 parent.Children.Add( this );
+				Log = parent.Log;
             }
 			else
 			{
 				// Init log
-				Log.Init();				
+				Log = new Log();		
 			}
 			
 			Log.Write( "Loading file: " + file );
@@ -521,10 +522,8 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.ClipRegion] = HandleUnhandled;
             ChildHandler.Handler[Opcodes.DegreeOfFreedom] = HandleDOF;
             ChildHandler.Handler[Opcodes.Group] = HandleGroup;
-
-            ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleUnhandled;
-
-            // TODO: lod, external ref
+			ChildHandler.Handler[Opcodes.ExternalReference] = HandleExternalReference;
+            ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleUnhandled;            
         }
 
         //////////////////////////////////////////////////////////////////
@@ -629,7 +628,7 @@ namespace UFLT.Records
             VertexCoordinateUnits       = ( VertexCoordinateUnits )Stream.Reader.ReadByte();
             TexWhite                    = Stream.Reader.ReadBoolean();
             Flags                       = Stream.Reader.ReadInt32();
-            /* Skip reserved bytes*/      Stream.Reader.BaseStream.Seek( 24, SeekOrigin.Current ); 
+            /* Skip reserved bytes*/    Stream.Reader.BaseStream.Seek( 24, SeekOrigin.Current ); 
             ProjectionType              = ( Projection )Stream.Reader.ReadInt32();
             /* Skip reserved bytes*/    Stream.Reader.BaseStream.Seek( 28, SeekOrigin.Current ); 
             NextDegreeOfFreedomNodeID   = Stream.Reader.ReadInt16();

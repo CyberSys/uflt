@@ -16,12 +16,12 @@ public class TEST : MonoBehaviour
 	
 	public Texture2D tex;
 	
-	void Start ()
+	IEnumerator Start ()
     {	
-		TextureSGI s = new TextureSGI( file );
-		tex = s.Texture;
+		//TextureSGI s = new TextureSGI( file );
+		//tex = s.Texture;
 		
-		// WHY ARE MATERIALS NOT SHARED. E.G load the same file twice, works for textures but not materials.
+		// TODO: WHY ARE MATERIALS NOT SHARED. E.G load the same file twice, works for textures but not materials.
 		
 		
 		//WWW www = new WWW( "file://" + @"D:\Desktop\TruckTop.jpg" );
@@ -30,17 +30,17 @@ public class TEST : MonoBehaviour
 		
 		
         // How to load a database multithreaded
-        //db = new Database( file );
+        db = new Database( file );
 
         // Single-threaded
         //db.ParsePrepareAndImport();
 
         // Multi-threaded
-        //yield return StartCoroutine( db.ParseAsynchronously() );        
-        //db.ImportIntoScene();
+        yield return StartCoroutine( db.ParseAsynchronously() );        
+        db.ImportIntoScene();
 		
 		// Print out log 
-		//Debug.Log( Log.ToString() );		        
+		Debug.Log( db.Log.ToString() );		        
 	}
   
 

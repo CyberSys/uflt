@@ -347,7 +347,20 @@ namespace UFLT.Records
             d.Parse();
             return true;
         }		
-
+		
+		//////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Handles external reference records.
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        protected bool HandleExternalReference()
+        {
+            ExternalReference e = new ExternalReference( this );
+            e.Parse();
+            return true;
+        }		
+		
         #endregion Record Handlers
     }
 }

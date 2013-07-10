@@ -22,14 +22,69 @@ namespace UFLT.Editor
 				db.ParsePrepareAndImport();
 			}			
 			
-			string assetPath = EditorUtility.SaveFilePanelInProject( "Save Prefab", "OpenFlight File", "asset", "Where to save the prefab version of your OpenFlight file?" );
-			if( assetPath.Length != 0 )
-			{					
-				Object[] depends = EditorUtility.CollectDeepHierarchy( new Object[]{ db.UnityGameObject } );
+			//string assetPath = EditorUtility.SaveFilePanelInProject( "Save Prefab", "OpenFlight File", "asset", "Where to save the prefab version of your OpenFlight file?" );
+			//if( assetPath.Length != 0 )
+			{		
+					Object[] depends = EditorUtility.CollectDependencies( new Object[]{ db.UnityGameObject } );
+				foreach( Object o in depends )
+				{
+					if( !o.Equals( db.UnityGameObject ) )
+					{
+						if( o is MeshRenderer )
+						{	
+							foreach( Material m in ( o as MeshRenderer ).sharedMaterials )
+							{
+								//AssetDatabase.AddObjectToAsset( m, db.UnityGameObject );						
+								if( AssetDatabase.GetAssetPath( m ) == null )
+								{
+									AssetDatabase.CreateAsset( m, "Assets/TEST/" + m.name + ".mat" );
+								}
+								if( m.mainTexture != null )
+								{
+								}
+							}
+						}
+					}
+				}
 				
-				AssetDatabase.CreateAsset( db.UnityGameObject, "Assets/test.asset"/*assetPath*/ );
+				
+							
+				AssetDatabase.CreateAsset( db.UnityGameObject, "Assets/TEST/test.asset"/*assetPath*/ );
+				
+				foreach( Object o in depends )
+				{
+					if( !o.Equals( db.UnityGameObject ) )
+					{
+						if( o is GameObject )continue;
+						if( o is MeshRenderer )
+						{	
+					
+						}
+						
+						if( o is MeshFilter )
+						{
+							AssetDatabase.AddObjectToAsset( ( o as MeshFilter ).sharedMesh, db.UnityGameObject );							
+						}						
+						
+						if( o is Transform )
+						{
+							continue;	
+						}
+						
+						Debug.Log( o );
+						//AssetDatabase.AddObjectToAsset( o, db.UnityGameObject );	
+					}
+				}
+				
+				AssetDatabase.SaveAssets();
+				//var ob = PrefabUtility.CreateEmptyPrefab( "Assets/empty.prefab" );
+				//PrefabUtility.ReplacePrefab( db.UnityGameObject, ob, ReplacePrefabOptions.ReplaceNameBased );
+				
+				//AssetDatabase.SaveAssets();
+				
+				
 				//PrefabUtility.CreatePrefab( path, db.UnityGameObject );
-				
+				/*
 				foreach( Object o in depends )
 				{
 					if( o != db.UnityGameObject )
@@ -56,8 +111,11 @@ namespace UFLT.Editor
 					}
 				}
 				
-				PrefabUtility.CreatePrefab( "Assets/testp.prefab", db.UnityGameObject );			
-			}
+				PrefabUtility.CreatePrefab( "Assets/testp.prefab", db.UnityGameObject );	
+				*/		
+			}							
 		}
+
+		
 	}
 }

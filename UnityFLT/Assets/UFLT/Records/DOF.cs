@@ -280,7 +280,7 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.ClipRegion] = HandleUnhandled;
 
             ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleUnhandled;
-            ChildHandler.Handler[Opcodes.ExternalReference] = HandleUnhandled;			
+            ChildHandler.Handler[Opcodes.ExternalReference] = HandleExternalReference;			
 		}
 
         //////////////////////////////////////////////////////////////////

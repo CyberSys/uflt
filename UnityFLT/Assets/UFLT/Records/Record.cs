@@ -14,6 +14,15 @@ namespace UFLT.Records
     public class Record
     {
         #region Properties	
+		
+		/// <summary>
+		/// Log file containing messages generated from parsing and importing.
+		/// </summary>		
+		public Log Log
+		{
+			get;
+			set;
+		}
 
         /// <summary>
         /// The type of record
@@ -176,6 +185,7 @@ namespace UFLT.Records
         public Record( Record parent, Database header ) :
             this()
         {
+			Log = header.Log;
             Header = header;
             Parent = parent;
 			
@@ -184,7 +194,7 @@ namespace UFLT.Records
 			Level = Header.Stream.Level;
 
             if( parent != null )
-            {
+            {				
                 parent.Children.Add( this );
             }            
         }

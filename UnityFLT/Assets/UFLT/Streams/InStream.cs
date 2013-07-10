@@ -123,7 +123,7 @@ namespace UFLT.Streams
             }
             catch( Exception e )
             {
-				Log.WriteError( "Parse Error!\n" + e.ToString() );			
+				Debug.LogError( "Parse Error!\n" + e.ToString() );			
                 return false;
             }
 

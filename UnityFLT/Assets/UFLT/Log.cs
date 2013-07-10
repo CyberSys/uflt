@@ -14,7 +14,7 @@ namespace UFLT
 		/// <summary>
 		/// Gets or sets the log builder.		
 		/// </summary>		
-		public static StringBuilder LogBuilder
+		public StringBuilder LogBuilder
 		{
 			get;
 			set;
@@ -24,10 +24,10 @@ namespace UFLT
 		
 		//////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates a new log.
+		/// Ctr
 		/// </summary>
 		//////////////////////////////////////////////////////////////////
-		public static void Init()
+		public Log()
 		{
 			// Create a new log
 			LogBuilder = new StringBuilder();
@@ -38,7 +38,7 @@ namespace UFLT
 		/// Writes a line to the log.
 		/// </summary>
 		//////////////////////////////////////////////////////////////////
-		public static void Write( string line )
+		public void Write( string line )
 		{
 			LogBuilder.AppendLine( line );	
 		}
@@ -48,7 +48,7 @@ namespace UFLT
 		/// Writes a warning line to the log.
 		/// </summary>
 		//////////////////////////////////////////////////////////////////
-		public static void WriteWarning( string line )
+		public void WriteWarning( string line )
 		{
 			LogBuilder.AppendFormat( "WARNING: {0}\n", line );			
 		}
@@ -58,7 +58,7 @@ namespace UFLT
 		/// Writes a error line to the log.
 		/// </summary>
 		//////////////////////////////////////////////////////////////////
-		public static void WriteError( string line )
+		public void WriteError( string line )
 		{
 			LogBuilder.AppendFormat( "ERROR: {0}\n", line );			
 		}		
@@ -68,7 +68,7 @@ namespace UFLT
 		/// Returns log data as string.
 		/// </summary>
 		//////////////////////////////////////////////////////////////////
-		public new static string ToString ()
+		public new string ToString ()
 		{
 			return LogBuilder.ToString();
 		}

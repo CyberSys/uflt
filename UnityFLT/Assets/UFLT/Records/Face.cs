@@ -257,7 +257,7 @@ namespace UFLT.Records
         {
             get
             {
-                return ( Flags & 0x4000000 ) != 0 ? true : false;
+                return ( Flags & 0x2000000 ) != 0 ? true : false;
             }
         }
                

@@ -125,7 +125,7 @@ namespace UFLT.Utils
                 }
             }
 			
-			Log.WriteWarning( "Could not find file: " + fullPath );            
+			Debug.LogWarning( "Could not find file: " + fullPath );            
 
             return string.Empty;
         }

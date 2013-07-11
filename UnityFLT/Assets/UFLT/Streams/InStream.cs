@@ -81,7 +81,7 @@ namespace UFLT.Streams
         //////////////////////////////////////////////////////////////////
         public InStream( string file )
         {
-            Stream s = new FileStream( file, FileMode.Open, FileAccess.Read, FileShare.Read );
+            Stream s = new FileStream( file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite );
             Reader = BitConverter.IsLittleEndian ? new BinaryReaderBigEndian( s ) : new BinaryReader( s );
             Repeat = false;
             CurrentPosition = 0;

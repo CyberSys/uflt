@@ -272,7 +272,7 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.Sound] = HandleUnhandled;
             ChildHandler.Handler[Opcodes.ClipRegion] = HandleUnhandled;
 
-            ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleUnhandled;
+            ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleLevelOfDetail;
             ChildHandler.Handler[Opcodes.ExternalReference] = HandleExternalReference;			
 		}
 
@@ -311,7 +311,7 @@ namespace UFLT.Records
 		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Converts the record/s into a Unity GameObject structure with meshes, materials etc and imports into the scene. 
-		/// Adds a Component to the DOF GameObject is one is assigned in the Settings.
+		/// Adds a Component to the DOF GameObject if one is assigned in the Settings.
 		/// </summary>
 		//////////////////////////////////////////////////////////////////
 		public override void ImportIntoScene ()

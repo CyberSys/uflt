@@ -18,7 +18,7 @@ namespace UFLT.Utils
     {
         #region Properties
 		
-        private static MaterialBank instance;
+        public static MaterialBank instance;
 		
 		/// <summary>
 		/// Current materials.		
@@ -130,6 +130,7 @@ namespace UFLT.Utils
 				string ext = Path.GetExtension( path );
 				if( ext == ".rgb" ||
 					ext == ".rgba" ||
+                    ext == ".bw" ||
 					ext == ".int" || 
 					ext == ".inta" || 
 					ext == ".sgi" )

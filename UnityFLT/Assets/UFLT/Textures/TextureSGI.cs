@@ -6,8 +6,6 @@ using System.IO;
 using System.Text;
 using UFLT.Utils;
 
-// TODO: Clean me up. Support 2 bpc. file ext .bw, .rgb, .rgba, .sgi. .int?
-
 //SGI or RGB: 3 colour channels
 //RGBA: 3 colour channels and alpha
 //BW or INT: black and white

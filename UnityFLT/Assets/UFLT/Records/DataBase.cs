@@ -487,7 +487,7 @@ namespace UFLT.Records
         /// <param name="file"></param>
         //////////////////////////////////////////////////////////////////
         public Database( string file, Record parent, ImportSettings settings )            
-        {			
+        {
 			Settings = settings;
             Stream = new InStream( file );
             Header = this;
@@ -495,16 +495,13 @@ namespace UFLT.Records
             if( parent != null )
             {
                 parent.Children.Add( this );
-				Log = parent.Log;
+				Log = parent.Log; // Use the same log
             }
 			else
 			{
 				// Init log
-				Log = new Log();		
-				foreach( string s in Settings.AdditionalSearchDirectories )
-				{
-					FileFinder.Instance.AddPath( s );
-				}
+				Log = new Log();
+                Settings.AdditionalSearchDirectories.ForEach( o => FileFinder.Instance.AddPath( o ) );				
 			}
 			
 			Log.Write( "Loading file: " + file );
@@ -536,7 +533,7 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.DegreeOfFreedom] = HandleDOF;
             ChildHandler.Handler[Opcodes.Group] = HandleGroup;
 			ChildHandler.Handler[Opcodes.ExternalReference] = HandleExternalReference;
-            ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleUnhandled;            
+            ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleLevelOfDetail;            
         }
 
         //////////////////////////////////////////////////////////////////
@@ -609,15 +606,37 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
 		public override void ImportIntoScene()
 		{
-			base.ImportIntoScene();
-			
-			if( Parent == null )
-			{
-				// TODO: Convert between left and right hand coordinate systems
-				// Rotate so z is up
-				UnityGameObject.transform.Rotate( new Vector3( 270, 180, 0 ) );
-			}
+            if( Parent == null )
+            {
+                System.Diagnostics.Stopwatch timer = System.Diagnostics.Stopwatch.StartNew();
+
+                base.ImportIntoScene();
+
+                // TODO: Convert between left and right hand coordinate systems
+                // Rotate so z is up
+                UnityGameObject.transform.Rotate( new Vector3( 270, 180, 0 ) );
+
+                Log.Write( string.Format( "Finished Importing Into Scene, total time taken: {0:0.00} seconds", timer.Elapsed.TotalSeconds ) );
+
+                // Print out the log
+                Debug.Log( Log.ToString() );
+            }
+            else
+            {
+                base.ImportIntoScene();
+            }   
 		}
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Closes the stream and performs base cleanup operations.
+        /// </summary>
+        //////////////////////////////////////////////////////////////////
+        public override void Cleanup()
+        {
+            Stream.Reader.Close();
+            base.Cleanup();
+        }
 
         #region Record Handlers        
 

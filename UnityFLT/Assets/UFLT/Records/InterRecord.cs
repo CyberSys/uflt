@@ -359,6 +359,19 @@ namespace UFLT.Records
             ExternalReference e = new ExternalReference( this );
             e.Parse();
             return true;
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Handles level of detail records.
+        /// </summary>
+        /// <returns></returns>
+        //////////////////////////////////////////////////////////////////
+        protected bool HandleLevelOfDetail()
+        {
+            LOD l = new LOD( this );
+            l.Parse();
+            return true;
         }		
 		
         #endregion Record Handlers

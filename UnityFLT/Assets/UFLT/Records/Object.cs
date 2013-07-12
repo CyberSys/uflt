@@ -156,8 +156,7 @@ namespace UFLT.Records
             get;
             set;
         }
-
-   
+           
 		#endregion Properties
 
         //////////////////////////////////////////////////////////////////

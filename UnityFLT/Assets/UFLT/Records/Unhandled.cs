@@ -38,7 +38,7 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.Sound] = HandleUnhandled;
             ChildHandler.Handler[Opcodes.ClipRegion] = HandleUnhandled;
 
-            ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleUnhandled;
+            ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleLevelOfDetail;
             ChildHandler.Handler[Opcodes.ExternalReference] = HandleExternalReference;
 		}
 

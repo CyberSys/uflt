@@ -228,7 +228,7 @@ namespace UFLT.Records
                 {
                     if( ActiveHandler.ThrowBackUnhandled || ActiveHandler.ThrowBacks.Contains( op ) ) // Do we throw back the record to be handled by the parent?
                     {
-						Log.WriteWarning( string.Format( "{0} throwing back - {1}", GetType(), op ) );
+						//Log.Write( string.Format( "{0} throwing back - {1}", GetType().Name, op ) );
                         // Mark the record to be repeated by our parent.
                         Header.Stream.Repeat = true;
                         break;
@@ -236,7 +236,7 @@ namespace UFLT.Records
                     else
                     {                        
                         // Just ignore the record.
-						Log.Write( string.Format( "{0} not handled record - {1}", GetType(), op ) );
+						Log.Write( string.Format( "{0} not handled record - {1}", GetType().Name, op ) );
                     }
                 }
             }
@@ -261,7 +261,20 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         public virtual void ImportIntoScene()
         {
-            Children.ForEach( o => o.ImportIntoScene() );
+            Children.ForEach( o => o.ImportIntoScene() );            
+        }
+
+        //////////////////////////////////////////////////////////////////
+        /// <summary>        
+        /// Cleans up for GC. Breaks relationships between nodes so un-referenced records will be garbage collected.
+        /// If you were to store a reference to a single record the whole database would stay in memory(could be huge!), 
+        /// so this ensures that does not happen but allows you to hold a reference to a record if you need to.
+        /// </summary>
+        //////////////////////////////////////////////////////////////////
+        public virtual void Cleanup()
+        {
+            Parent = null;
+            Children.Clear();
         }
 
         #region Record Handlers

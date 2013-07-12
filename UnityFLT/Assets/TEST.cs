@@ -5,24 +5,18 @@ using UFLT.Records;
 using System.Threading;
 using UFLT;
 using UFLT.Textures;
+using UFLT.Utils;
 
 public class TEST : MonoBehaviour 
 {
     public string file;
 
-    //public Thread t;
-
-    public Database db;
-	
-	public ImportSettings settings = new ImportSettings();
-
-	//public Texture2D tex;
+    public ImportSettings settings = new ImportSettings();
+        		
+	public Texture2D tex;
 	
 	IEnumerator Start ()
-    {	
-		//TextureSGI s = new TextureSGI( file );
-		//tex = s.Texture;
-		
+    {
 		// TODO: WHY ARE MATERIALS NOT SHARED. E.G load the same file twice, works for textures but not materials.
 		
 		//gameObject.AddComponent( typ );
@@ -33,17 +27,25 @@ public class TEST : MonoBehaviour
 		
 		
         // How to load a database multithreaded
-        db = new Database( file, null, settings );
+        Database db = new Database( file, null, settings );
 
         // Single-threaded
         //db.ParsePrepareAndImport();
 
         // Multi-threaded
         yield return StartCoroutine( db.ParseAsynchronously() );        
-        db.ImportIntoScene();
-		
-		// Print out log 
-		Debug.Log( db.Log.ToString() );		        
+        db.ImportIntoScene(); 
+        db.Cleanup();
+        //MaterialBank.instance = null;
+
+        // TODO: Material bank should not keep references or should clear them, maybe create a gameobject to keep reference of this stuff instead of static?
+        MaterialBank.instance.Materials.Clear();
+
+        db = null;
+        //settings = null;
+        
+        yield return new WaitForSeconds( 4 );
+        System.GC.Collect();
 	}
   
 

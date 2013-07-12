@@ -229,7 +229,7 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.ClipRegion] = HandleUnhandled;
             ChildHandler.Handler[Opcodes.DegreeOfFreedom] = HandleDOF;
 
-            ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleUnhandled;
+            ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleLevelOfDetail;
 		}
 
         //////////////////////////////////////////////////////////////////

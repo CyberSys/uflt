@@ -181,11 +181,6 @@ namespace UFLT.Records
             // Parse children
 			base.Parse();
         }
-
-        ~LOD()
-        {
-            Debug.LogError( "gc" );
-        }
 		
 		//////////////////////////////////////////////////////////////////
 		/// <summary>

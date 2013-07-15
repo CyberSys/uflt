@@ -35,11 +35,11 @@ public class TEST : MonoBehaviour
         // Multi-threaded
         yield return StartCoroutine( db.ParseAsynchronously() );        
         db.ImportIntoScene(); 
-        db.Cleanup();
+        //db.Cleanup();
         //MaterialBank.instance = null;
 
         // TODO: Material bank should not keep references or should clear them, maybe create a gameobject to keep reference of this stuff instead of static?
-        MaterialBank.instance.Materials.Clear();
+        //MaterialBank.instance.Materials.Clear();
 
         db = null;
         //settings = null;

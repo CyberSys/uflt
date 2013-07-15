@@ -9,9 +9,18 @@ namespace UFLT.Records
     /// <summary>
     /// The material palette contains descriptions of “standard” materials used while drawing geometry.
     /// </summary>
-	public class MaterialPalette : Record
+	public class MaterialPalette 
 	{
 		#region Properties
+
+        /// <summary>
+        /// Material name.
+        /// </summary>
+        public string ID
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// Index, position of material in list.
@@ -116,30 +125,30 @@ namespace UFLT.Records
         /// </summary>
         /// <param name="parent"></param>
         //////////////////////////////////////////////////////////////////
-        public MaterialPalette( Record parent ) :
-			base( parent, parent.Header )
+        public MaterialPalette()
 		{            
 		}
 
         //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Parses binary stream.
+        /// Parses binary stream. 
         /// </summary>
+        /// <param name="db">Database this material is part of.</param>
         //////////////////////////////////////////////////////////////////
-        public override void Parse()
+        public void Parse( Database db )
         {
-            Index = Header.Stream.Reader.ReadInt32();
-            ID = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( 12 ) ); // Name of material
-            Flags = Header.Stream.Reader.ReadInt32();
-            Ambient = new Color( Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle() );
-            Diffuse = new Color( Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle() );
-            Specular = new Color( Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle() );
-            Emissive = new Color( Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle() );
-			
-			Shininess = Header.Stream.Reader.ReadSingle(); // Also apply it to the alpha channel.
+            Index = db.Stream.Reader.ReadInt32();
+            ID = NullTerminatedString.GetAsString( db.Stream.Reader.ReadBytes( 12 ) ); // Name of material
+            Flags = db.Stream.Reader.ReadInt32();
+            Ambient = new Color( db.Stream.Reader.ReadSingle(), db.Stream.Reader.ReadSingle(), db.Stream.Reader.ReadSingle() );
+            Diffuse = new Color( db.Stream.Reader.ReadSingle(), db.Stream.Reader.ReadSingle(), db.Stream.Reader.ReadSingle() );
+            Specular = new Color( db.Stream.Reader.ReadSingle(), db.Stream.Reader.ReadSingle(), db.Stream.Reader.ReadSingle() );
+            Emissive = new Color( db.Stream.Reader.ReadSingle(), db.Stream.Reader.ReadSingle(), db.Stream.Reader.ReadSingle() );
+
+            Shininess = db.Stream.Reader.ReadSingle(); // Also apply it to the alpha channel.
 			Specular = new Color( Specular.r, Specular.g, Specular.b, Shininess / 128f ); // Use the shininess in the specular alpha channel.
-			
-            Alpha = Header.Stream.Reader.ReadSingle();
+
+            Alpha = db.Stream.Reader.ReadSingle();
         }
 		
 		//////////////////////////////////////////////////////////////////
@@ -156,13 +165,6 @@ namespace UFLT.Records
 		//////////////////////////////////////////////////////////////////
 		public bool Equals( MaterialPalette other )
 		{
-			// First check index, if it matches and we both belong to the same db then we are the same.
-			if( Index  != other.Index  )return false;
-			if( Header == other.Header )return true; // Same index and same db, no need to check the rest.
-			
-			// Name is not important, if 2 materials have different names but the same values it makes more sense to combine them at this stage.
-			// Flags also has no impact on appearance so lets ignore that too.
-			
 			// Check color fields
 			if( !Ambient.Equals( other.Ambient )   ) return false;
 			if( !Diffuse.Equals( other.Diffuse )   ) return false;

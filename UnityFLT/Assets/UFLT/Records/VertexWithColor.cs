@@ -8,7 +8,7 @@ namespace UFLT.Records
     /// <summary>
     /// A vertex with color data.
     /// </summary>
-	public class VertexWithColor : Record
+	public class VertexWithColor 
 	{
 		#region Properties
 
@@ -114,8 +114,7 @@ namespace UFLT.Records
         /// </summary>
         /// <param name="parent"></param>
         //////////////////////////////////////////////////////////////////
-        public VertexWithColor( Record parent ) :
-			base( parent, parent.Header )
+        public VertexWithColor()
 		{
 		}
 
@@ -123,21 +122,22 @@ namespace UFLT.Records
         /// <summary>
         /// Parses binary stream.
         /// </summary>
+        /// <param name="db">Database that this vertex is part of.</param>
         //////////////////////////////////////////////////////////////////
-        public override void Parse()
+        public virtual void Parse( Database db )
         {
-            ColorNameIndex = Header.Stream.Reader.ReadUInt16();
-            Flags = Header.Stream.Reader.ReadInt16();
-			Coordinate = new double[3]{ Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };					
+            ColorNameIndex = db.Stream.Reader.ReadUInt16();
+            Flags = db.Stream.Reader.ReadInt16();
+            Coordinate = new double[3] { db.Stream.Reader.ReadDouble(), db.Stream.Reader.ReadDouble(), db.Stream.Reader.ReadDouble() };					
 			
             Color32 c = new Color32();
-            c.a = Header.Stream.Reader.ReadByte();
-            c.b = Header.Stream.Reader.ReadByte();
-            c.g = Header.Stream.Reader.ReadByte();
-            c.r = Header.Stream.Reader.ReadByte();
+            c.a = db.Stream.Reader.ReadByte();
+            c.b = db.Stream.Reader.ReadByte();
+            c.g = db.Stream.Reader.ReadByte();
+            c.r = db.Stream.Reader.ReadByte();
             PackedColor = c;
 
-            VertexColorIndex = Header.Stream.Reader.ReadUInt32();
+            VertexColorIndex = db.Stream.Reader.ReadUInt32();
         }
 	}
 }

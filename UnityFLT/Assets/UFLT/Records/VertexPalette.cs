@@ -88,10 +88,10 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         private bool HandleVertexColor()
         {
-            VertexWithColor v = new VertexWithColor( this );
-            v.Parse();
+            VertexWithColor v = new VertexWithColor();
+            v.Parse( Header );
             Vertices[Offset] = v;
-            Offset += v.Length;
+            Offset += Header.Stream.Length;
             return true;
         }
 
@@ -103,10 +103,10 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         private bool HandleVertexColorNormal()
         {
-            VertexWithColorNormal v = new VertexWithColorNormal( this );
-            v.Parse();
+            VertexWithColorNormal v = new VertexWithColorNormal();
+            v.Parse( Header );
             Vertices[Offset] = v;
-            Offset += v.Length;
+            Offset += Header.Stream.Length;
             return true;
         }
 
@@ -118,10 +118,10 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         private bool HandleVertexColorUV()
         {
-            VertexWithColorUV v = new VertexWithColorUV( this );
-            v.Parse();
+            VertexWithColorUV v = new VertexWithColorUV();
+            v.Parse( Header );
             Vertices[Offset] = v;
-            Offset += v.Length;
+            Offset += Header.Stream.Length;
             return true;
         }
 
@@ -133,10 +133,10 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         private bool HandleVertexColorNormalUV()
         {
-            VertexWithColorNormalUV v = new VertexWithColorNormalUV( this );
-            v.Parse();
+            VertexWithColorNormalUV v = new VertexWithColorNormalUV();
+            v.Parse( Header );
             Vertices[Offset] = v;
-            Offset += v.Length;
+            Offset += Header.Stream.Length;
             return true;
         }
 

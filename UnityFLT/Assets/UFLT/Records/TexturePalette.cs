@@ -13,7 +13,7 @@ namespace UFLT.Records
     /// The x and y palette locations are used to store offset locations in 
     /// the palette for display
     /// </summary>
-	public class TexturePalette : Record
+	public class TexturePalette 
 	{
 		#region Properties
 
@@ -61,8 +61,7 @@ namespace UFLT.Records
         /// </summary>
         /// <param name="parent"></param>
         //////////////////////////////////////////////////////////////////
-        public TexturePalette( Record parent ) :
-			base( parent, parent.Header )
+        public TexturePalette() 
 		{            
 		}
 
@@ -70,12 +69,13 @@ namespace UFLT.Records
         /// <summary>
         /// Parses binary stream.
         /// </summary>
+        /// <param name="db">Database that this vertex is part of.</param>
         //////////////////////////////////////////////////////////////////
-        public override void Parse()
-        {			
-            FileName = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( 200 ) ); 
-            Index = Header.Stream.Reader.ReadInt32();
-            Location = new int[] { Header.Stream.Reader.ReadInt32(), Header.Stream.Reader.ReadInt32() };            
+        public void Parse( Database db )
+        {
+            FileName = NullTerminatedString.GetAsString( db.Stream.Reader.ReadBytes( 200 ) );
+            Index = db.Stream.Reader.ReadInt32();
+            Location = new int[] { db.Stream.Reader.ReadInt32(), db.Stream.Reader.ReadInt32() };            
         }
 		
 		//////////////////////////////////////////////////////////////////
@@ -92,10 +92,6 @@ namespace UFLT.Records
 		//////////////////////////////////////////////////////////////////
 		public bool Equals( TexturePalette other )
 		{
-			// First check index, if it matches and we both belong to the same db then we are the same.
-			if( Index  != other.Index  ) return false;
-			if( Header == other.Header ) return true; // Same index and same db, no need to check the rest.
-						
 			// TODO: Filename could be relative for the current db, e.g if we are supporting multiple db using the same file. Need a way to check if this is so. Maybe convert to absolute addresses?
 			
 			if( !FileName.Equals( other.FileName ) ) return false;

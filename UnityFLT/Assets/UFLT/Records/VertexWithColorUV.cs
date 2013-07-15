@@ -29,8 +29,7 @@ namespace UFLT.Records
         /// </summary>
         /// <param name="parent"></param>
         //////////////////////////////////////////////////////////////////
-        public VertexWithColorUV( Record parent ) :
-			base( parent )
+        public VertexWithColorUV()
 		{
 		}
 
@@ -39,21 +38,21 @@ namespace UFLT.Records
         /// Parses binary stream.
         /// </summary>
         //////////////////////////////////////////////////////////////////
-        public override void Parse()
+        public override void Parse( Database db )
         {
-            ColorNameIndex = Header.Stream.Reader.ReadUInt16();
-            Flags = Header.Stream.Reader.ReadInt16();
-            Coordinate = new double[] { Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble(), Header.Stream.Reader.ReadDouble() };
-            UV = new Vector2( Header.Stream.Reader.ReadSingle(), Header.Stream.Reader.ReadSingle() );
+            ColorNameIndex = db.Stream.Reader.ReadUInt16();
+            Flags = db.Stream.Reader.ReadInt16();
+            Coordinate = new double[] { db.Stream.Reader.ReadDouble(), db.Stream.Reader.ReadDouble(), db.Stream.Reader.ReadDouble() };
+            UV = new Vector2( db.Stream.Reader.ReadSingle(), db.Stream.Reader.ReadSingle() );
             
             Color32 c = new Color32();
-            c.a = Header.Stream.Reader.ReadByte();
-            c.b = Header.Stream.Reader.ReadByte();
-            c.g = Header.Stream.Reader.ReadByte();
-            c.r = Header.Stream.Reader.ReadByte();
+            c.a = db.Stream.Reader.ReadByte();
+            c.b = db.Stream.Reader.ReadByte();
+            c.g = db.Stream.Reader.ReadByte();
+            c.r = db.Stream.Reader.ReadByte();
             PackedColor = c;
 
-            VertexColorIndex = Header.Stream.Reader.ReadUInt32();
+            VertexColorIndex = db.Stream.Reader.ReadUInt32();
             // Last 4 bytes are reserved
         }
 	}

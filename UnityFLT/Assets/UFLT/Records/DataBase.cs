@@ -719,8 +719,8 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         private bool HandleTexturePalette()
         {
-            TexturePalette t = new TexturePalette( this );
-            t.Parse();
+            TexturePalette t = new TexturePalette();
+            t.Parse( Header );
             TexturePalettes[t.Index] = t;
             return true;
         }
@@ -746,8 +746,8 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         private bool HandleMaterialPalette()
         {
-            MaterialPalette m = new MaterialPalette( this );
-            m.Parse();
+            MaterialPalette m = new MaterialPalette();
+            m.Parse( Header );
             MaterialPalettes[m.Index] = m;
             return true;
         }

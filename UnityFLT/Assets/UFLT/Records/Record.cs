@@ -264,19 +264,6 @@ namespace UFLT.Records
             Children.ForEach( o => o.ImportIntoScene() );            
         }
 
-        //////////////////////////////////////////////////////////////////
-        /// <summary>        
-        /// Cleans up for GC. Breaks relationships between nodes so un-referenced records will be garbage collected.
-        /// If you were to store a reference to a single record the whole database would stay in memory(could be huge!), 
-        /// so this ensures that does not happen but allows you to hold a reference to a record if you need to.
-        /// </summary>
-        //////////////////////////////////////////////////////////////////
-        public virtual void Cleanup()
-        {
-            Parent = null;
-            Children.Clear();
-        }
-
         #region Record Handlers
 
         //////////////////////////////////////////////////////////////////

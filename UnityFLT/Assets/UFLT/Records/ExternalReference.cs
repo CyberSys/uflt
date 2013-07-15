@@ -184,6 +184,13 @@ namespace UFLT.Records
 			{
 				ID = "Ref: " + Path;
 				Reference = new Database( AbsolutePath, this, Header.Settings );
+				
+				// Override 
+				if( FlagsColorPaletteOverridden ) Reference.ColorPalette = Header.ColorPalette;
+				if( FlagsMaterialPaletteOverridden ) Reference.MaterialPalettes = Header.MaterialPalettes;
+				if( FlagsTexturePaletteOverridden ) Reference.TexturePalettes = Header.TexturePalettes;
+				// TODO: Implment overrides for other records that are not currently implemented.											
+				
 				Reference.Parse();
 			}
 			else

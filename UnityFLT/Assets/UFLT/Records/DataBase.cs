@@ -627,17 +627,6 @@ namespace UFLT.Records
             }   
 		}
 
-        //////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Closes the stream and performs base cleanup operations.
-        /// </summary>
-        //////////////////////////////////////////////////////////////////
-        public override void Cleanup()
-        {
-            Stream.Reader.Close();
-            base.Cleanup();
-        }
-
         #region Record Handlers        
 
         //////////////////////////////////////////////////////////////////
@@ -706,9 +695,18 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         private bool HandleColorPalette()
         {
-            ColorPalette = new ColorPalette( this );
-            ColorPalette.Parse();
-            return true;
+			// Ignore if the palette is overriden
+			if( Parent != null && Parent is ExternalReference )
+			{
+				if( ( Parent as ExternalReference ).FlagsColorPaletteOverridden )
+				{
+					return true;
+				}
+			}
+			
+        	ColorPalette = new ColorPalette( this );
+        	ColorPalette.Parse();
+		    return true;
         }
 
         //////////////////////////////////////////////////////////////////
@@ -719,9 +717,18 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         private bool HandleTexturePalette()
         {
-            TexturePalette t = new TexturePalette();
-            t.Parse( Header );
-            TexturePalettes[t.Index] = t;
+			// Ignore if the palette is overriden
+			if( Parent != null && Parent is ExternalReference )
+			{
+				if( ( Parent as ExternalReference ).FlagsTexturePaletteOverridden )
+				{
+					return true;
+				}
+			}
+			
+        	TexturePalette t = new TexturePalette();
+        	t.Parse( Header );
+        	TexturePalettes[t.Index] = t;		
             return true;
         }
                 
@@ -746,6 +753,15 @@ namespace UFLT.Records
         //////////////////////////////////////////////////////////////////
         private bool HandleMaterialPalette()
         {
+			// Ignore if the palette is overriden
+			if( Parent != null && Parent is ExternalReference )
+			{
+				if( ( Parent as ExternalReference ).FlagsMaterialPaletteOverridden )
+				{
+					return true;
+				}
+			}
+			
             MaterialPalette m = new MaterialPalette();
             m.Parse( Header );
             MaterialPalettes[m.Index] = m;

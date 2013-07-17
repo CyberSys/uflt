@@ -4,6 +4,7 @@ using UFLT.Records;
 using UFLT.DataTypes.Enums;
 using System.IO;
 using UFLT.Textures;
+using System.Collections;
 
 namespace UFLT.Utils
 {
@@ -17,9 +18,7 @@ namespace UFLT.Utils
     public class MaterialBank
     {
         #region Properties
-		
-        public static MaterialBank instance;
-		
+				
 		/// <summary>
 		/// Current materials.		
 		/// </summary>		
@@ -29,21 +28,6 @@ namespace UFLT.Utils
 			set;
 		}		
 
-        /// <summary>
-        /// Singleton instance.
-        /// </summary>
-        public static MaterialBank Instance
-        {
-            get
-            {
-                if( instance == null )
-                {
-                    instance = new MaterialBank();
-                }
-				return instance;
-            }
-        }
-		
 		/// <summary>
 		/// Known textures, key is <b>absolute</b> file path.
 		/// </summary>		
@@ -57,10 +41,10 @@ namespace UFLT.Utils
 
         //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Private constructor to enforce singleton.
+        /// Ctr
         /// </summary>
         //////////////////////////////////////////////////////////////////
-        private MaterialBank()
+        public MaterialBank()
         {
 			Materials = new List<IntermediateMaterial>();
 			Textures = new Dictionary<string, Texture2D>();
@@ -95,7 +79,7 @@ namespace UFLT.Utils
 				}            
 	
 				// Create a new material
-				IntermediateMaterial im = new IntermediateMaterial( mp, mainTex, detailTex, f.Transparency, f.LightMode );
+				IntermediateMaterial im = new IntermediateMaterial( this, mp, mainTex, detailTex, f.Transparency, f.LightMode );
 				Materials.Add( im );
 				return im;				
 			}			
@@ -103,9 +87,63 @@ namespace UFLT.Utils
 		
 		//////////////////////////////////////////////////////////////////
 		/// <summary>
+		/// Loads all material textures using a coroutine.
+		/// </summary>
+		//////////////////////////////////////////////////////////////////
+		public IEnumerator LoadTextures()
+		{
+			foreach( IntermediateMaterial im in Materials )
+			{
+				string path = FileFinder.Instance.Find( im.MainTexture.FileName );			
+				if( path != string.Empty )
+				{
+					// Have we already loaded this texture?					
+					if( Textures.ContainsKey( path ) )
+					{
+						// Dont need to load it.
+						break;
+					}
+					
+					string ext = Path.GetExtension( path );
+					if( ext == ".rgb" ||
+						ext == ".rgba" ||
+	                    ext == ".bw" ||
+						ext == ".int" || 
+						ext == ".inta" || 
+						ext == ".sgi" )
+					{					
+						TextureSGI sgi = new TextureSGI( path );
+						Texture2D tex = sgi.Texture;
+						if( tex != null )
+						{
+							Textures[path] = tex;	
+							return tex;
+						}
+					}
+					else
+					{							
+						WWW www = new WWW( "file://" + path );				
+						yield return www;
+		
+						if( www.error == null && www.texture != null )
+						{
+							Textures[path] = www.texture;	
+							return www.texture;
+						}							
+						else
+						{
+							Debug.LogError( www.error );	
+						}
+					}
+				}			
+			}
+		}
+		
+		//////////////////////////////////////////////////////////////////
+		/// <summary>
 		/// Finds the texture if it has already been loaded else loads
 		/// the new texture and records it for future re-use.
-		/// </summary>
+		/// </summary> Texture will be loaded in the same thread.
 		/// <returns>
 		/// Found texture or null if it can not be found/loaded.
 		/// </returns>
@@ -145,12 +183,9 @@ namespace UFLT.Utils
 				}
 				else
 				{							
-					// We need to load the texture.	
-					// TODO: Load textures & create materials in a seperate function that supports coroutines.
 					WWW www = new WWW( "file://" + path );				
 					while( !www.isDone )
-					{
-						// HACK: coroutine me up!									
+					{							
 					}
 	
 					if( www.error == null && www.texture != null )

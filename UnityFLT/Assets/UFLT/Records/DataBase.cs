@@ -34,6 +34,15 @@ namespace UFLT.Records
             get;
             set;
         }
+		
+		/// <summary>
+		/// Collates related data in order to generate Unity materials.
+		/// </summary>		
+		public MaterialBank MaterialBank
+		{
+			get;
+			set;
+		}
 
         #region Palettes
 
@@ -492,6 +501,7 @@ namespace UFLT.Records
             Stream = new InStream( file );
             Header = this;
             Parent = parent;
+			MaterialBank = new MaterialBank();
             if( parent != null )
             {
                 parent.Children.Add( this );
@@ -538,7 +548,7 @@ namespace UFLT.Records
 
         //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Coroutine, Loads the db in a seperate thread. Returns once the
+        /// Coroutine, Loads the db and textures in a seperate thread. Returns once the
         /// db is loaded and ready to be imported into the scene.
         /// <example>
         /// Database db = new Database( file );
@@ -548,8 +558,8 @@ namespace UFLT.Records
         /// </summary>
         /// <returns></returns>
         //////////////////////////////////////////////////////////////////        
-        public IEnumerator ParseAsynchronously()
-        {            
+        public IEnumerator ParseAsynchronously( MonoBehaviour controller )
+        {   			
             Thread t = new Thread( ParseAndPrepare );            
             t.Start();   
          
@@ -558,6 +568,9 @@ namespace UFLT.Records
             {
                 yield return 0;
             }                      
+			
+			// Load textures.
+			yield return controller.StartCoroutine( MaterialBank.LoadTextures() );
         }
 		
 		//////////////////////////////////////////////////////////////////
@@ -590,7 +603,7 @@ namespace UFLT.Records
 
         //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Parses db and imports into the scene()
+        /// Parses db and imports into the scene().
         /// </summary>
         //////////////////////////////////////////////////////////////////
         public void ParsePrepareAndImport()

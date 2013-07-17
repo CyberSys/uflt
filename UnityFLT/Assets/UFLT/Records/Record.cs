@@ -245,7 +245,7 @@ namespace UFLT.Records
 		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Prepares the record for importing into the scene. Everything that 
-		/// can be done outside of the main unity thread is dont here.
+		/// can be done outside of the main unity thread is done here.
 		/// </summary>
 		//////////////////////////////////////////////////////////////////
 		public virtual void PrepareForImport()

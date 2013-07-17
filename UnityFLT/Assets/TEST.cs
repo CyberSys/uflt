@@ -16,36 +16,13 @@ public class TEST : MonoBehaviour
 	public Texture2D tex;
 	
 	IEnumerator Start ()
-    {
-		// TODO: WHY ARE MATERIALS NOT SHARED. E.G load the same file twice, works for textures but not materials.
-		
-		//gameObject.AddComponent( typ );
-		
-		//WWW www = new WWW( "file://" + @"D:\Desktop\TruckTop.jpg" );
-		//yield return www;
-		//tex = www.texture;
-		
-		
-        // How to load a database multithreaded
+    {		
+        // How to load a database multi-threaded
         Database db = new Database( file, null, settings );
-
-        // Single-threaded
-        //db.ParsePrepareAndImport();
-
-        // Multi-threaded
-        yield return StartCoroutine( db.ParseAsynchronously() );        
+		
+		// TODO: Controller object with callback
+        yield return StartCoroutine( db.ParseAsynchronously( this ) ); 
         db.ImportIntoScene(); 
-        //db.Cleanup();
-        //MaterialBank.instance = null;
-
-        // TODO: Material bank should not keep references or should clear them, maybe create a gameobject to keep reference of this stuff instead of static?
-        //MaterialBank.instance.Materials.Clear();
-
-        db = null;
-        //settings = null;
-        
-        yield return new WaitForSeconds( 4 );
-        System.GC.Collect();
 	}
   
 

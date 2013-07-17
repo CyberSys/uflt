@@ -262,7 +262,7 @@ namespace UFLT.Records
             }
 
             // Create a new submesh
-            IntermediateMaterial im = MaterialBank.Instance.FindOrCreateMaterial( f );
+            IntermediateMaterial im = Header.MaterialBank.FindOrCreateMaterial( f );
             KeyValuePair<IntermediateMaterial, List<int>> newMesh = new KeyValuePair<IntermediateMaterial, List<int>>( im, new List<int>() );
             SubMeshes.Add( newMesh );
             return newMesh;

@@ -189,7 +189,12 @@ namespace UFLT.Records
 				if( FlagsColorPaletteOverridden ) Reference.ColorPalette = Header.ColorPalette;
 				if( FlagsMaterialPaletteOverridden ) Reference.MaterialPalettes = Header.MaterialPalettes;
 				if( FlagsTexturePaletteOverridden ) Reference.TexturePalettes = Header.TexturePalettes;
-				// TODO: Implment overrides for other records that are not currently implemented.											
+				// TODO: Implment overrides for other records that are not currently implemented.		
+				
+				if( FlagsMaterialPaletteOverridden || FlagsTexturePaletteOverridden )
+				{
+					Reference.MaterialBank = Header.MaterialBank; // Share material bank.	
+				}													
 				
 				Reference.Parse();
 			}

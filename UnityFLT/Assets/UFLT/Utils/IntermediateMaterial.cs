@@ -14,6 +14,15 @@ namespace UFLT.Utils
         #region Properties
 		
 		/// <summary>
+		/// Collates related data in order to generate Unity materials.
+		/// </summary>		
+		public MaterialBank MaterialBank
+		{
+			get;
+			set;
+		}		
+		
+		/// <summary>
 		/// Gets or sets the unity material.
 		/// This could be null if the material has not been imported into the scene yet.
 		/// </summary>		
@@ -85,14 +94,16 @@ namespace UFLT.Utils
 		/// <summary>
 		/// Initializes a new instance of the <see cref="UFLT.Utils.IntermediateMaterial"/> class.
 		/// </summary>
+		/// <param name='bank'>Material bank, used for finding materials.</param>
 		/// <param name='mp'>Material palette or null.</param>
 		/// <param name='main'>Main texture or null.</param>
 		/// <param name='detail'>Detail texture or null.</param>
 		/// <param name='transparancy'>Transparancy</param>
 		/// <param name='lm'>Light mode.</param>
 		//////////////////////////////////////////////////////////////////
-		public IntermediateMaterial( MaterialPalette mp, TexturePalette main, TexturePalette detail, ushort transparancy, LightMode lm )
+		public IntermediateMaterial( MaterialBank bank, MaterialPalette mp, TexturePalette main, TexturePalette detail, ushort transparancy, LightMode lm )
 		{
+			MaterialBank = bank;
 			Palette = mp;
 			MainTexture = main;
 			DetailTexture = detail;
@@ -173,14 +184,13 @@ namespace UFLT.Utils
 			{
 				if( mat.HasProperty( "_MainTex" ) )
 				{
-					Texture2D t = MaterialBank.Instance.FindOrCreateTexture( MainTexture );
+					Texture2D t = MaterialBank.FindOrCreateTexture( MainTexture );
 					if( t != null )
 					{
 						mat.SetTexture( "_MainTex", t );
 					}
 				}
 			}			
-					
 			
             if( Palette != null )
             {

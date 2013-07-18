@@ -17,7 +17,7 @@ public class TEST : MonoBehaviour
 	
 	void Start()
     {		
-		UFLT.Controllers.Loader.LoadOpenFlight( file, OnFileLoaded, settings );		
+		UFLT.Controllers.OpenFlightLoader.LoadOpenFlight( file, OnFileLoaded, settings );		
 	}
 			
 	void OnFileLoaded( Database db )

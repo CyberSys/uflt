@@ -1,12 +1,40 @@
 using UnityEngine;
 using UnityEditor;
 using UFLT.Records;
+using System.Collections.Generic;
 using Object = UnityEngine.Object;
+using System.Text;
+using System.IO;
 
 namespace UFLT.Editor
 {
 	public class AssetImporter
 	{
+		static StringBuilder sb = new StringBuilder();		
+				
+		static public void CollectDependanciesRecursive( UnityEngine.Object obj, ref Dictionary<int, Object> dependencies)
+   		{
+	        if (!dependencies.ContainsKey( obj.GetHashCode() ) )
+	        {
+	            dependencies.Add( obj.GetHashCode(), obj );      
+	            SerializedObject objSO = new SerializedObject( obj );
+	            SerializedProperty property = objSO.GetIterator();
+	            do 
+	            {
+					sb.AppendLine( property.name );
+	                if( ( property.propertyType == SerializedPropertyType.ObjectReference ) && 
+	                    ( property.objectReferenceValue != null ) && 
+	                    ( property.name != "m_PrefabParentObject" ) && //Don't follow prefabs
+	                    ( property.name != "m_PrefabInternal" ) && //Don't follow prefab internals
+	                    ( property.name != "m_Father" ) ) //Don't go back up the hierarchy in transforms
+	                {
+	                    CollectDependanciesRecursive( property.objectReferenceValue, ref dependencies );
+	                }
+	            } 
+				while( property.Next( true ) );	
+        	}
+    	}			
+		
 		[MenuItem( "Assets/Import OpenFlight(.flt)" )]
 		public static void AssetsImportOpenFlight()
 		{
@@ -14,108 +42,32 @@ namespace UFLT.Editor
 		
 			string fltPath = EditorUtility.OpenFilePanel( "Import OpenFlight", Application.dataPath, "flt" );
 			
-			Database db = null;
-			
+			Database db = null;			
 			if( fltPath.Length != 0 )
 			{
 				db = new Database( fltPath );
 				db.ParsePrepareAndImport();
 			}			
 			
-			//string assetPath = EditorUtility.SaveFilePanelInProject( "Save Prefab", "OpenFlight File", "asset", "Where to save the prefab version of your OpenFlight file?" );
-			//if( assetPath.Length != 0 )
-			{		
-					Object[] depends = EditorUtility.CollectDependencies( new Object[]{ db.UnityGameObject } );
-				foreach( Object o in depends )
-				{
-					if( !o.Equals( db.UnityGameObject ) )
-					{
-						if( o is MeshRenderer )
-						{	
-							foreach( Material m in ( o as MeshRenderer ).sharedMaterials )
-							{
-								//AssetDatabase.AddObjectToAsset( m, db.UnityGameObject );						
-								if( AssetDatabase.GetAssetPath( m ) == null )
-								{
-									AssetDatabase.CreateAsset( m, "Assets/TEST/" + m.name + ".mat" );
-								}
-								if( m.mainTexture != null )
-								{
-								}
-							}
-						}
-					}
-				}
-				
-				
-							
-				AssetDatabase.CreateAsset( db.UnityGameObject, "Assets/TEST/test.asset"/*assetPath*/ );
-				
-				foreach( Object o in depends )
-				{
-					if( !o.Equals( db.UnityGameObject ) )
-					{
-						if( o is GameObject )continue;
-						if( o is MeshRenderer )
-						{	
+			Dictionary<int, Object> depends = new Dictionary<int, Object>();
+			CollectDependanciesRecursive( db.UnityGameObject, ref depends );
 					
-						}
-						
-						if( o is MeshFilter )
-						{
-							AssetDatabase.AddObjectToAsset( ( o as MeshFilter ).sharedMesh, db.UnityGameObject );							
-						}						
-						
-						if( o is Transform )
-						{
-							continue;	
-						}
-						
-						Debug.Log( o );
-						//AssetDatabase.AddObjectToAsset( o, db.UnityGameObject );	
-					}
-				}
-				
-				AssetDatabase.SaveAssets();
-				//var ob = PrefabUtility.CreateEmptyPrefab( "Assets/empty.prefab" );
-				//PrefabUtility.ReplacePrefab( db.UnityGameObject, ob, ReplacePrefabOptions.ReplaceNameBased );
-				
-				//AssetDatabase.SaveAssets();
-				
-				
-				//PrefabUtility.CreatePrefab( path, db.UnityGameObject );
-				/*
-				foreach( Object o in depends )
+			AssetDatabase.CreateAsset( db.UnityGameObject, "Assets/TEST/db.asset"/*assetPath*/ );
+			foreach( KeyValuePair<int, Object> kvp in depends )
+			{
+				if( kvp.Value != db.UnityGameObject )
 				{
-					if( o != db.UnityGameObject )
-					{
-						if( o is MeshRenderer )
-						{							 
-							foreach( Material m in ( o as MeshRenderer ).materials )
-							{
-								AssetDatabase.AddObjectToAsset( m, db.UnityGameObject );						
-								
-								if( m.mainTexture != null )
-								{
-									//AssetDatabase.AddObjectToAsset( m.mainTexture, db.UnityGameObject );							
-								}
-							}
-						}
-						
-						if( o is MeshFilter )
-						{
-							AssetDatabase.AddObjectToAsset( ( o as MeshFilter ).mesh, db.UnityGameObject );							
-						}
-						
-						AssetDatabase.AddObjectToAsset( o, db.UnityGameObject );
-					}
+					AssetDatabase.AddObjectToAsset( kvp.Value, db.UnityGameObject );	
 				}
-				
-				PrefabUtility.CreatePrefab( "Assets/testp.prefab", db.UnityGameObject );	
-				*/		
-			}							
-		}
-
-		
+			}					
+						
+			Object o = PrefabUtility.CreateEmptyPrefab( "Assets/TEST/dbpr.prefab" );			
+			PrefabUtility.ReplacePrefab( db.UnityGameObject, o );
+			AssetDatabase.SaveAssets();	
+			
+			TextWriter writer = File.CreateText("perl.txt");
+			writer.Write( sb.ToString() );
+			//Debug.Log( sb );
+		}		
 	}
 }

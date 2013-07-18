@@ -18,7 +18,7 @@ namespace UFLT.Utils
     public class MaterialBank
     {
         #region Properties
-				
+		
 		/// <summary>
 		/// Current materials.		
 		/// </summary>		
@@ -127,7 +127,7 @@ namespace UFLT.Utils
 		
 						if( www.error == null && www.texture != null )
 						{
-							Textures[path] = www.texture;	
+							Textures[path] = www.texture;															
 							return www.texture;
 						}							
 						else

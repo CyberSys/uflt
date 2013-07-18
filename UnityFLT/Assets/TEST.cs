@@ -15,14 +15,14 @@ public class TEST : MonoBehaviour
         		
 	public Texture2D tex;
 	
-	IEnumerator Start ()
+	void Start()
     {		
-        // How to load a database multi-threaded
-        Database db = new Database( file, null, settings );
-		
-		// TODO: Controller object with callback
-        yield return StartCoroutine( db.ParseAsynchronously( this ) ); 
-        db.ImportIntoScene(); 
+		UFLT.Controllers.Loader.LoadOpenFlight( file, OnFileLoaded, settings );		
+	}
+			
+	void OnFileLoaded( Database db )
+	{
+		Debug.Log( "File loaded" );		
 	}
   
 

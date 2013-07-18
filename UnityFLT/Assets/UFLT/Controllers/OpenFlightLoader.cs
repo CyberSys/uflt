@@ -6,7 +6,8 @@ using System;
 
 namespace UFLT.Controllers
 {
-	public class Loader : MonoBehaviour 
+	[AddComponentMenu( "UFLT/OpenFlight Loader" )]
+	public class OpenFlightLoader : MonoBehaviour 
 	{
 		#region Properties
 		
@@ -16,25 +17,25 @@ namespace UFLT.Controllers
 		// Import settings for all files.
 		public ImportSettings settings = new ImportSettings();
 		
-		private static Loader instance = null;
+		private static OpenFlightLoader instance = null;
 		
 		/// <summary>
 		/// Singleton instance.
 		/// </summary>		
-		public static Loader Instance
+		public static OpenFlightLoader Instance
 		{
 			get
 			{
 				if( instance == null )
 				{			
 					GameObject go = new GameObject( "OpenFlight Loader" );
-					instance = go.AddComponent<Loader>();
+					instance = go.AddComponent<OpenFlightLoader>();
 				}
 				
 				return instance;
 			}
 		}
-				
+						
 		private class LoadRequest
 		{
 			public string path;
@@ -79,7 +80,7 @@ namespace UFLT.Controllers
 		//////////////////////////////////////////////////////////////////
 		public static void LoadOpenFlight( string file, Action<Database> callback, ImportSettings settings )
 		{			
-			Loader l = Instance;
+			OpenFlightLoader l = Instance;
 			
 			LoadRequest lr = new LoadRequest();
 			lr.path = file;

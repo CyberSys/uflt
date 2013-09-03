@@ -197,6 +197,7 @@ namespace UFLT.Textures
 		//////////////////////////////////////////////////////////////////////
 		private void ReadHeader()
 		{
+			Debug.Log( "Reading header" );
 			// Magic number
 			short magic = Reader.ReadInt16();		
 			if( magic != 474 )

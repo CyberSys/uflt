@@ -117,6 +117,7 @@ namespace UFLT.Utils
 						if( tex != null )
 						{
 							Textures[path] = tex;	
+							tex.name = Path.GetFileNameWithoutExtension( path );
 							return tex;
 						}
 					}
@@ -128,6 +129,7 @@ namespace UFLT.Utils
 						if( www.error == null && www.texture != null )
 						{
 							Textures[path] = www.texture;															
+							www.texture.name = Path.GetFileNameWithoutExtension( path );
 							return www.texture;
 						}							
 						else
@@ -177,7 +179,8 @@ namespace UFLT.Utils
 					tex = sgi.Texture;
 					if( tex != null )
 					{
-						Textures[path] = tex;	
+						Textures[path] = tex;
+						tex.name = Path.GetFileNameWithoutExtension( path );
 						return tex;
 					}
 				}
@@ -191,6 +194,7 @@ namespace UFLT.Utils
 					if( www.error == null && www.texture != null )
 					{
 						Textures[path] = www.texture;	
+						www.texture.name = Path.GetFileNameWithoutExtension( path );
 						return www.texture;
 					}							
 					else

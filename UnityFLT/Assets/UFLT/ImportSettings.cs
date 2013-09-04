@@ -67,6 +67,25 @@ namespace UFLT
             }
         }	
 		
+		[SerializeField]
+		protected bool generateColliders = false;
+		
+		/// <summary>
+		/// Adds mesh colliders to objects that contain a mesh.
+		/// </summary>		
+		public bool GenerateColliders
+		{
+			get
+			{
+				return generateColliders;
+			}
+			set
+			{
+				generateColliders = value;
+			}
+		}
+				
+		
 		#endregion Properties
 				
         //////////////////////////////////////////////////////////////////
@@ -81,6 +100,6 @@ namespace UFLT
             // Defaults
             degreeOfFreedomComponent = "DegreeOfFreedom";
             levelOfDetailComponent = "LevelOfDetail";
-		}	
+		}				
 	}
 }

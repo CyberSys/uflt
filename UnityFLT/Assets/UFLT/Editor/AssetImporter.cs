@@ -100,6 +100,9 @@ namespace UFLT.Editor
 			Object o = PrefabUtility.CreatePrefab( Path.Combine( outDirRelative, fltName + ".prefab" ).Replace( "\\", "/" ), db.UnityGameObject );
 			PrefabUtility.ReplacePrefab( db.UnityGameObject, o );
 			
+			// Remove from the scene.
+			GameObject.DestroyImmediate( db.UnityGameObject, true );
+			
 			// Refresh
 			AssetDatabase.SaveAssets();	
 		}		

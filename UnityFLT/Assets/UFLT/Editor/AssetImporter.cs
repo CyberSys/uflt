@@ -57,7 +57,7 @@ namespace UFLT.Editor
 				Object o = AssetDatabase.LoadAssetAtPath( outFileRelative, typeof( Texture ) );
 				if( o != null )
 				{
-					//Object.DestroyImmediate( t, true );
+					Object.DestroyImmediate( t );
 					return o as Texture;	
 				}				
 			}
@@ -99,16 +99,16 @@ namespace UFLT.Editor
 			}			
 			
 			// Make relative
-			string outDirRelative = MakePathRelative( outDir );		
-			string materialsDir = AssetDatabase.CreateFolder( outDirRelative, "Materials" ); // Create materials dir
+			string outDirRelative = MakePathRelative( outDir );					
+			AssetDatabase.CreateFolder( outDirRelative, "Materials" ); // Create materials dir
 			AssetDatabase.Refresh(); // Refresh for new directories that may have been created.
 			
 			// Collect depenancies.
 			Dictionary<int, Object> depends = new Dictionary<int, Object>();
-			CollectDependanciesRecursive( db.UnityGameObject, ref depends );			
+			CollectDependanciesRecursive( db.UnityGameObject, ref depends );		
 			
 			// Create our asset/s
-			AssetDatabase.CreateAsset( db.UnityGameObject, Path.Combine( outDirRelative, fltName + ".asset" ) );
+			AssetDatabase.CreateAsset( db.UnityGameObject, Path.Combine( outDirRelative, fltName + "_Meshes.asset" ) );
 			foreach( KeyValuePair<int, Object> kvp in depends )
 			{
 				if( kvp.Value != db.UnityGameObject )
@@ -118,11 +118,10 @@ namespace UFLT.Editor
 					if( kvp.Value is Texture )continue;
 					if( kvp.Value is Material )
 					{									
-						// TODO: Check if materials dir exists and it material already exists.
 						Material m = kvp.Value as Material;
 						Texture t = m.mainTexture; // The connection to the texture will be lost when we create the asset so we will need to re-assign it.
 						string name = string.IsNullOrEmpty( m.name ) ? "material.mat" : m.name + ".mat";
-						string fileName = AssetDatabase.GenerateUniqueAssetPath( Path.Combine( materialsDir, name ) );					
+						string fileName = AssetDatabase.GenerateUniqueAssetPath( Path.Combine( outDirRelative + "/Materials/", name ) );					
 						AssetDatabase.CreateAsset( kvp.Value, fileName );			
 						m.mainTexture = SaveToDisc( t, outDir );
 						continue;
@@ -139,11 +138,12 @@ namespace UFLT.Editor
 				
 			// Remove from the scene.
 			Object.DestroyImmediate( db.UnityGameObject, true );
-			
+		
 			// Refresh
 			AssetDatabase.SaveAssets();	
 			
-			// TODO: destroy old materials
+			// Cleanup old materials/textures etc.
+			EditorUtility.UnloadUnusedAssetsIgnoreManagedReferences(); 
 		}		
 	}
 }

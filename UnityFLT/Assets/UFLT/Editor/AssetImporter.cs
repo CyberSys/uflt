@@ -85,9 +85,11 @@ namespace UFLT.Editor
 					if( kvp.Value is Material )
 					{
 						Material m = kvp.Value as Material;
+						Texture t = m.mainTexture; // The connection to the texture will be lost when we create the asset so we will need to re-assign it.
 						string name = string.IsNullOrEmpty( m.name ) ? "material.mat" : m.name + ".mat";
 						string fileName = AssetDatabase.GenerateUniqueAssetPath( Path.Combine( outDirRelative, name ) );					
 						AssetDatabase.CreateAsset( kvp.Value, fileName );			
+						m.mainTexture = t;
 						continue;
 					}			
 					

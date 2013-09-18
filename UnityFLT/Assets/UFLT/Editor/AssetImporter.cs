@@ -37,7 +37,33 @@ namespace UFLT.Editor
 	            } 
 				while( property.Next( true ) );	
         	}
-    	}			
+    	}	
+		
+		static Texture SaveToDisc( Texture t, string dir )
+		{
+			Texture2D tex2D = t as Texture2D;
+			if( tex2D )
+			{
+				byte[] bytes = tex2D.EncodeToPNG();				
+				string file = Path.Combine( dir, ( string.IsNullOrEmpty( t.name ) ? t.GetHashCode().ToString() : t.name ) ) + ".png";							
+				File.WriteAllBytes( file, bytes );
+				string outFileRelative = MakePathRelative( file );		
+				AssetDatabase.ImportAsset( outFileRelative );
+				Object o = AssetDatabase.LoadAssetAtPath( outFileRelative, typeof( Texture ) );
+				if( o != null )
+				{
+					return o as Texture;	
+				}				
+			}
+			
+			return t;		
+		}
+		
+		static string MakePathRelative( string abs )
+		{
+			return "Assets" + abs.Replace( Application.dataPath, "" );			
+		}
+		
 		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Imports an OpenFlight file.
@@ -67,7 +93,8 @@ namespace UFLT.Editor
 			}			
 			
 			// Make relative
-			string outDirRelative = "Assets" + outDir.Replace( Application.dataPath, "" );			
+			string outDirRelative = MakePathRelative( outDir );		
+			AssetDatabase.CreateFolder( outDirRelative, "Materials" ); // Create materials dir
 			AssetDatabase.Refresh(); // Refresh for new directories that may have been created.
 			
 			// Collect depenancies.
@@ -81,15 +108,16 @@ namespace UFLT.Editor
 				if( kvp.Value != db.UnityGameObject )
 				{									
 					if( kvp.Value is Shader )continue;
-					if( kvp.Value is MonoScript )continue;		
+					if( kvp.Value is MonoScript )continue;	
+					if( kvp.Value is Texture )continue;
 					if( kvp.Value is Material )
-					{
+					{											
 						Material m = kvp.Value as Material;
 						Texture t = m.mainTexture; // The connection to the texture will be lost when we create the asset so we will need to re-assign it.
 						string name = string.IsNullOrEmpty( m.name ) ? "material.mat" : m.name + ".mat";
-						string fileName = AssetDatabase.GenerateUniqueAssetPath( Path.Combine( outDirRelative, name ) );					
+						string fileName = AssetDatabase.GenerateUniqueAssetPath( Path.Combine( outDirRelative, "Materials/" + name ) );					
 						AssetDatabase.CreateAsset( kvp.Value, fileName );			
-						m.mainTexture = t;
+						m.mainTexture = SaveToDisc( t, outDir );
 						continue;
 					}			
 					

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Object = UnityEngine.Object;
 using System.Text;
 using System.IO;
+using UFLT.Utils;
 
 namespace UFLT.Editor
 {
@@ -43,15 +44,20 @@ namespace UFLT.Editor
 		{
 			Texture2D tex2D = t as Texture2D;
 			if( tex2D )
-			{
-				byte[] bytes = tex2D.EncodeToPNG();				
+			{				
 				string file = Path.Combine( dir, ( string.IsNullOrEmpty( t.name ) ? t.GetHashCode().ToString() : t.name ) ) + ".png";							
-				File.WriteAllBytes( file, bytes );
 				string outFileRelative = MakePathRelative( file );		
-				AssetDatabase.ImportAsset( outFileRelative );
+				if( !File.Exists( file ) ) // Does the file already exist?
+				{					
+					byte[] bytes = tex2D.EncodeToPNG();				
+					File.WriteAllBytes( file, bytes );
+					AssetDatabase.ImportAsset( outFileRelative );
+				}				
+				
 				Object o = AssetDatabase.LoadAssetAtPath( outFileRelative, typeof( Texture ) );
 				if( o != null )
 				{
+					//Object.DestroyImmediate( t, true );
 					return o as Texture;	
 				}				
 			}
@@ -94,7 +100,7 @@ namespace UFLT.Editor
 			
 			// Make relative
 			string outDirRelative = MakePathRelative( outDir );		
-			AssetDatabase.CreateFolder( outDirRelative, "Materials" ); // Create materials dir
+			string materialsDir = AssetDatabase.CreateFolder( outDirRelative, "Materials" ); // Create materials dir
 			AssetDatabase.Refresh(); // Refresh for new directories that may have been created.
 			
 			// Collect depenancies.
@@ -111,11 +117,12 @@ namespace UFLT.Editor
 					if( kvp.Value is MonoScript )continue;	
 					if( kvp.Value is Texture )continue;
 					if( kvp.Value is Material )
-					{											
+					{									
+						// TODO: Check if materials dir exists and it material already exists.
 						Material m = kvp.Value as Material;
 						Texture t = m.mainTexture; // The connection to the texture will be lost when we create the asset so we will need to re-assign it.
 						string name = string.IsNullOrEmpty( m.name ) ? "material.mat" : m.name + ".mat";
-						string fileName = AssetDatabase.GenerateUniqueAssetPath( Path.Combine( outDirRelative, "Materials/" + name ) );					
+						string fileName = AssetDatabase.GenerateUniqueAssetPath( Path.Combine( materialsDir, name ) );					
 						AssetDatabase.CreateAsset( kvp.Value, fileName );			
 						m.mainTexture = SaveToDisc( t, outDir );
 						continue;
@@ -129,12 +136,14 @@ namespace UFLT.Editor
 			// Create a prefab from the asset			
 			Object o = PrefabUtility.CreatePrefab( Path.Combine( outDirRelative, fltName + ".prefab" ).Replace( "\\", "/" ), db.UnityGameObject );
 			PrefabUtility.ReplacePrefab( db.UnityGameObject, o );
-			
+				
 			// Remove from the scene.
-			GameObject.DestroyImmediate( db.UnityGameObject, true );
+			Object.DestroyImmediate( db.UnityGameObject, true );
 			
 			// Refresh
 			AssetDatabase.SaveAssets();	
+			
+			// TODO: destroy old materials
 		}		
 	}
 }

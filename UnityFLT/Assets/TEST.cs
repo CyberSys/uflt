@@ -18,9 +18,12 @@ public class TEST : MonoBehaviour
 	void Start()
     {		
 		//UFLT.Controllers.OpenFlightLoader.LoadOpenFlight( file, OnFileLoaded, settings );	
-		UFLT.Textures.TextureSGI sgi = new UFLT.Textures.TextureSGI( @"D:\Documents\Skydrive\Documents\GR_TU_FETA\barriere.rgba" );
+		//UFLT.Textures.TextureSGI sgi = new UFLT.Textures.TextureSGI( @"D:\Documents\Skydrive\Documents\GR_TU_FETA\barriere.rgba" );
 		//UFLT.Textures.TextureSGI sgi = new UFLT.Textures.TextureSGI( @"D:\Desktop\hh65\v70bdy.rgb" );
-		tex = sgi.Texture;
+		//tex = sgi.Texture;
+		
+		
+		
 	}
 			
 	void OnFileLoaded( Database db )

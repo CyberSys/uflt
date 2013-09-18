@@ -5,6 +5,7 @@ using UFLT.DataTypes.Enums;
 using System.IO;
 using UFLT.Textures;
 using System.Collections;
+using System.Reflection;
 
 namespace UFLT.Utils
 {
@@ -128,8 +129,10 @@ namespace UFLT.Utils
 		
 						if( www.error == null && www.texture != null )
 						{
-							Textures[path] = www.texture;															
+							Textures[path] = www.texture;			
+							Textures[path].hideFlags = HideFlags.DontSave;
 							www.texture.name = Path.GetFileNameWithoutExtension( path );
+														
 							return www.texture;
 						}							
 						else
@@ -180,6 +183,7 @@ namespace UFLT.Utils
 					if( tex != null )
 					{
 						Textures[path] = tex;
+						Textures[path].hideFlags = HideFlags.DontSave;
 						tex.name = Path.GetFileNameWithoutExtension( path );
 						return tex;
 					}
@@ -194,7 +198,17 @@ namespace UFLT.Utils
 					if( www.error == null && www.texture != null )
 					{
 						Textures[path] = www.texture;	
-						www.texture.name = Path.GetFileNameWithoutExtension( path );
+						www.texture.hideFlags = HideFlags.DontSave;
+						www.texture.name = Path.GetFileNameWithoutExtension( path );									
+													
+						
+						// TODO: You are here!!!!
+						FieldInfo fi = www.texture.GetType().GetField( "m_Name", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase );						
+						if( fi != null ) Debug.Log( "FOund it " );						
+						//myFieldInfo.SetValue( www.texture, "TEST" );					
+						//Debug.Log( myFieldInfo.GetValue( www.texture ) );
+						
+						
 						return www.texture;
 					}							
 					else

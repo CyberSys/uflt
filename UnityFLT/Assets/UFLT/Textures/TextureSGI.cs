@@ -159,7 +159,8 @@ namespace UFLT.Textures
 			{
 				if( texture == null && Valid )
 				{
-					texture = new Texture2D( Size[0], Size[1] );			
+					texture = new Texture2D( Size[0], Size[1] );	
+					texture.hideFlags = HideFlags.DontSave;
 					if( BPC == 1 )texture.SetPixels32( PixelsBPC1 );
 					else texture.SetPixels( PixelsBPC2 );
 					texture.Apply();

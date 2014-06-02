@@ -52,11 +52,9 @@ namespace UFLT.Controllers
 		
 		#endregion
 			
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Init
 		/// </summary>
-		//////////////////////////////////////////////////////////////////
 		private void Start() 
 		{
 			if( _instance == null || _instance == this )
@@ -70,14 +68,12 @@ namespace UFLT.Controllers
 			}
 		}		
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Loads the open flight file when a loading slot is available.
 		/// </summary>
 		/// <param name='file'>The openflight file to load.</param>
 		/// <param name='callback'>Callback when the file has finished loading into the scene. Can be null.</param>
 		/// <param name='settings'>Custom import settings for this file.</param>
-		//////////////////////////////////////////////////////////////////
 		public static void LoadOpenFlight( string file, Action<Database> callback, ImportSettings settings )
 		{			
 			OpenFlightLoader l = Instance;
@@ -91,23 +87,19 @@ namespace UFLT.Controllers
 			l.UpdateLoaders();			
 		}
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Loads the open flight file when a loading slot is available.
 		/// </summary>
 		/// <param name='file'>The openflight file to load.</param>
 		/// <param name='callback'>Callback when the file has finished loading into the scene. Can be null.</param>		
-		//////////////////////////////////////////////////////////////////
 		public static void LoadOpenFlight( string file, Action<Database> callback )
 		{									
 			LoadOpenFlight( file, callback, Instance.settings );				
 		}		
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Starts up new loaders if a slot is free.
 		/// </summary>
-		//////////////////////////////////////////////////////////////////
 		private void UpdateLoaders()
 		{			
 			while( _BeingProcessed.Count < filesToLoadSimultaneously && _Queue.Count > 0 )
@@ -116,12 +108,10 @@ namespace UFLT.Controllers
 			}
 		}		
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Coroutine to loads the database.
 		/// </summary>		
 		/// <param name="file">File to load</param>
-		//////////////////////////////////////////////////////////////////
 		private IEnumerator ProcessFile( LoadRequest file )
 		{
 			// Register that the file is being loaded.

@@ -328,7 +328,6 @@ namespace UFLT.Records
             return true;
         }		
 		
-		//////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handles external reference records.
         /// </summary>

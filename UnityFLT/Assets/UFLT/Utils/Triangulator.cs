@@ -11,13 +11,11 @@ namespace UFLT.Utils
 	{
 	    private List<Vector2> m_points = new List<Vector2>();
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Inits the triangulator.
 		/// </summary>
 		/// <param name='points'>Points</param>
 		/// <param name='normal'>Face normal</param>
-		//////////////////////////////////////////////////////////////////
 	    public void initTriangulator(List<Vector3> points, Vector3 normal)
 	    {
 	        var quad = Quaternion.FromToRotation(normal, Vector3.forward);
@@ -26,25 +24,21 @@ namespace UFLT.Utils
 	            m_points.Add(quad * v);
 	    }
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Inits the triangulator.
 		/// </summary>
 		/// <param name='points'>Points</param>
 		/// <param name='normal'>Face normal</param>
-		//////////////////////////////////////////////////////////////////
 	    public void initTriangulator(List<Vector2> points, Vector3 normal)
 	    {
 	        m_points = new List<Vector2>(points);
 	    }
 	    
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Generates triangles from the points, returns indexes.
 		/// </summary>
 		/// <param name='points'>Points</param>
 		/// <param name='normal'>Face normal</param>
-		//////////////////////////////////////////////////////////////////
 	    public int[] Triangulate(int offset) {
 	        var indices = new List<int>();
 	        

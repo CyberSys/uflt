@@ -304,12 +304,10 @@ namespace UFLT.Records
 			base.Parse();
         }
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Converts the record/s into a Unity GameObject structure with meshes, materials etc and imports into the scene. 
 		/// Adds a Component to the DOF GameObject if one is assigned in the Settings.
 		/// </summary>
-		//////////////////////////////////////////////////////////////////
 		public override void ImportIntoScene ()
 		{							
 			base.ImportIntoScene ();			

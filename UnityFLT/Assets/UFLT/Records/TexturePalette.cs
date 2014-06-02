@@ -74,7 +74,6 @@ namespace UFLT.Records
             Location = new int[] { db.Stream.Reader.ReadInt32(), db.Stream.Reader.ReadInt32() };            
         }
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Determines whether the specified <see cref="TexturePalette"/> is equal to the current <see cref="UFLT.Records.TexturePalette"/>.
 		/// </summary>
@@ -85,7 +84,6 @@ namespace UFLT.Records
 		/// <c>true</c> if the specified <see cref="TexturePalette"/> is equal to the current
 		/// <see cref="UFLT.Records.TexturePalette"/>; otherwise, <c>false</c>.
 		/// </returns>
-		//////////////////////////////////////////////////////////////////
 		public bool Equals( TexturePalette other )
 		{
 			// TODO: Filename could be relative for the current db, e.g if we are supporting multiple db using the same file. Need a way to check if this is so. Maybe convert to absolute addresses?

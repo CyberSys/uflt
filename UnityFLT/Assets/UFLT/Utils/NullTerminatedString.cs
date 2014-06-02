@@ -4,12 +4,10 @@ namespace UFLT.Utils
 {
 	public class NullTerminatedString 
 	{
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Reads a bytes array of null terminated ASCII characters.
 		/// </summary>		
 		/// <param name='bytes'>Null terminated ASCII bytes</param>
-		//////////////////////////////////////////////////////////////////
 		public static string GetAsString( byte[] bytes )
 		{	
 			int offset = bytes.Length;

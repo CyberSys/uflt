@@ -568,11 +568,9 @@ namespace UFLT.Records
 			yield return controller.StartCoroutine( MaterialBank.LoadTextures() );
         }
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Parses the streams records.
 		/// </summary>
-		//////////////////////////////////////////////////////////////////
 		public override void Parse()
 		{
 			base.Parse ();

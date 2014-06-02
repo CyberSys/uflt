@@ -42,7 +42,6 @@ namespace UFLT.Utils
 			Materials = new List<IntermediateMaterial>();			
         }
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Finds the or create material. Thread safe.
 		/// </summary>
@@ -50,7 +49,6 @@ namespace UFLT.Utils
 		/// The found or created material, never returns null.
 		/// </returns>
 		/// <param name='f'>The face to find a material for.</param>
-		//////////////////////////////////////////////////////////////////
 		public IntermediateMaterial FindOrCreateMaterial( Face f )
 		{				
 			// TODO: A faster lookup data structure, currently using a linear search.
@@ -77,11 +75,9 @@ namespace UFLT.Utils
 			}			
 		}
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Loads all material textures using a coroutine.
 		/// </summary>
-		//////////////////////////////////////////////////////////////////
 		public IEnumerator LoadTextures()
 		{
 			foreach( IntermediateMaterial im in Materials )
@@ -135,7 +131,6 @@ namespace UFLT.Utils
 			}
 		}
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Finds the texture if it has already been loaded else loads
 		/// the new texture and records it for future re-use.
@@ -144,7 +139,6 @@ namespace UFLT.Utils
 		/// Found texture or null if it can not be found/loaded.
 		/// </returns>
 		/// <param name='tp'>Tp.</param>
-		//////////////////////////////////////////////////////////////////
 		public Texture2D FindOrCreateTexture( TexturePalette tp )
 		{
 			// Find the texture 

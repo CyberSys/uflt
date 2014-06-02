@@ -90,7 +90,6 @@ namespace UFLT.Utils
 
         #endregion Properties     
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Initializes a new instance of the <see cref="UFLT.Utils.IntermediateMaterial"/> class.
 		/// </summary>
@@ -100,7 +99,6 @@ namespace UFLT.Utils
 		/// <param name='detail'>Detail texture or null.</param>
 		/// <param name='transparancy'>Transparancy</param>
 		/// <param name='lm'>Light mode.</param>
-		//////////////////////////////////////////////////////////////////
 		public IntermediateMaterial( MaterialBank bank, MaterialPalette mp, TexturePalette main, TexturePalette detail, ushort transparancy, LightMode lm )
 		{
 			MaterialBank = bank;
@@ -111,11 +109,9 @@ namespace UFLT.Utils
 			LightMode = lm;			
 		}
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Creates the unity material.
 		/// </summary>		
-		//////////////////////////////////////////////////////////////////
 		protected virtual Material CreateUnityMaterial()
 		{									
             Material mat = null;//new Material( Shader.Find( "Specular" ) );

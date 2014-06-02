@@ -147,7 +147,6 @@ namespace UFLT.Records
             Alpha = db.Stream.Reader.ReadSingle();
         }
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Determines whether the specified <see cref="MaterialPalette"/> is equal to the current <see cref="UFLT.Records.MaterialPalette"/>.
 		/// </summary>
@@ -158,7 +157,6 @@ namespace UFLT.Records
 		/// <c>true</c> if the specified <see cref="MaterialPalette"/> is equal to the current
 		/// <see cref="UFLT.Records.MaterialPalette"/>; otherwise, <c>false</c>.
 		/// </returns>
-		//////////////////////////////////////////////////////////////////
 		public bool Equals( MaterialPalette other )
 		{
 			// Check color fields

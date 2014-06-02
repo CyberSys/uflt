@@ -38,7 +38,7 @@ namespace UFLT.Editor
         	}
     	}	
 		
-		static Texture SaveToDisc( Texture t, string dir )
+		static Texture SaveTextureToDisc( Texture t, string dir )
 		{
 			Texture2D tex2D = t as Texture2D;
 			if( tex2D )
@@ -101,10 +101,12 @@ namespace UFLT.Editor
 			
 			// Collect depenancies.
 			Dictionary<int, Object> depends = new Dictionary<int, Object>();
-			CollectDependanciesRecursive( db.UnityGameObject, ref depends );		
-			
+			CollectDependanciesRecursive( db.UnityGameObject, ref depends );
+            
 			// Create our asset/s
-			AssetDatabase.CreateAsset( db.UnityGameObject, Path.Combine( outDirRelative, fltName + "_Meshes.asset" ) );
+			//AssetDatabase.CreateAsset( db.UnityGameObject, Path.Combine( outDirRelative, fltName + "_Meshes.asset" ) );
+            Object om = null;            
+
 			foreach( KeyValuePair<int, Object> kvp in depends )
 			{
 				if( kvp.Value != db.UnityGameObject )
@@ -118,22 +120,41 @@ namespace UFLT.Editor
 						Texture t = m.mainTexture; // The connection to the texture will be lost when we create the asset so we will need to re-assign it.
 						string name = string.IsNullOrEmpty( m.name ) ? "material.mat" : m.name + ".mat";
 						string fileName = AssetDatabase.GenerateUniqueAssetPath( Path.Combine( outDirRelative + "/Materials/", name ) );					
-						AssetDatabase.CreateAsset( kvp.Value, fileName );			
-						m.mainTexture = SaveToDisc( t, outDir );
+						AssetDatabase.CreateAsset( kvp.Value, fileName );
+                        m.mainTexture = SaveTextureToDisc( t, outDir );
 						continue;
-					}			
-					
+					}
+
+                    if( kvp.Value is Mesh )
+                    {
+                        Mesh m = kvp.Value as Mesh;
+                        string fileName = AssetDatabase.GenerateUniqueAssetPath( Path.Combine( outDirRelative + "/", m.name ) );
+
+                        if( om == null )
+                        {
+                            om = kvp.Value;
+                            string meshFileName = AssetDatabase.GenerateUniqueAssetPath( Path.Combine( outDirRelative + "/", fltName + "_MeshData.asset" ) );            
+                            AssetDatabase.CreateAsset( om, meshFileName );                            
+                        }
+                        else
+                        {
+                            AssetDatabase.AddObjectToAsset( kvp.Value, om );
+                        }
+                    }
+
+                    Debug.Log( "Missed\n" + kvp.Value.ToString() );
 					// Add to the main asset			
-					AssetDatabase.AddObjectToAsset( kvp.Value, db.UnityGameObject );	
+					//AssetDatabase.AddObjectToAsset( kvp.Value, db.UnityGameObject );	
 				}
-			}					
+			}
 				
 			// Create a prefab from the asset			
 			Object o = PrefabUtility.CreatePrefab( Path.Combine( outDirRelative, fltName + ".prefab" ).Replace( "\\", "/" ), db.UnityGameObject );
 			PrefabUtility.ReplacePrefab( db.UnityGameObject, o );
+            //PrefabUtility.IsComponentAddedToPrefabInstance
 				
 			// Remove from the scene.
-			Object.DestroyImmediate( db.UnityGameObject, true );
+			//Object.DestroyImmediate( db.UnityGameObject, true );
 		
 			// Refresh
 			AssetDatabase.SaveAssets();	

@@ -326,12 +326,10 @@ namespace UFLT.Records
 
 		#endregion Properties
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
         /// <param name="parent"></param>
-        //////////////////////////////////////////////////////////////////
         public Face( Record parent ) :
 			base( parent, parent.Header )
 		{
@@ -346,11 +344,9 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.VertexList] = HandleVertexList;
 		}
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses binary stream.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public override void Parse()
         {
             ID                        = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( 8 ) );
@@ -396,11 +392,9 @@ namespace UFLT.Records
             base.Parse();
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Prepares the vertices and triangulates the faces ready for creating a mesh.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public override void PrepareForImport()
 		{
             // Do we draw this face?

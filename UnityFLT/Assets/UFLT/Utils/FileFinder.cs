@@ -18,13 +18,13 @@ namespace UFLT.Utils
         /// <summary>
         /// All known file paths to be checked.
         /// </summary>
-        private static List<string> Paths
+        private static List<string> _Paths
         {
             get;
             set;
         }
 
-        private static FileFinder instance;
+        private static FileFinder _Instance;
 
         #endregion
 
@@ -35,50 +35,44 @@ namespace UFLT.Utils
         {
             get
             {
-                if( instance == null )
+                if( _Instance == null )
                 {
-                    instance = new FileFinder();
+                    _Instance = new FileFinder();
                 }
 
-                return instance;
+                return _Instance;
             }
         }
 
         #endregion Properties
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Ctor
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         private FileFinder()
         {
-            Paths = new List<string>();            
+            _Paths = new List<string>();            
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Adds a path to the file finder, this path will now be checked when searching for missing files.
         /// </summary>
         /// <param name="fileName"></param>
-        //////////////////////////////////////////////////////////////////
         public void AddPath( string fileName )
         {
             string dir = Path.GetDirectoryName( fileName );
-            if( !Paths.Contains( dir ) ) // Dont add duplicates
+            if( !_Paths.Contains( dir ) ) // Dont add duplicates
             {
-                Paths.Add( dir );
+                _Paths.Add( dir );
             }            
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Checks if the file exists, if not searches for a file with the same name using all known paths.
         /// Returns the path if found else returns an empty string.
         /// </summary>
         /// <param name="full_path"></param>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         public string Find( string fullPath )
         {        
 			// TODO: Always return an absolute path, we can then check if a texture is already loaded without
@@ -98,7 +92,7 @@ namespace UFLT.Utils
             else
             {
                 // Try the relative path against our list of paths.
-                foreach( string currentPath in Paths )
+                foreach( string currentPath in _Paths )
                 {
                     string combPath = Path.Combine( currentPath, fullPath );
                     if( File.Exists( combPath ) )
@@ -112,7 +106,7 @@ namespace UFLT.Utils
             }
 
             // Search previous directories that have worked.
-            foreach( string currentPath in Paths )
+            foreach( string currentPath in _Paths )
             {
 	            string file = Path.GetFileName( fullPath );
                 string combPath = Path.Combine( currentPath, file );

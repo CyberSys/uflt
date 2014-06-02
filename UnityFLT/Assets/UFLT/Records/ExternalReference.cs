@@ -153,12 +153,10 @@ namespace UFLT.Records
 		
 		#endregion Properties
 		
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
         /// <param name="parent"></param>
-        //////////////////////////////////////////////////////////////////
         public ExternalReference( Record parent ) :
 			base( parent, parent.Header )
 		{
@@ -166,11 +164,9 @@ namespace UFLT.Records
             RootHandler.ThrowBacks.UnionWith( RecordHandler.ThrowBackOpcodes );
 		}
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses binary stream.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public override void Parse()
         {            
 			Path = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( 200 ) );

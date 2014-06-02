@@ -29,26 +29,17 @@ namespace UFLT.Utils
 			set;
 		}		
 
-		/// <summary>
-		/// Known textures, key is <b>absolute</b> file path.
-		/// </summary>		
-		private Dictionary<string, Texture2D> Textures
-		{
-			get;
-			set;
-		}
+		// Known textures, key is <b>absolute</b> file path.
+        private Dictionary<string, Texture2D> _Textures = new Dictionary<string, Texture2D>();
         
         #endregion Properties
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public MaterialBank()
         {
-			Materials = new List<IntermediateMaterial>();
-			Textures = new Dictionary<string, Texture2D>();
+			Materials = new List<IntermediateMaterial>();			
         }
 		
 		//////////////////////////////////////////////////////////////////
@@ -99,7 +90,7 @@ namespace UFLT.Utils
 				if( path != string.Empty )
 				{
 					// Have we already loaded this texture?					
-					if( Textures.ContainsKey( path ) )
+					if( _Textures.ContainsKey( path ) )
 					{
 						// Dont need to load it.
 						break;
@@ -117,7 +108,7 @@ namespace UFLT.Utils
 						Texture2D tex = sgi.Texture;
 						if( tex != null )
 						{
-							Textures[path] = tex;	
+							_Textures[path] = tex;	
 							tex.name = Path.GetFileNameWithoutExtension( path );
 							return tex;
 						}
@@ -129,8 +120,8 @@ namespace UFLT.Utils
 		
 						if( www.error == null && www.texture != null )
 						{
-							Textures[path] = www.texture;			
-							Textures[path].hideFlags = HideFlags.DontSave;
+							_Textures[path] = www.texture;			
+							_Textures[path].hideFlags = HideFlags.DontSave;
 							www.texture.name = Path.GetFileNameWithoutExtension( path );
 														
 							return www.texture;
@@ -164,7 +155,7 @@ namespace UFLT.Utils
 				// Have we already loaded this texture?
 				Texture2D tex = null;
 				// TODO: Maybe hash the paths for faster lookup?
-				if( Textures.TryGetValue( path, out tex ) )
+				if( _Textures.TryGetValue( path, out tex ) )
 				{
 					// We found it!
 					return tex;
@@ -182,8 +173,8 @@ namespace UFLT.Utils
 					tex = sgi.Texture;
 					if( tex != null )
 					{
-						Textures[path] = tex;
-						Textures[path].hideFlags = HideFlags.DontSave;
+						_Textures[path] = tex;
+						_Textures[path].hideFlags = HideFlags.DontSave;
 						tex.name = Path.GetFileNameWithoutExtension( path );
 						return tex;
 					}
@@ -197,7 +188,7 @@ namespace UFLT.Utils
 	
 					if( www.error == null && www.texture != null )
 					{
-						Textures[path] = www.texture;	
+						_Textures[path] = www.texture;	
 						www.texture.hideFlags = HideFlags.DontSave;
 						www.texture.name = Path.GetFileNameWithoutExtension( path );									
 													

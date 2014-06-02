@@ -157,11 +157,9 @@ namespace UFLT.Records
 
         #endregion Handlers
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public Record()
         {		
             RootHandler = new RecordHandler();
@@ -175,13 +173,11 @@ namespace UFLT.Records
 			ExtensionHandler.Handler[Opcodes.PopExtension] = HandlePopExtension;							
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
         /// <param name="parent">The record creating this record.</param>
         /// <param name="header">The file header including palettes etc.</param>
-        //////////////////////////////////////////////////////////////////
         public Record( Record parent, Database header ) :
             this()
         {
@@ -199,11 +195,9 @@ namespace UFLT.Records
             }            
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses the streams records.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public virtual void Parse()
         {            
             while( Header.Stream.BeginRecord() )
@@ -253,12 +247,10 @@ namespace UFLT.Records
 			Children.ForEach( o => o.PrepareForImport() );
 		}
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Converts the record/s into a Unity GameObject structure with meshes, 
         /// materials etc and imports into the scene. Should be called from the main unity thread.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public virtual void ImportIntoScene()
         {
             Children.ForEach( o => o.ImportIntoScene() );            
@@ -266,12 +258,10 @@ namespace UFLT.Records
 
         #region Record Handlers
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handle push records.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         protected bool HandlePush()
         {
             Header.Stream.Level++;
@@ -280,12 +270,10 @@ namespace UFLT.Records
             return true;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handle pop records.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         protected bool HandlePop()
         {
             Header.Stream.Level--;
@@ -296,12 +284,10 @@ namespace UFLT.Records
             return true;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handle push extension records. 
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         protected bool HandlePushExtension()
         {
             SavedHandler = ActiveHandler;
@@ -309,24 +295,20 @@ namespace UFLT.Records
             return true;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handle pop  extension records. 
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         protected bool HandlePopExtension()
         {
             ActiveHandler = SavedHandler;
             return true;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handles a vertex list record
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         protected bool HandleVertexList()
         {
             VertexList vl = new VertexList( this );
@@ -334,12 +316,10 @@ namespace UFLT.Records
             return true;          
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handles a face record
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         protected bool HandleFace()
         {
             Face f = new Face( this );
@@ -347,24 +327,20 @@ namespace UFLT.Records
             return true;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses a long id record.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         protected bool HandleLongID()
         {
             ID = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( Header.Stream.Length - 4 ) ); // The id is the length of the record minus its header of 4 bytes.
             return true;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses a record comment.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         protected bool HandleComment()
         {
             Comment = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( Header.Stream.Length - 4 ) ); // The comment is the length of the record minus its header of 4 bytes.

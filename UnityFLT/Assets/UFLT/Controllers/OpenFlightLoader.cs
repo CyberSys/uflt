@@ -17,7 +17,7 @@ namespace UFLT.Controllers
 		// Import settings for all files.
 		public ImportSettings settings = new ImportSettings();
 		
-		private static OpenFlightLoader instance = null;
+		private static OpenFlightLoader _instance = null;
 		
 		/// <summary>
 		/// Singleton instance.
@@ -26,13 +26,13 @@ namespace UFLT.Controllers
 		{
 			get
 			{
-				if( instance == null )
+				if( _instance == null )
 				{			
 					GameObject go = new GameObject( "OpenFlight Loader" );
-					instance = go.AddComponent<OpenFlightLoader>();
+					_instance = go.AddComponent<OpenFlightLoader>();
 				}
 				
-				return instance;
+				return _instance;
 			}
 		}
 						
@@ -45,10 +45,10 @@ namespace UFLT.Controllers
 		}				
 		
 		// Load Queue.
-		private Queue<LoadRequest> Queue = new Queue<LoadRequest>();
+		private Queue<LoadRequest> _Queue = new Queue<LoadRequest>();
 
 		// Files currently being loaded.
-		private List<LoadRequest> beingProcessed = new List<LoadRequest>();
+		private List<LoadRequest> _BeingProcessed = new List<LoadRequest>();
 		
 		#endregion
 			
@@ -59,9 +59,9 @@ namespace UFLT.Controllers
 		//////////////////////////////////////////////////////////////////
 		private void Start() 
 		{
-			if( instance == null || instance == this )
+			if( _instance == null || _instance == this )
 			{
-				instance = this;				
+				_instance = this;				
 			}
 			else
 			{
@@ -87,7 +87,7 @@ namespace UFLT.Controllers
 			lr.callback = callback;
 			lr.settings = settings;
 			
-			l.Queue.Enqueue( lr );			
+			l._Queue.Enqueue( lr );			
 			l.UpdateLoaders();			
 		}
 		
@@ -110,9 +110,9 @@ namespace UFLT.Controllers
 		//////////////////////////////////////////////////////////////////
 		private void UpdateLoaders()
 		{			
-			while( beingProcessed.Count < filesToLoadSimultaneously && Queue.Count > 0 )
+			while( _BeingProcessed.Count < filesToLoadSimultaneously && _Queue.Count > 0 )
 			{
-				StartCoroutine( ProcessFile( Queue.Dequeue() ) );								
+				StartCoroutine( ProcessFile( _Queue.Dequeue() ) );								
 			}
 		}		
 		
@@ -125,7 +125,7 @@ namespace UFLT.Controllers
 		private IEnumerator ProcessFile( LoadRequest file )
 		{
 			// Register that the file is being loaded.
-			beingProcessed.Add( file );
+			_BeingProcessed.Add( file );
 			
 			// Now start loading the file			   
         	file.root = new Database( file.path, null, settings );					
@@ -140,7 +140,7 @@ namespace UFLT.Controllers
 				file.callback( file.root );	
 			}
 			
-			beingProcessed.Remove( file );
+			_BeingProcessed.Remove( file );
 			
 			UpdateLoaders();					
 		}

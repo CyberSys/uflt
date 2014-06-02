@@ -108,22 +108,18 @@ namespace UFLT.Records
     
 		#endregion Properties
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
         /// <param name="parent"></param>
-        //////////////////////////////////////////////////////////////////
         public VertexWithColor()
 		{
 		}
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses binary stream.
         /// </summary>
         /// <param name="db">Database that this vertex is part of.</param>
-        //////////////////////////////////////////////////////////////////
         public virtual void Parse( Database db )
         {
             ColorNameIndex = db.Stream.Reader.ReadUInt16();

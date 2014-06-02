@@ -25,22 +25,18 @@ namespace UFLT.Records
 		
 		#endregion Properties
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
         /// <param name="parent"></param>
-        //////////////////////////////////////////////////////////////////
 		public VertexList( Record parent ) :
 			base( parent, parent.Header )
 		{            
 		}
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses binary stream.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public override void Parse()
         {
             Offsets = new List<int>();

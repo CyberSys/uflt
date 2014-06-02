@@ -10,13 +10,11 @@ namespace UFLT.Utils
     /// </summary>    
     internal static class MatrixUtils
     {
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Converts the matrix into position, rotation, scale and assigns to the transform.
         /// </summary>
         /// <param name="transform"></param>
         /// <param name="matrix"></param>
-        //////////////////////////////////////////////////////////////////
         public static void FromMatrix4x4( this Transform transform, Matrix4x4 matrix )
         {
             transform.localScale = matrix.GetScale();
@@ -24,13 +22,11 @@ namespace UFLT.Utils
             transform.localPosition = matrix.GetPosition();
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Returns the rotation for the matrix.
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         public static Quaternion GetRotation( this Matrix4x4 matrix )
         {
             var qw = Mathf.Sqrt( 1f + matrix.m00 + matrix.m11 + matrix.m22 ) / 2;
@@ -41,13 +37,11 @@ namespace UFLT.Utils
             return new Quaternion( qx, qy, qz, qw );
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Returns the position for the matrix.
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         public static Vector3 GetPosition( this Matrix4x4 matrix )
         {
             var x = matrix.m03;
@@ -56,13 +50,11 @@ namespace UFLT.Utils
             return new Vector3( x, y, z );
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Returns the scale for the matrix.
         /// </summary>
         /// <param name="m"></param>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         public static Vector3 GetScale( this Matrix4x4 m )
         {
             var x = Mathf.Sqrt( m.m00 * m.m00 + m.m01 * m.m01 + m.m02 * m.m02 );

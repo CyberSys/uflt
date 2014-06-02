@@ -102,34 +102,28 @@ namespace UFLT.Records
 
         #endregion Properties
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public InterRecord()
         {
             Scale = Vector3.one;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="header"></param>
-        //////////////////////////////////////////////////////////////////
         public InterRecord( Record parent, Database header ) :            
             base( parent, header )            
         {
             Scale = Vector3.one;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Sets up record for importing into scene, if its a mesh creates the mesh structures.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public override void PrepareForImport()
         {
             // Do we have any faces?
@@ -186,12 +180,10 @@ namespace UFLT.Records
             }
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Converts the record/s into a Unity GameObject structure with meshes, 
         /// materials etc and imports into the scene.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public override void ImportIntoScene()
         {                        			
             // Create an empty gameobject
@@ -239,12 +231,10 @@ namespace UFLT.Records
             }
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Returns the submesh for this face based on material info.
         /// </summary>        
         /// <param name='f'>The face to find a submesh for.</param>
-        //////////////////////////////////////////////////////////////////
         public KeyValuePair<IntermediateMaterial, List<int>> FindOrCreateSubMesh( Face f )
         {            
             // Fetch palettes
@@ -270,14 +260,12 @@ namespace UFLT.Records
 
         #region Record Handlers
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handle matrix records.
         /// Reads a 4x4 matrix of floats, row major order and converts them 
         /// into position, rotation and scale.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         protected bool HandleMatrix()
         {
             Matrix4x4 m = new Matrix4x4();
@@ -296,12 +284,10 @@ namespace UFLT.Records
             return true;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handles records that are not fully handled.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         protected bool HandleUnhandled()
         {
             Unhandled uh = new Unhandled( this );
@@ -309,12 +295,10 @@ namespace UFLT.Records
             return true;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handles object records.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         protected bool HandleObject()
         {
             Object o = new Object( this );
@@ -322,12 +306,10 @@ namespace UFLT.Records
             return true;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handles Group records.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         protected bool HandleGroup()
         {
             Group g = new Group( this );
@@ -335,12 +317,10 @@ namespace UFLT.Records
             return true;
         }
 		
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handles Degree Of Freedom records.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         protected bool HandleDOF()
         {
             DOF d = new DOF( this );
@@ -353,7 +333,6 @@ namespace UFLT.Records
         /// Handles external reference records.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         protected bool HandleExternalReference()
         {
             ExternalReference e = new ExternalReference( this );
@@ -361,12 +340,10 @@ namespace UFLT.Records
             return true;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handles level of detail records.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         protected bool HandleLevelOfDetail()
         {
             LOD l = new LOD( this );

@@ -6,16 +6,16 @@ using System.IO;
 using System.Text;
 using UFLT.Utils;
 
-//SGI or RGB: 3 colour channels
-//RGBA: 3 colour channels and alpha
-//BW or INT: black and white
-//INTA: black and white and alpha
 
 namespace UFLT.Textures
 {
 	/// <summary>
-	/// Texture SG.
-	/// File format taken from http://paulbourke.net/dataformats/sgirgb/
+	/// Texture reader for SGI standard.
+    /// SGI or RGB: 3 colour channels
+    /// RGBA: 3 colour channels and alpha
+    /// BW or INT: black and white
+    /// INTA: black and white and alpha
+    /// File structure taken from http://paulbourke.net/dataformats/sgirgb/
 	/// </summary>
 	public class TextureSGI 
 	{
@@ -106,15 +106,6 @@ namespace UFLT.Textures
 		}
 		
 		/// <summary>
-		/// File reader.
-		/// </summary>	
-		private BinaryReader Reader
-		{
-			get;
-			set;
-		}		
-		
-		/// <summary>
 		/// RLE data. The start file positions for each scanline.
 		/// </summary>		
 		public int[] RowStart
@@ -157,20 +148,23 @@ namespace UFLT.Textures
 		{
 			get
 			{
-				if( texture == null && Valid )
+				if( _Texture == null && Valid )
 				{
-					texture = new Texture2D( Size[0], Size[1] );	
-					texture.hideFlags = HideFlags.DontSave;
-					if( BPC == 1 )texture.SetPixels32( PixelsBPC1 );
-					else texture.SetPixels( PixelsBPC2 );
-					texture.Apply();
-					texture.Compress( true ); // Compress.
-					texture.name = Name;
+					_Texture = new Texture2D( Size[0], Size[1] );	
+					_Texture.hideFlags = HideFlags.DontSave;
+					if( BPC == 1 )_Texture.SetPixels32( PixelsBPC1 );
+					else _Texture.SetPixels( PixelsBPC2 );
+					_Texture.Apply();
+					_Texture.Compress( true ); // Compress.
+					_Texture.name = Name;
 				}
-				return texture;										
+				return _Texture;										
 			}
 		}
-		private Texture2D texture;
+		private Texture2D _Texture;
+        
+        // File reader.
+        private BinaryReader _Reader;
 		
 		#endregion Properties
 		
@@ -186,7 +180,7 @@ namespace UFLT.Textures
 			
 			// Load file
 			Stream s = new FileStream( file, FileMode.Open );
-			Reader = BitConverter.IsLittleEndian ? new BinaryReaderBigEndian( s ) : new BinaryReader( s );			
+			_Reader = BitConverter.IsLittleEndian ? new BinaryReaderBigEndian( s ) : new BinaryReader( s );			
 			ReadHeader(); 			
 			ReadPixels();
 		}	
@@ -200,30 +194,30 @@ namespace UFLT.Textures
 		{
 			Debug.Log( "Reading header" );
 			// Magic number
-			short magic = Reader.ReadInt16();		
+			short magic = _Reader.ReadInt16();		
 			if( magic != 474 )
 			{				
-				Reader.Close();
+				_Reader.Close();
 				Debug.LogError( "Invalid file, the file header does not contain the correct magic number(474)" );
 				return;
 			}
 			
 			Valid = true;			
-			RLE = Reader.ReadSByte() == 1 ? true : false;		
-			BPC = Reader.ReadSByte();
-			Dimension = Reader.ReadUInt16();
-			Size = new ushort[]{ Reader.ReadUInt16(), Reader.ReadUInt16(), Reader.ReadUInt16() };
-			PixMinMax = new int[]{ Reader.ReadInt32(), Reader.ReadInt32() };
+			RLE = _Reader.ReadSByte() == 1 ? true : false;		
+			BPC = _Reader.ReadSByte();
+			Dimension = _Reader.ReadUInt16();
+			Size = new ushort[]{ _Reader.ReadUInt16(), _Reader.ReadUInt16(), _Reader.ReadUInt16() };
+			PixMinMax = new int[]{ _Reader.ReadInt32(), _Reader.ReadInt32() };
 					
 			// Skip dummy data
-			Reader.BaseStream.Seek( 4, SeekOrigin.Current ); 
+			_Reader.BaseStream.Seek( 4, SeekOrigin.Current ); 
 			
 			// Null terminated name.
-			Name = NullTerminatedString.GetAsString( Reader.ReadBytes( 80 ) );
-			ColorMapID = Reader.ReadInt32();
+			Name = NullTerminatedString.GetAsString( _Reader.ReadBytes( 80 ) );
+			ColorMapID = _Reader.ReadInt32();
 					
 			// Skip dummy data
-			Reader.BaseStream.Seek( 404, SeekOrigin.Current );
+			_Reader.BaseStream.Seek( 404, SeekOrigin.Current );
 			
 			if( RLE )
 			{
@@ -244,12 +238,12 @@ namespace UFLT.Textures
 			
 			for( int i = 0; i < count; ++i )
 			{
-				RowStart[i] = Reader.ReadInt32();
+				RowStart[i] = _Reader.ReadInt32();
 			}
 			
 			for( int i = 0; i < count; ++i )
 			{
-				RowSize[i] = Reader.ReadInt32();
+				RowSize[i] = _Reader.ReadInt32();
 			}				
 		}		
 		
@@ -315,8 +309,8 @@ namespace UFLT.Textures
 				int index = row + channel * Size[1];
 				
 				// Seek to start of row				
-				Reader.BaseStream.Seek( RowStart[index], SeekOrigin.Begin ); 		    
-				byte[] rowData = Reader.ReadBytes( RowSize[index] );
+				_Reader.BaseStream.Seek( RowStart[index], SeekOrigin.Begin ); 		    
+				byte[] rowData = _Reader.ReadBytes( RowSize[index] );
 				
 				int currentRowData = 0;					
 				byte pixel = 0, pixelCount = 0;		
@@ -364,10 +358,10 @@ namespace UFLT.Textures
 				long readPos = 512 + ( row * Size[0] ) + ( channel * Size[0] * Size[1] );
 								
 				// Seek to start of row			
-				Reader.BaseStream.Seek( readPos, SeekOrigin.Begin ); 		
+				_Reader.BaseStream.Seek( readPos, SeekOrigin.Begin ); 		
 				
 				// Read pixels
-				byte[] rowData = Reader.ReadBytes( Size[0] );
+				byte[] rowData = _Reader.ReadBytes( Size[0] );
 				
 				for( int i = 0; i < Size[0]; ++i )
 				{

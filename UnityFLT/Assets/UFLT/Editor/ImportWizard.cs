@@ -11,11 +11,11 @@ namespace UFLT.Editor
 	
 		// The full file path to the flt file
 		public string openflightFile;
-		private bool validFile = false;
+		private bool _validFile = false;
 		
 		// The relative file path to where the converted file will be stored.
 		public string exportDirectory = "Assets/";
-		private bool validDir = true;
+		private bool _validDir = true;
 			
 		// Our import settings.
 		public ImportSettings settings = new ImportSettings();
@@ -28,7 +28,7 @@ namespace UFLT.Editor
 		public bool generateLightmapUVs = false;
 		public UnwrapParam lightmapParams = new UnwrapParam();
 		
-		private Texture2D fltIcon = AssetPreview.GetMiniTypeThumbnail( typeof( Light ) );
+		private Texture2D _fltIcon = AssetPreview.GetMiniTypeThumbnail( typeof( Light ) );
 			    	
 	    #endregion
 		
@@ -38,11 +38,9 @@ namespace UFLT.Editor
 	        ScriptableWizard.DisplayWizard<ImportWizard>( "Import Openflight", "Import" );
 	    }
 	
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Custom GUI.
 		/// </summary>
-		//////////////////////////////////////////////////////////////////
 	    private void OnGUI()
 		{			
 			// Title
@@ -59,11 +57,9 @@ namespace UFLT.Editor
             EditorGUILayout.EndVertical();
 		}
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Field to display the selected flt file, validates if the file exists and if its ext is flt.
 		/// </summary>
-		//////////////////////////////////////////////////////////////////
 		private void FileSelectionField()
 		{
 			// Store the default GUI color so we can revert back.
@@ -87,19 +83,19 @@ namespace UFLT.Editor
 			// Validate the file
 			if( EditorGUI.EndChangeCheck() )
 			{				
-				validFile = File.Exists( openflightFile );		
-				if( validFile )
+				_validFile = File.Exists( openflightFile );		
+				if( _validFile )
 				{
 					if( !Path.GetExtension( openflightFile ).Equals( ".flt", System.StringComparison.OrdinalIgnoreCase ) )
 					{
-						validFile = false;
+						_validFile = false;
 					}
 				}
 			}
 			
 			// Indicate if the file is good
-			GUI.contentColor = validFile ? Color.green : Color.red;
-			EditorGUILayout.LabelField( new GUIContent( fltIcon ), GUILayout.Width( 50 ) );			
+			GUI.contentColor = _validFile ? Color.green : Color.red;
+			EditorGUILayout.LabelField( new GUIContent( _fltIcon ), GUILayout.Width( 50 ) );			
 			GUI.contentColor = defaultGUICol;
 			EditorGUILayout.EndHorizontal();
 		}
@@ -131,24 +127,24 @@ namespace UFLT.Editor
 				// Make sure the path is inside the unity project assets folder
 				if( !exportDirectory.Contains( Application.dataPath ) )
 				{
-					validDir = false;					
+					_validDir = false;					
 				}			
 				else
 				{
-					validDir = true;
+					_validDir = true;
 				}
 		
-				if( validDir )
+				if( _validDir )
 				{												
 					// Make relative
 					exportDirectory = "Assets" + exportDirectory.Replace( Application.dataPath, "" );						
-					validDir = true;
+					_validDir = true;
 				}
 			}
 			
 			// Indicate if the file is good
-			GUI.contentColor = validDir ? Color.green : Color.red;
-			EditorGUILayout.LabelField( new GUIContent( fltIcon ), GUILayout.Width( 50 ) );			
+			GUI.contentColor = _validDir ? Color.green : Color.red;
+			EditorGUILayout.LabelField( new GUIContent( _fltIcon ), GUILayout.Width( 50 ) );			
 			GUI.contentColor = defaultGUICol;
 			EditorGUILayout.EndHorizontal();
 		}		

@@ -12,12 +12,10 @@ namespace UFLT.Records
     /// </summary>
 	public class Unhandled : InterRecord
 	{
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
         /// <param name="parent"></param>
-        //////////////////////////////////////////////////////////////////
         public Unhandled( Record parent ) :
 			base( parent, parent.Header )
 		{
@@ -42,11 +40,9 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.ExternalReference] = HandleExternalReference;
 		}
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses binary stream.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public override void Parse()
         {
             ID = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( 8 ) );

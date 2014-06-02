@@ -16,14 +16,8 @@ namespace UFLT.Records
 	{
 		#region Properties
 
-        /// <summary>
-        /// Next offset value top be parsed.
-        /// </suvmmary>
-        private int Offset
-        {
-            get;
-            set;
-        }
+        // Next offset value to be parsed.
+        private int _Offset;
 
         /// <summary>
         /// Length of this record plus all vertices.
@@ -45,12 +39,10 @@ namespace UFLT.Records
 
 		#endregion Properties
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
         /// <param name="parent"></param>
-        //////////////////////////////////////////////////////////////////
         public VertexPalette( Record parent ) :
 			base( parent, parent.Header )
 		{
@@ -64,15 +56,13 @@ namespace UFLT.Records
             Vertices = new Dictionary<int, VertexWithColor>();
 		}
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses binary stream.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public override void Parse()
         {            
             LengthPlusVertexPalette = Header.Stream.Reader.ReadInt32();
-            Offset = 8;
+            _Offset = 8;
 
             // Parse vertices
             base.Parse();
@@ -80,63 +70,55 @@ namespace UFLT.Records
 
         #region Record Handlers
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handle vertex with color.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         private bool HandleVertexColor()
         {
             VertexWithColor v = new VertexWithColor();
             v.Parse( Header );
-            Vertices[Offset] = v;
-            Offset += Header.Stream.Length;
+            Vertices[_Offset] = v;
+            _Offset += Header.Stream.Length;
             return true;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handle vertex with color.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         private bool HandleVertexColorNormal()
         {
             VertexWithColorNormal v = new VertexWithColorNormal();
             v.Parse( Header );
-            Vertices[Offset] = v;
-            Offset += Header.Stream.Length;
+            Vertices[_Offset] = v;
+            _Offset += Header.Stream.Length;
             return true;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handle vertex with color.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         private bool HandleVertexColorUV()
         {
             VertexWithColorUV v = new VertexWithColorUV();
             v.Parse( Header );
-            Vertices[Offset] = v;
-            Offset += Header.Stream.Length;
+            Vertices[_Offset] = v;
+            _Offset += Header.Stream.Length;
             return true;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handle vertex with color.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         private bool HandleVertexColorNormalUV()
         {
             VertexWithColorNormalUV v = new VertexWithColorNormalUV();
             v.Parse( Header );
-            Vertices[Offset] = v;
-            Offset += Header.Stream.Length;
+            Vertices[_Offset] = v;
+            _Offset += Header.Stream.Length;
             return true;
         }
 

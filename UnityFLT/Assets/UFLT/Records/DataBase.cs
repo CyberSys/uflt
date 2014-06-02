@@ -479,22 +479,18 @@ namespace UFLT.Records
         
         #endregion Properties
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Ctor, uses default import settings.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public Database( string file ) :
             this( file, null, new ImportSettings() )
         {
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Ctor, a DataBase may have a parent if it is part of an external reference node.
         /// </summary>
         /// <param name="file"></param>
-        //////////////////////////////////////////////////////////////////
         public Database( string file, Record parent, ImportSettings settings )            
         {
 			Settings = settings;
@@ -546,7 +542,6 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleLevelOfDetail;            
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Coroutine, Loads the db and textures in a seperate thread. Returns once the
         /// db is loaded and ready to be imported into the scene.
@@ -586,13 +581,11 @@ namespace UFLT.Records
 			Stream.Reader.Close();
 		}
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parse the db and prepare for import, designed to run outside of the
         /// main unity thread. This is called by ParseAsynchronously outside of
         /// the main thread however you can also call it in the main unity thread.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public void ParseAndPrepare()
         {            
             System.Diagnostics.Stopwatch timer = System.Diagnostics.Stopwatch.StartNew();            
@@ -601,22 +594,18 @@ namespace UFLT.Records
             Log.Write( string.Format( "Finished Parsing & Preparing, total time taken: {0:0.00} seconds", timer.Elapsed.TotalSeconds ) );                        
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses db and imports into the scene().
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public void ParsePrepareAndImport()
         {
             ParseAndPrepare();
             ImportIntoScene();
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Imports the db into the current unity scene.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
 		public override void ImportIntoScene()
 		{
             if( Parent == null )
@@ -642,12 +631,10 @@ namespace UFLT.Records
 
         #region Record Handlers        
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses a header record.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         private bool HandleHeader()
         {            
             ID                          = NullTerminatedString.GetAsString( Stream.Reader.ReadBytes( 8 ) );
@@ -700,12 +687,10 @@ namespace UFLT.Records
             return true;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handles the color palette.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         private bool HandleColorPalette()
         {
 			// Ignore if the palette is overriden
@@ -722,12 +707,10 @@ namespace UFLT.Records
 		    return true;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handle a texture palette, adds it to our collection.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         private bool HandleTexturePalette()
         {
 			// Ignore if the palette is overriden
@@ -745,12 +728,10 @@ namespace UFLT.Records
             return true;
         }
                 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handle a vertex palette.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         private bool HandleVertexPalette()
         {
             VertexPalette = new VertexPalette( this );
@@ -758,12 +739,10 @@ namespace UFLT.Records
             return true;
         }       
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handle a material palete, adds it to our collection.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         private bool HandleMaterialPalette()
         {
 			// Ignore if the palette is overriden

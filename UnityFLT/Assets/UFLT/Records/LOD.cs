@@ -132,12 +132,10 @@ namespace UFLT.Records
    
 		#endregion Properties
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
         /// <param name="parent"></param>
-        //////////////////////////////////////////////////////////////////
         public LOD( Record parent ) :
 			base( parent, parent.Header )
 		{            
@@ -160,11 +158,9 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.ExternalReference] = HandleExternalReference;			
 		}
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses binary stream.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public override void Parse()
         {
             ID                          = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( 8 ) );

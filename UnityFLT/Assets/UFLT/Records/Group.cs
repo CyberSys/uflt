@@ -200,12 +200,10 @@ namespace UFLT.Records
 
 		#endregion Properties
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
         /// <param name="parent"></param>
-        //////////////////////////////////////////////////////////////////
         public Group( Record parent ) :
 			base( parent, parent.Header )
 		{
@@ -232,11 +230,9 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.LevelOfDetail] = HandleLevelOfDetail;
 		}
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses binary stream.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public override void Parse()
         {
             ID = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( 8 ) );

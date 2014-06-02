@@ -11,13 +11,11 @@ namespace UFLT.Editor
 {
 	public class AssetImporter
 	{				
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Collects the dependancies recursive.
 		/// </summary>
 		/// <param name='obj'>Object.</param>
 		/// <param name='dependencies'>Dependencies</param>
-		//////////////////////////////////////////////////////////////////
 		static public void CollectDependanciesRecursive( UnityEngine.Object obj, ref Dictionary<int, Object> dependencies)
    		{
 	        if (!dependencies.ContainsKey( obj.GetHashCode() ) )
@@ -70,11 +68,9 @@ namespace UFLT.Editor
 			return "Assets" + abs.Replace( Application.dataPath, "" );			
 		}
 		
-		//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Imports an OpenFlight file.
 		/// </summary>
-		//////////////////////////////////////////////////////////////////
 		[MenuItem( "Assets/Import OpenFlight(.flt)" )]
 		public static void ImportOpenFlight()
 		{					

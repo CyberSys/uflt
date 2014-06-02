@@ -23,21 +23,17 @@ namespace UFLT.Records
 
 		#endregion Properties
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
         /// <param name="parent"></param>
-        //////////////////////////////////////////////////////////////////
         public VertexWithColorNormalUV() 
 		{			
 		}
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses binary stream.
         /// </summary>
-        //////////////////////////////////////////////////////////////////
         public override void Parse( Database db )
         {
             ColorNameIndex = db.Stream.Reader.ReadUInt16();

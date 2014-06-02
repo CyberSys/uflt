@@ -26,16 +26,16 @@ namespace UFLT.Utils
 		/// Gets or sets the unity material.
 		/// This could be null if the material has not been imported into the scene yet.
 		/// </summary>		
-		private Material unityMaterial;
+		private Material _UnityMaterial;
 		public Material UnityMaterial
 		{
 			get
 			{
-				if( unityMaterial == null )
+				if( _UnityMaterial == null )
 				{
-					unityMaterial = CreateUnityMaterial();
+					_UnityMaterial = CreateUnityMaterial();
 				}                
-				return unityMaterial;
+				return _UnityMaterial;
 			}
 		}
 
@@ -200,7 +200,6 @@ namespace UFLT.Utils
 			return mat;
 		}
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Compares various material attrbiutes to see if this material matches.
         /// </summary>
@@ -210,7 +209,6 @@ namespace UFLT.Utils
         /// <param name="trans"></param>
         /// <param name="lm"></param>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         public bool Equals( MaterialPalette mp, TexturePalette main, TexturePalette detail, ushort trans, LightMode lm )
         {
             if( !MaterialPalette.Equals( Palette, mp ) ) return false;

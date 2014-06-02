@@ -88,11 +88,9 @@ namespace UFLT
 		
 		#endregion Properties
 				
-        //////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Ctr
+		/// Constructor
 		/// </summary>
-        //////////////////////////////////////////////////////////////////
 		public ImportSettings()
 		{
 			additionalSearchDirectories = new List<string>();		

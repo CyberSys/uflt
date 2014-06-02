@@ -55,22 +55,18 @@ namespace UFLT.Records
 
 		#endregion Properties
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
         /// <param name="parent"></param>
-        //////////////////////////////////////////////////////////////////
         public TexturePalette() 
 		{            
 		}
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses binary stream.
         /// </summary>
         /// <param name="db">Database that this vertex is part of.</param>
-        //////////////////////////////////////////////////////////////////
         public void Parse( Database db )
         {
             FileName = NullTerminatedString.GetAsString( db.Stream.Reader.ReadBytes( 200 ) );

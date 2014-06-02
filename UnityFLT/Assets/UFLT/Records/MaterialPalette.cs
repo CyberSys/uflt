@@ -119,22 +119,18 @@ namespace UFLT.Records
 				
 		#endregion Properties
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Ctr
+        /// Constructor
         /// </summary>
         /// <param name="parent"></param>
-        //////////////////////////////////////////////////////////////////
         public MaterialPalette()
 		{            
 		}
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Parses binary stream. 
         /// </summary>
         /// <param name="db">Database this material is part of.</param>
-        //////////////////////////////////////////////////////////////////
         public void Parse( Database db )
         {
             Index = db.Stream.Reader.ReadInt32();

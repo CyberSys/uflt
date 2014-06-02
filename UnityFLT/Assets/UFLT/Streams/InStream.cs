@@ -15,14 +15,8 @@ namespace UFLT.Streams
 
         #region Private
 
-        /// <summary>
-        /// Current position in file
-        /// </summary>
-        private long CurrentPosition
-        {
-            get;
-            set;
-        }
+        // Current position in file
+        private long _CurrentPosition;
 
         #endregion Private
 
@@ -73,27 +67,23 @@ namespace UFLT.Streams
 
         #endregion Properties
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Creates a new binary stream.
         /// </summary>
         /// <param name="file"></param>
-        //////////////////////////////////////////////////////////////////
         public InStream( string file )
         {
             Stream s = new FileStream( file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite );
             Reader = BitConverter.IsLittleEndian ? new BinaryReaderBigEndian( s ) : new BinaryReader( s );
             Repeat = false;
-            CurrentPosition = 0;
+            _CurrentPosition = 0;
         }
 
-        //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Attempts to read the next record in the stream. Returns true if successful
         /// or false if no data is left or an error occured.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////
         public bool BeginRecord()
         {
             if( Repeat )
@@ -104,10 +94,10 @@ namespace UFLT.Streams
             else
             {
                 // Move to next record
-                CurrentPosition += Length;
+                _CurrentPosition += Length;
             }            
 
-            if( Reader.BaseStream.Length - CurrentPosition < 4 )
+            if( Reader.BaseStream.Length - _CurrentPosition < 4 )
             {
                 // TODO: Not enough data left, close the file                
                 return false;
@@ -115,7 +105,7 @@ namespace UFLT.Streams
             
             try
             {
-                Reader.BaseStream.Seek( CurrentPosition, SeekOrigin.Begin );
+                Reader.BaseStream.Seek( _CurrentPosition, SeekOrigin.Begin );
 
                 // Read record header
                 Opcode = ( Opcodes )Reader.ReadInt16();

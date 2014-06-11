@@ -11,23 +11,19 @@ namespace UFLT.Streams
     /// </summary>
     public class BinaryReaderBigEndian : BinaryReader
     {
-        //////////////////////////////////////////////////////////////////////
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="input"></param>
-        //////////////////////////////////////////////////////////////////////
         public BinaryReaderBigEndian( Stream input ) :
             base( input )
         {
         }
 
-        //////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Reads data and swaps endian.
+        /// Reads data and swaps endian before returning.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////////
         public override float ReadSingle()
         {
             // Get raw data
@@ -39,12 +35,10 @@ namespace UFLT.Streams
             return BitConverter.ToSingle( bytes, 0 );
         }
 
-        //////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Reads data and swaps endian.
+        /// Reads data and swaps endian before returning.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////////
         public override double ReadDouble()
         {
             // Get raw data
@@ -56,45 +50,37 @@ namespace UFLT.Streams
             return BitConverter.ToDouble( bytes, 0 );
         }
 
-        //////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Reads data and swaps endian.
+        /// Reads data and swaps endian before returning.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////////
         public override short ReadInt16()
         {
             return IPAddress.HostToNetworkOrder( base.ReadInt16() );
         }
 
-        //////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Reads data and swaps endian.
+        /// Reads data and swaps endian before returning.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////////
         public override int ReadInt32()
         {
             return IPAddress.HostToNetworkOrder( base.ReadInt32() );
         }
 
-        //////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Reads data and swaps endian.
+        /// Reads data and swaps endian before returning.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////////
         public override long ReadInt64()
         {
             return IPAddress.HostToNetworkOrder( base.ReadInt64() );
         }
 
-        //////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Reads data and swaps endian.
+        /// Reads data and swaps endian before returning.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////////
         public override ushort ReadUInt16()
         {
             // Get raw data
@@ -106,12 +92,10 @@ namespace UFLT.Streams
             return BitConverter.ToUInt16( bytes, 0 );
         }
 
-        //////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Reads data and swaps endian.
+        /// Reads data and swaps endian before returning.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////////
         public override uint ReadUInt32()
         {
             // Get raw data
@@ -123,12 +107,10 @@ namespace UFLT.Streams
             return BitConverter.ToUInt32( bytes, 0 );
         }
 
-        //////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Reads data and swaps endian.
+        /// Reads data and swaps endian before returning.
         /// </summary>
         /// <returns></returns>
-        //////////////////////////////////////////////////////////////////////
         public override ulong ReadUInt64()
         {
             // Get raw data

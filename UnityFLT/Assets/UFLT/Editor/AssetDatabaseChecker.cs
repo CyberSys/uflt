@@ -6,7 +6,7 @@ using System.IO;
 namespace UFLT.Editor
 {
 	/// <summary>
-	/// Looks for AssetDatabase events that involve .flt files so we can import and convert them.
+	/// Looks for AssetDatabase events that involve .flt files so we can handle them.
 	/// </summary>
 	public class AssetDatabaseChecker : AssetPostprocessor
 	{
@@ -16,14 +16,16 @@ namespace UFLT.Editor
 			{
 				if( Path.GetExtension( str ).ToLower() == ".flt" ) 
 				{
-					FLTImportSettings importSettings = FLTImportSettings.CreateInstance<FLTImportSettings>();				
+                    string guid = AssetDatabase.AssetPathToGUID( str );
 
-					var convertedFilePath = Path.ChangeExtension( str, ".asset" );
-					AssetDatabase.CreateAsset( importSettings, convertedFilePath );
+                    FLTImportSettings importSettings =  FLTImportSettings.FindOrCreate( guid );
+                    importSettings.Import();
 				}
 			}
 
+            // TODO: Check for operations on .asset files that contain flt settings, if deleeted then destroy any instances associated.
 
+            
 	        //foreach( var str in deletedAssets )
 			//	Debug.Log("Deleted Asset: " + str);
 			

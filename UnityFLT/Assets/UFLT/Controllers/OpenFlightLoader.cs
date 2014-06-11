@@ -11,8 +11,8 @@ namespace UFLT.Controllers
 	{
 		#region Properties
 		
-		// How many files can be simultaneously. 
-		public int filesToLoadSimultaneously = 1;	
+		// How many files can be simultaneously loaded. 
+		public int maxLoadOperations = 1;	
 		
 		// Import settings for all files.
 		public ImportSettings settings = new ImportSettings();
@@ -102,7 +102,7 @@ namespace UFLT.Controllers
 		/// </summary>
 		private void UpdateLoaders()
 		{			
-			while( _BeingProcessed.Count < filesToLoadSimultaneously && _Queue.Count > 0 )
+			while( _BeingProcessed.Count < maxLoadOperations && _Queue.Count > 0 )
 			{
 				StartCoroutine( ProcessFile( _Queue.Dequeue() ) );								
 			}

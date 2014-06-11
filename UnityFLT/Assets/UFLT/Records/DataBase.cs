@@ -551,10 +551,10 @@ namespace UFLT.Records
         /// db.ImportIntoScene();
         /// </example>
         /// </summary>
-        /// <returns></returns>
-        //////////////////////////////////////////////////////////////////        
+        /// <returns></returns>        
         public IEnumerator ParseAsynchronously( MonoBehaviour controller )
         {   			
+            // TODO: Create a gameobject and place a coroutine controller script which we can use instead of asking the user. (What if the users was disabled!!)
             Thread t = new Thread( ParseAndPrepare );            
             t.Start();   
          
@@ -580,9 +580,8 @@ namespace UFLT.Records
 		}
 
         /// <summary>
-        /// Parse the db and prepare for import, designed to run outside of the
-        /// main unity thread. This is called by ParseAsynchronously outside of
-        /// the main thread however you can also call it in the main unity thread.
+        /// Parse the db and prepare for import. 
+        /// Contains all the work that can be performed safely outside of the main unity thread.        
         /// </summary>
         public void ParseAndPrepare()
         {            

@@ -4,6 +4,7 @@ using UFLT.DataTypes.Enums;
 using System;
 using UnityEngine;
 using UFLT.Records;
+
 namespace UFLT.Streams
 {
     /// <summary>

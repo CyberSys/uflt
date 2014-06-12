@@ -6,11 +6,21 @@ using UFLT.Records;
 
 namespace UFLT.Editor
 {
-	public class FLTImportSettings : ScriptableObject
+    public class FLTImportSettings : CustomImporter
 	{
-        // AssetDatabase guid of the OpenFlight file.
-        //[HideInInspector]
-        public string guid;
+
+        /// <summary>
+        /// File extension/s supported by this importer.
+        /// </summary>
+        public new static string[] Extensions
+        {
+            get
+            {
+                return new string[]{ ".flt" };
+            }
+        }
+
+
 
 		[Header( "OpenFlight Import Settings" )]
 		[Space( 30 )]        
@@ -62,5 +72,20 @@ namespace UFLT.Editor
             Database openFlightDB = new Database( filePath );
             openFlightDB.ParsePrepareAndImport();           
         }
-	}
+
+        public override void OnSourceFileImported()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void OnSourceFileMoved()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void OnSourceFileDeletes()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 }

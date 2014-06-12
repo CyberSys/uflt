@@ -171,16 +171,16 @@ namespace UFLT.Textures
 		/// <summary>
 		/// Loads a SGI rgb, rgba or int texture file.
 		/// </summary>
-		/// <param name='file'>File path</param>
+		/// <param name='filePath'></param>
 		//////////////////////////////////////////////////////////////////////
-		public TextureSGI( string file )		
+		public TextureSGI( string filePath )		
 		{
 			Valid = false;
 			
 			// Load file
             try
             {
-                Stream s = new FileStream( file, FileMode.Open );
+                Stream s = new FileStream( filePath, FileMode.Open );
                 _Reader = BitConverter.IsLittleEndian ? new BinaryReaderBigEndian( s ) : new BinaryReader( s );
                 ReadHeader();
                 ReadPixels();
@@ -196,7 +196,7 @@ namespace UFLT.Textures
 		/// Reads the file header.
 		/// </summary>
 		//////////////////////////////////////////////////////////////////////
-		private void ReadHeader()
+		void ReadHeader()
 		{
 			Debug.Log( "Reading header" );
 			// Magic number
@@ -236,7 +236,7 @@ namespace UFLT.Textures
 		/// Reads the offsets fields if using rle.
 		/// </summary>
 		//////////////////////////////////////////////////////////////////////
-		private void ReadOffsets()
+		void ReadOffsets()
 		{
 			int count = Size[0] * Size[2]; // Scanline len * num channels
 			RowStart = new int[count];
@@ -258,7 +258,7 @@ namespace UFLT.Textures
 		/// Reads the pixels.
 		/// </summary>
 		//////////////////////////////////////////////////////////////////////
-		private void ReadPixels()		
+		void ReadPixels()		
 		{
 			//If BPC is 2, there is one short (2 bytes) per pixel. In this case the RLE data should be read into an 
 			//array of shorts. To expand data, the low order seven bits of the first short: bits[6..0] are used to form 
@@ -301,11 +301,11 @@ namespace UFLT.Textures
 		/// <summary>
 		/// Reads the row for 1 byte per channel.
 		/// </summary>
-		/// <param name='pixels'>Pixels.</param>
-		/// <param name='row'>Row.</param>
-		/// <param name='channel'>Channel.</param>
+		/// <param name='pixels'></param>
+		/// <param name='row'></param>
+		/// <param name='channel'></param>
 		//////////////////////////////////////////////////////////////////////
-		private void ReadRowBPC1( int row, int channel )
+		void ReadRowBPC1( int row, int channel )
 		{
 			// Where to start writing to in the pixel array.
 			int currentPixel = row * Size[0];			

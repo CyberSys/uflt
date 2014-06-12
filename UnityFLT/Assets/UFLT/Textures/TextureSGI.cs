@@ -6,7 +6,6 @@ using System.IO;
 using System.Text;
 using UFLT.Utils;
 
-
 namespace UFLT.Textures
 {
 	/// <summary>
@@ -179,10 +178,17 @@ namespace UFLT.Textures
 			Valid = false;
 			
 			// Load file
-			Stream s = new FileStream( file, FileMode.Open );
-			_Reader = BitConverter.IsLittleEndian ? new BinaryReaderBigEndian( s ) : new BinaryReader( s );			
-			ReadHeader(); 			
-			ReadPixels();
+            try
+            {
+                Stream s = new FileStream( file, FileMode.Open );
+                _Reader = BitConverter.IsLittleEndian ? new BinaryReaderBigEndian( s ) : new BinaryReader( s );
+                ReadHeader();
+                ReadPixels();
+            }
+            catch( System.Exception e )
+            {
+                Debug.LogException( e );
+            }
 		}	
 		
 		//////////////////////////////////////////////////////////////////////

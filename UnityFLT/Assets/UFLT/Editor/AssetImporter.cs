@@ -8,7 +8,7 @@ using System.IO;
 using UFLT.Utils;
 
 namespace UFLT.Editor
-{
+{    
 	public class AssetImporter
 	{				
 		/// <summary>

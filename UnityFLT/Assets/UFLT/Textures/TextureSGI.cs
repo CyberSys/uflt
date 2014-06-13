@@ -149,12 +149,12 @@ namespace UFLT.Textures
 			{
 				if( _Texture == null && Valid )
 				{
-					_Texture = new Texture2D( Size[0], Size[1] );	
+                    _Texture = new Texture2D( Size[0], Size[1], Size[2] == 4 ? TextureFormat.ARGB32 : TextureFormat.RGB24, true );
 					_Texture.hideFlags = HideFlags.DontSave;
 					if( BPC == 1 )_Texture.SetPixels32( PixelsBPC1 );
 					else _Texture.SetPixels( PixelsBPC2 );
 					_Texture.Apply();
-					_Texture.Compress( true ); // Compress.
+					//_Texture.Compress( true ); // Compress into DXT format
 					_Texture.name = Name;
 				}
 				return _Texture;										

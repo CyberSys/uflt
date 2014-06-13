@@ -4,7 +4,7 @@ using System.Collections;
 using System.IO;
 using UFLT.Records;
 
-namespace UFLT.Editor
+namespace UFLT.Editor.Importer
 {
     public class FLTImportSettings : CustomImporter
 	{
@@ -19,9 +19,7 @@ namespace UFLT.Editor
                 return new string[]{ ".flt" };
             }
         }
-
-
-
+        
 		[Header( "OpenFlight Import Settings" )]
 		[Space( 30 )]        
 		public string test = "TEST STRING";
@@ -83,7 +81,7 @@ namespace UFLT.Editor
             throw new System.NotImplementedException();
         }
 
-        public override void OnSourceFileDeletes()
+        public override void OnSourceFileDeleted()
         {
             throw new System.NotImplementedException();
         }

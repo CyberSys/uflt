@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
 
-namespace UFLT.Editor
+namespace UFLT.Editor.Importer
 {
     /// <summary>
     /// Base class for UFLT defined custom importers.
@@ -24,7 +24,7 @@ namespace UFLT.Editor
         public string guid;
 
         /// <summary>
-        /// File extension/s supported by this importer.
+        /// File extension/s supported by this importer.        
         /// </summary>
         public static string[] Extensions
         {
@@ -41,61 +41,49 @@ namespace UFLT.Editor
         /// </summary>
         /// <param name="sourceGuid">guid of the file which needs an importer.</param>
         /// <returns></returns>
-        //public static CustomImporter FindOrCreateImporter( string sourceGuid )
-        //{
-        //    var foundObjects = Resources.FindObjectsOfTypeAll( typeof( CustomImporter ) );            
-        //    foreach( var obj in foundObjects )
-        //    {
-        //        CustomImporter ci = obj as CustomImporter;
-        //        if( ci.guid == sourceGuid )
-        //        {
-        //            return ci;
-        //        }
-        //    }
+        public static CustomImporter FindOrCreateImporter( string sourceGuid )
+        {
+            var foundObjects = Resources.FindObjectsOfTypeAll( typeof( CustomImporter ) );
+            foreach( var obj in foundObjects )
+            {
+                CustomImporter ci = obj as CustomImporter;
+                if( ci.guid == sourceGuid )
+                {
+                    return ci;
+                }
+            }
 
-
-
-
-
-
-
-        //    string filePath = AssetDatabase.GUIDToAssetPath( openFlightGuid );
-        //    string extension = Path.GetExtension( filePath );
-        //    if( extension.ToLower() != ".flt" )
-        //    {
-        //        Debug.LogError( "Not an OpenFlight file, must have .flt as an extension." );
-        //        return null;
-        //    }
-
-        //    FLTImportSettings createdSettings = ScriptableObject.CreateInstance<FLTImportSettings>();
-        //    createdSettings.guid = openFlightGuid;
-
-        //    string filePathNoExt = filePath.Replace( extension, "" );
-        //    string convertedFilePath = filePathNoExt + "(Converted).asset";
-        //    AssetDatabase.CreateAsset( createdSettings, convertedFilePath );
-
-        //    return createdSettings;
-        //}
+            return CreateImporter( sourceGuid );
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="sourceGuid"></param>
         /// <returns></returns>
-        static CustomEditor CreateImporter( string sourceGuid )
+        static CustomImporter CreateImporter( string sourceGuid )
         {
             // Find an importer for this file type
-            string filePath = AssetDatabase.GUIDToAssetPath( sourceGuid );
-            string fileExtension = Path.GetExtension( filePath );
-            Type importerType = FindImporter( fileExtension );
+            string sourceFilePath = AssetDatabase.GUIDToAssetPath( sourceGuid );
+            string sourceFileExtension = Path.GetExtension( sourceFilePath );
+            Type importerType = FindImporter( sourceFileExtension );
             if( importerType == null ) return null;
 
-            var importerInstance = ScriptableObject.CreateInstance( importerType.Name );
-            if( importerInstance == null ) return null;
+            var objInstance = ScriptableObject.CreateInstance( importerType.Name );
+            if( objInstance == null )
+            {
+                Debug.LogError( "Failed to create instance of type: " + importerType.Name );
+                return null;
+            }
 
+            CustomImporter importerInstance = objInstance as CustomImporter;
+            ( importerInstance as CustomImporter ).guid = sourceGuid;
 
-            return null;
-            // TODO: Save to file. YOU ARE HERE
+            // Save to asset file.
+            string assetFilePath = sourceFilePath.Replace( sourceFileExtension, "(Importer).asset" );
+            AssetDatabase.CreateAsset( importerInstance, assetFilePath );
+
+            return importerInstance;            
         }
 
         /// <summary>
@@ -105,7 +93,7 @@ namespace UFLT.Editor
         /// <returns></returns>
         static Type FindImporter( string fileExt )
         {
-            // Find an implmentation of CustomImporter that supports our file type.
+            // Find an implementation of CustomImporter that supports our file type.
             Type typeToFind = typeof( CustomImporter );
             Type[] types = Assembly.GetExecutingAssembly().GetTypes();            
             foreach( var currentType in types )
@@ -120,7 +108,7 @@ namespace UFLT.Editor
                                         
                     foreach( var currentExt in supportedExts )
                     {
-                        if( currentExt == fileExt )                        
+                        if( currentExt.Equals( fileExt, StringComparison.OrdinalIgnoreCase ) )                        
                             return currentType;                                                            
                     }                                     
                 }
@@ -142,6 +130,6 @@ namespace UFLT.Editor
         /// <summary>
         /// Called when the source file is deleted.
         /// </summary>
-        public abstract void OnSourceFileDeletes();
+        public abstract void OnSourceFileDeleted();
     }
 }

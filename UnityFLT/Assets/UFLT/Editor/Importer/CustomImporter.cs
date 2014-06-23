@@ -34,6 +34,18 @@ namespace UFLT.Editor.Importer
             }
         }
 
+        /// <summary>
+        /// Import priority. Files are imported in order of priority(highest to lowest).
+        /// This allows us to ensure that textures are impoorted first.
+        /// </summary>
+        public virtual int Priority
+        {
+            get
+            {
+                return 0;
+            }
+        }
+
         #endregion Properties
 
         /// <summary>

@@ -33,7 +33,7 @@ namespace UFLT.Editor.Importer
         }
 
         /// <summary>
-        /// SGI files should be imported first, they have no dependency but may be a dependency for other files.
+        /// SGI files should be imported first, they have no dependency themselves however may be a dependency for other files.
         /// </summary>
         public override int Priority
         {

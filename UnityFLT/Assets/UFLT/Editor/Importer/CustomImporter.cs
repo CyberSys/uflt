@@ -36,7 +36,7 @@ namespace UFLT.Editor.Importer
 
         /// <summary>
         /// Import priority. Files are imported in order of priority(highest to lowest).
-        /// This allows us to ensure that textures are impoorted first.
+        /// This allows us to ensure that textures are imported first.
         /// </summary>
         public virtual int Priority
         {
@@ -92,7 +92,7 @@ namespace UFLT.Editor.Importer
             ( importerInstance as CustomImporter ).guid = sourceGuid;
 
             // Save to asset file.
-            string assetFilePath = sourceFilePath.Replace( sourceFileExtension, "(Importer).asset" );
+            string assetFilePath = sourceFilePath.Replace( sourceFileExtension, "(Importer Settings).asset" );
             AssetDatabase.CreateAsset( importerInstance, assetFilePath );
 
             return importerInstance;            

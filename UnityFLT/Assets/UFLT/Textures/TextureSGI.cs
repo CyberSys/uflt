@@ -180,10 +180,12 @@ namespace UFLT.Textures
 			// Load file
             try
             {
-                Stream s = new FileStream( filePath, FileMode.Open );
-                _Reader = BitConverter.IsLittleEndian ? new BinaryReaderBigEndian( s ) : new BinaryReader( s );
-                ReadHeader();
-                ReadPixels();
+                using( Stream s = new FileStream( filePath, FileMode.Open ) )
+                {
+                    _Reader = BitConverter.IsLittleEndian ? new BinaryReaderBigEndian( s ) : new BinaryReader( s );
+                    ReadHeader();
+                    ReadPixels();
+                }
             }
             catch( System.Exception e )
             {
@@ -198,7 +200,6 @@ namespace UFLT.Textures
 		//////////////////////////////////////////////////////////////////////
 		void ReadHeader()
 		{
-			Debug.Log( "Reading header" );
 			// Magic number
 			short magic = _Reader.ReadInt16();		
 			if( magic != 474 )
@@ -223,7 +224,7 @@ namespace UFLT.Textures
 			ColorMapID = _Reader.ReadInt32();
 					
 			// Skip dummy data
-			_Reader.BaseStream.Seek( 404, SeekOrigin.Current );
+			_Reader.BaseStream.Seek( 404, SeekOrigin.Current );            
 			
 			if( RLE )
 			{

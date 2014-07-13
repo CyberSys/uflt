@@ -16,9 +16,9 @@ namespace UFLT.Records
     /// The color entry section consists of 1024 ramped colors of 128 intensities each.
     /// The color name section may or may not be included.    
     /// </summary>
-	public class ColorPalette : Record
-	{
-		#region Properties
+    public class ColorPalette : Record
+    {
+        #region Properties
 
         /// <summary>
         /// Holds a color and color name.
@@ -37,17 +37,17 @@ namespace UFLT.Records
             get;
             set;
         }        
-		
-		#endregion Properties
+        
+        #endregion Properties
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="parent"></param>
-		public ColorPalette( Record parent ) :
-			base( parent, parent.Header )
-		{            
-		}
+        public ColorPalette( Record parent ) :
+            base( parent, parent.Header )
+        {            
+        }
 
         /// <summary>
         /// Parses binary stream.
@@ -69,17 +69,17 @@ namespace UFLT.Records
             // Do we have color names?
             if( Length > 4228)
             {
-				int numColNames = Header.Stream.Reader.ReadInt16();
+                int numColNames = Header.Stream.Reader.ReadInt32();
                 for( int i = 0; i < numColNames; ++i )
                 {
                     short len = Header.Stream.Reader.ReadInt16();
                     Header.Stream.Reader.BaseStream.Seek( 2, SeekOrigin.Current ); // Skip reserved
                     short index = Header.Stream.Reader.ReadInt16();
                     Header.Stream.Reader.BaseStream.Seek( 2, SeekOrigin.Current ); // Skip reserved
-					if (len > 8 && index>=0 && index < Colors.Length)
-                    	Colors[index].Name = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( len - 8 ) );
+                    if (len > 8 && index>=0 && index < Colors.Length)
+                        Colors[index].Name = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( len - 8 ) );
                 }
             }
         }
-	}
+    }
 }

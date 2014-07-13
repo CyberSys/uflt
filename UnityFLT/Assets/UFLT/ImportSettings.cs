@@ -48,24 +48,43 @@ namespace UFLT
 			}
 		}
 
-        [SerializeField]
-        protected string levelOfDetailComponent;
-        /// <summary>
-        /// This class will be added to LOD GameObjects, if the class inherits from 
-        /// UFLT.MonoBehaviours.LevelOfDetails it will also have the LOD node 
-        /// values populated. Leave empty to have no component added.
-        /// </summary>		
-        public string LevelOfDetailComponent
-        {
-            get
-            {
-                return levelOfDetailComponent;
-            }
-            set
-            {
-                levelOfDetailComponent = value;
-            }
-        }	
+		[SerializeField]
+		protected string levelOfDetailComponent;
+		/// <summary>
+		/// This class will be added to LOD GameObjects, if the class inherits from 
+		/// UFLT.MonoBehaviours.LevelOfDetails it will also have the LOD node 
+		/// values populated. Leave empty to have no component added.
+		/// </summary>		
+		public string LevelOfDetailComponent
+		{
+			get
+			{
+				return levelOfDetailComponent;
+			}
+			set
+			{
+				levelOfDetailComponent = value;
+			}
+		}	
+		
+		[SerializeField]
+		protected string switchComponent;
+		/// <summary>
+		/// This class will be added to SwitchNode GameObjects, if the class inherits from 
+		/// UFLT.MonoBehaviours.Switch it will also have the Switch node 
+		/// values populated. Leave empty to have no component added.
+		/// </summary>		
+		public string SwitchComponent
+		{
+			get
+			{
+				return switchComponent;
+			}
+			set
+			{
+				switchComponent = value;
+			}
+		}	
 		
 		[SerializeField]
 		protected bool generateColliders = false;
@@ -98,6 +117,7 @@ namespace UFLT
             // Defaults
             degreeOfFreedomComponent = "DegreeOfFreedom";
             levelOfDetailComponent = "LevelOfDetail";
+			switchComponent = "SwitchNode";
 		}				
 	}
 }

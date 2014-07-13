@@ -55,12 +55,27 @@ namespace UFLT.MonoBehaviours
 
         #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
+		private bool _previousEnable = true;
+
+		private void Start() {
+			for (int i=0;i<transform.childCount;i++) {
+				transform.GetChild(i).gameObject.SetActive(true);
+			}
+		}
+
         private void Update()
         {
-
+			if (!Camera.current)
+				return;
+			Vector3 pos = transform.position - Camera.current.transform.position;
+			float distance = pos.magnitude;
+			bool enable = (distance >= switchOutDistance) && (distance < switchInDistance);
+			if ((enable && !_previousEnable) || (!enable && _previousEnable)) {
+				_previousEnable = enable;
+				for (int i=0;i<transform.childCount;i++) {
+					transform.GetChild(i).gameObject.SetActive(enable);
+				}
+			}
         }
     }
 }

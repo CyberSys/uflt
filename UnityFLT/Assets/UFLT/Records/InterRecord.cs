@@ -306,18 +306,29 @@ namespace UFLT.Records
             return true;
         }
 
-        /// <summary>
-        /// Handles Group records.
-        /// </summary>
-        /// <returns></returns>
-        protected bool HandleGroup()
-        {
-            Group g = new Group( this );
-            g.Parse();
-            return true;
-        }
+		/// <summary>
+		/// Handles Group records.
+		/// </summary>
+		/// <returns></returns>
+		protected bool HandleGroup()
+		{
+			Group g = new Group( this );
+			g.Parse();
+			return true;
+		}
 		
-        /// <summary>
+		/// <summary>
+		/// Handles Switch records.
+		/// </summary>
+		/// <returns></returns>
+		protected bool HandleSwitch()
+		{
+			Switch s = new Switch( this );
+			s.Parse();
+			return true;
+		}
+		
+		/// <summary>
         /// Handles Degree Of Freedom records.
         /// </summary>
         /// <returns></returns>

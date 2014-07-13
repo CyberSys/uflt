@@ -67,16 +67,17 @@ namespace UFLT.Records
             }
 
             // Do we have color names?
-            if( Length > 4228 )
+            if( Length > 4228)
             {
-                int numColNames = Header.Stream.Reader.ReadInt32();
+				int numColNames = Header.Stream.Reader.ReadInt16();
                 for( int i = 0; i < numColNames; ++i )
                 {
                     short len = Header.Stream.Reader.ReadInt16();
                     Header.Stream.Reader.BaseStream.Seek( 2, SeekOrigin.Current ); // Skip reserved
                     short index = Header.Stream.Reader.ReadInt16();
                     Header.Stream.Reader.BaseStream.Seek( 2, SeekOrigin.Current ); // Skip reserved
-                    Colors[index].Name = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( len - 8 ) );
+					if (len > 8 && index>=0 && index < Colors.Length)
+                    	Colors[index].Name = NullTerminatedString.GetAsString( Header.Stream.Reader.ReadBytes( len - 8 ) );
                 }
             }
         }

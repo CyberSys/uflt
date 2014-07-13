@@ -9,7 +9,7 @@ namespace UFLT.Records
 {
     /// <summary>
     /// Groups are the most generic hierarchical node present in the database tree.
-    /// Attributes within the group record provide bounding volumes that encompass the group’s 
+    /// Attributes within the group record provide bounding volumes that encompass the groupï¿½s 
     /// children and real-time control flags. A group can represent an animation sequence 
     /// in which case each immediate child of the group represents one frame of the sequence.
     /// </summary>
@@ -222,7 +222,7 @@ namespace UFLT.Records
             ChildHandler.Handler[Opcodes.PushLevel] = HandlePush;
             ChildHandler.Handler[Opcodes.PopLevel] = HandlePop;
             ChildHandler.Handler[Opcodes.Object] = HandleObject;
-            ChildHandler.Handler[Opcodes.Switch] = HandleUnhandled;
+            ChildHandler.Handler[Opcodes.Switch] = HandleSwitch;
             ChildHandler.Handler[Opcodes.Sound] = HandleUnhandled;
             ChildHandler.Handler[Opcodes.ClipRegion] = HandleUnhandled;
             ChildHandler.Handler[Opcodes.DegreeOfFreedom] = HandleDOF;

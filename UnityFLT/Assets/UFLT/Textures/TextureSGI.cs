@@ -19,15 +19,15 @@ namespace UFLT.Textures
 	public class TextureSGI 
 	{
 		#region Properties
-		
-		/// <summary>
-		/// Is this a valid rgb file?
-		/// </summary>	
-		public bool Valid
-		{
-			get;
-			set;
-		}
+
+        /// <summary>
+        /// SGI file path.
+        /// </summary>
+        public string File
+        {
+            get;
+            set;
+        }			
 		
 		/// <summary>
 		/// Does the file use run length encoding?
@@ -147,12 +147,19 @@ namespace UFLT.Textures
 		{
 			get
 			{
-				if( _Texture == null && Valid )
+				if( _Texture == null )
 				{
+                    if( PixelsBPC1 == null && PixelsBPC2 == null )
+                        ReadPixels();
+
                     _Texture = new Texture2D( Size[0], Size[1], Size[2] == 4 ? TextureFormat.ARGB32 : TextureFormat.RGB24, true );
 					_Texture.hideFlags = HideFlags.DontSave;
-					if( BPC == 1 )_Texture.SetPixels32( PixelsBPC1 );
-					else _Texture.SetPixels( PixelsBPC2 );
+
+					if( BPC == 1 )
+                        _Texture.SetPixels32( PixelsBPC1 );
+					else 
+                        _Texture.SetPixels( PixelsBPC2 );
+
 					_Texture.Apply();
 					//_Texture.Compress( true ); // Compress into DXT format
 					_Texture.name = Name;
@@ -169,28 +176,15 @@ namespace UFLT.Textures
 		
 		//////////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Loads a SGI rgb, rgba or int texture file.
+		/// Loads a SGI rgb, rgba or int texture file. 
+        /// Throws exception if the file can not be read or is not valid.
 		/// </summary>
 		/// <param name='filePath'></param>
 		//////////////////////////////////////////////////////////////////////
 		public TextureSGI( string filePath )		
 		{
-			Valid = false;
-			
-			// Load file
-            try
-            {
-                using( Stream s = new FileStream( filePath, FileMode.Open ) )
-                {
-                    _Reader = BitConverter.IsLittleEndian ? new BinaryReaderBigEndian( s ) : new BinaryReader( s );
-                    ReadHeader();
-                    ReadPixels();
-                }
-            }
-            catch( System.Exception e )
-            {
-                Debug.LogException( e );
-            }
+            File = filePath;
+            ReadHeader();                                           
 		}	
 		
 		//////////////////////////////////////////////////////////////////////
@@ -200,36 +194,42 @@ namespace UFLT.Textures
 		//////////////////////////////////////////////////////////////////////
 		void ReadHeader()
 		{
-			// Magic number
-			short magic = _Reader.ReadInt16();		
-			if( magic != 474 )
-			{				
-				_Reader.Close();
-				Debug.LogError( "Invalid file, the file header does not contain the correct magic number(474)" );
-				return;
-			}
-			
-			Valid = true;			
-			RLE = _Reader.ReadSByte() == 1 ? true : false;		
-			BPC = _Reader.ReadSByte();
-			Dimension = _Reader.ReadUInt16();
-			Size = new ushort[]{ _Reader.ReadUInt16(), _Reader.ReadUInt16(), _Reader.ReadUInt16() };
-			PixMinMax = new int[]{ _Reader.ReadInt32(), _Reader.ReadInt32() };
-					
-			// Skip dummy data
-			_Reader.BaseStream.Seek( 4, SeekOrigin.Current ); 
-			
-			// Null terminated name.
-			Name = NullTerminatedString.GetAsString( _Reader.ReadBytes( 80 ) );
-			ColorMapID = _Reader.ReadInt32();
-					
-			// Skip dummy data
-			_Reader.BaseStream.Seek( 404, SeekOrigin.Current );            
-			
-			if( RLE )
-			{
-				ReadOffsets();	
-			}								
+            Stream s = new FileStream( File, FileMode.Open );
+            _Reader = BitConverter.IsLittleEndian ? new BinaryReaderBigEndian( s ) : new BinaryReader( s );
+
+            try
+            {
+                // Magic number	
+                if( _Reader.ReadInt16() != 474 )
+                {
+                    throw new Exception( "Invalid file, the file header does not contain the correct magic number(474)" );
+                }
+
+                RLE = _Reader.ReadSByte() == 1 ? true : false;
+                BPC = _Reader.ReadSByte();
+                Dimension = _Reader.ReadUInt16();
+                Size = new ushort[] { _Reader.ReadUInt16(), _Reader.ReadUInt16(), _Reader.ReadUInt16() };
+                PixMinMax = new int[] { _Reader.ReadInt32(), _Reader.ReadInt32() };
+
+                // Skip dummy data
+                _Reader.BaseStream.Seek( 4, SeekOrigin.Current );
+
+                // Null terminated name.
+                Name = NullTerminatedString.GetAsString( _Reader.ReadBytes( 80 ) );
+                ColorMapID = _Reader.ReadInt32();
+
+                // Skip dummy data
+                _Reader.BaseStream.Seek( 404, SeekOrigin.Current );
+
+                if( RLE )
+                {
+                    ReadOffsets();
+                }
+            }
+            finally
+            {
+                _Reader.Close();
+            }
 		}			
 				
 		//////////////////////////////////////////////////////////////////////
@@ -247,11 +247,11 @@ namespace UFLT.Textures
 			{
 				RowStart[i] = _Reader.ReadInt32();
 			}
-			
+
 			for( int i = 0; i < count; ++i )
-			{
+			{                
 				RowSize[i] = _Reader.ReadInt32();
-			}				
+			}
 		}		
 		
 		//////////////////////////////////////////////////////////////////////
@@ -268,34 +268,44 @@ namespace UFLT.Textures
 			//how many times to repeat the value of the following short, in the destination. This process proceeds until a count of
 			//0 is found. This should decompress exactly XSIZE pixels. Note that the byte order of short data in the input file 
 			//should be used, as described above.
-	
-			// Read in each row
-			//Color32[][] pixels = new Color32[Size[1]][];
-			PixelsBPC1 = new Color32[Size[0] * Size[1]];		
-			for( int y = 0; y < Size[1]; ++y )
-			{					
-				for( int channel = 0; channel < Size[2]; ++channel )
-				{
-					ReadRowBPC1( y, channel );	
-				}
-			}	
-			
-			if( Size[2] == 1 )			
-			{
-				// Grayscale
-				for( int i = 0; i < PixelsBPC1.Length; ++i )					
-				{
-					PixelsBPC1[i].b = PixelsBPC1[i].g = PixelsBPC1[i].r;
-					PixelsBPC1[i].a = 0xff;
-				}
-			}
-			else if( Size[2] == 3 )
-			{				
-				for( int i = 0; i < PixelsBPC1.Length; ++i )					
-				{				
-					PixelsBPC1[i].a = 0xff;
-				}	
-			}			
+
+            Stream s = new FileStream( File, FileMode.Open );
+            _Reader = BitConverter.IsLittleEndian ? new BinaryReaderBigEndian( s ) : new BinaryReader( s );
+
+            try
+            {
+                // Read in each row
+                //Color32[][] pixels = new Color32[Size[1]][];
+                PixelsBPC1 = new Color32[Size[0] * Size[1]];
+                for( int y = 0; y < Size[1]; ++y )
+                {
+                    for( int channel = 0; channel < Size[2]; ++channel )
+                    {
+                        ReadRowBPC1( y, channel );
+                    }
+                }
+
+                if( Size[2] == 1 )
+                {
+                    // Grayscale
+                    for( int i = 0; i < PixelsBPC1.Length; ++i )
+                    {
+                        PixelsBPC1[i].b = PixelsBPC1[i].g = PixelsBPC1[i].r;
+                        PixelsBPC1[i].a = 0xff;
+                    }
+                }
+                else if( Size[2] == 3 )
+                {
+                    for( int i = 0; i < PixelsBPC1.Length; ++i )
+                    {
+                        PixelsBPC1[i].a = 0xff;
+                    }
+                }
+            }
+            finally
+            {
+                _Reader.Close();
+            }
 		}
 		
 		//////////////////////////////////////////////////////////////////////
@@ -326,12 +336,10 @@ namespace UFLT.Textures
 				{				
 					pixel = rowData[currentRowData++];				
 					pixelCount = ( byte )( pixel & 0x7F ); // bits 0-6				
-					if( pixelCount == 0 )
-					{
-						break;	
-					}
+					if( pixelCount == 0 )					
+						break;						
 									
-					if( ( pixel & 0x80 ) == 1 ) // specify how many bytes to copy from the RLE data buffer to the destination
+					if( ( pixel & 0x80 ) != 0 ) // specify how many bytes to copy from the RLE data buffer to the destination
 					{					
 						while( pixelCount-- > 0 )
 						{

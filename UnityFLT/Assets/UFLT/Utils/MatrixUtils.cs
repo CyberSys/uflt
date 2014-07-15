@@ -4,7 +4,7 @@ using System;
 namespace UFLT.Utils
 {    
     /// <summary>
-    /// Taken from the Unity forumns:
+    /// Taken from the Unity forum's:
     /// http://forum.unity3d.com/threads/121966-How-to-assign-Matrix4x4-to-Transform
     /// Extension functions for converting a Matrix into position, rotation and scale values.
     /// </summary>    

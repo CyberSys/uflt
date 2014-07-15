@@ -48,15 +48,19 @@ namespace UFLT.Editor.Importer
         public override void OnSourceFileImported()
         {            
             string sourceFilePath = AssetDatabase.GUIDToAssetPath( guid );
-            string textureOutFilePath = sourceFilePath.Replace( Path.GetExtension( sourceFilePath ), textureFormat == OutputFormat.PNG ? "_Converted.png" : "_Converted.jpg" );            
-            TextureSGI textureLoader = new TextureSGI( sourceFilePath );
+            string textureOutFilePath = sourceFilePath.Replace( Path.GetExtension( sourceFilePath ), textureFormat == OutputFormat.PNG ? "_Converted.png" : "_Converted.jpg" );
 
-            if( textureLoader.Valid )
+            try
             {
+                TextureSGI textureLoader = new TextureSGI( sourceFilePath );
                 byte[] texBytes = textureFormat == OutputFormat.PNG ? textureLoader.Texture.EncodeToPNG() : textureLoader.Texture.EncodeToJPG();
                 File.WriteAllBytes( textureOutFilePath, texBytes );
                 AssetDatabase.ImportAsset( textureOutFilePath );
             }
+            catch( Exception e )
+            {
+                Debug.LogException( e );
+            }            
         }
 
         public override void OnSourceFileMoved()

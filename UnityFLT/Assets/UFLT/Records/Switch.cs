@@ -88,18 +88,20 @@ namespace UFLT.Records
 		/// Adds a Component to the DOF GameObject if one is assigned in the Settings.
 		/// </summary>
 		public override void ImportIntoScene ()
-		{							
-			base.ImportIntoScene ();			
-			if( !string.IsNullOrEmpty( Header.Settings.SwitchComponent ) )
-			{				
-				Component c = UnityGameObject.AddComponent( Header.Settings.SwitchComponent );		
-				if( c != null && c is SwitchNode )
-				{
-					SwitchNode s = c as SwitchNode;
-					s.Index = Index;
-					s.Masks = Masks;
-				}									
-			}
-		}
+        {
+            base.ImportIntoScene();
+            
+            Component switchComp = null;
+            
+            if( string.IsNullOrEmpty( Header.Settings.switchComponent ) )            
+                switchComp = UnityGameObject.AddComponent<SwitchNode>();
+            else
+                switchComp = UnityGameObject.AddComponent( Header.Settings.switchComponent );
+            
+            if( switchComp != null )
+                switchComp.SendMessage( "OnSwitchNode", this );    
+            else 
+                Debug.LogWarning( "Switch node is null, something has gone wrong. Does the " + Header.Settings.switchComponent +" class exist and inherit from MonoBehaviour?" );
+        }
 	}
 }

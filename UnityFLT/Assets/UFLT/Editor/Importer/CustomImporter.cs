@@ -5,13 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
+using System.Linq;
 
 namespace UFLT.Editor.Importer
 {
     /// <summary>
     /// Base class for UFLT defined custom importers.
     /// We have to import things slightly different than Unity's built in importers.
-    /// The original file is kept and we create an other file for the converted data.
+    /// The original file is kept and we create a file for the converted data.
     /// This file is linked to the original file via its guid, this way we can be    
     /// notified when the file changes, moves or is deleted.
     /// </summary>
@@ -36,7 +37,7 @@ namespace UFLT.Editor.Importer
 
         /// <summary>
         /// Import priority. Files are imported in order of priority(highest to lowest).
-        /// This allows us to ensure that textures are imported first.
+        /// This allows us to ensure that textures are imported first when importing multiple files at once.
         /// </summary>
         public virtual int Priority
         {
@@ -55,21 +56,19 @@ namespace UFLT.Editor.Importer
         /// <returns></returns>
         public static CustomImporter FindOrCreateImporter( string sourceGuid )
         {
-            var foundObjects = Resources.FindObjectsOfTypeAll( typeof( CustomImporter ) );
-            foreach( var obj in foundObjects )
+            var foundObjectImporters = Resources.FindObjectsOfTypeAll( typeof( CustomImporter ) );
+            foreach( var obj in foundObjectImporters )
             {
                 CustomImporter ci = obj as CustomImporter;
-                if( ci.guid == sourceGuid )
-                {
-                    return ci;
-                }
+                if( ci.guid == sourceGuid )                
+                    return ci;                
             }
 
             return CreateImporter( sourceGuid );
         }
 
         /// <summary>
-        /// 
+        /// Creates a new importer 
         /// </summary>
         /// <param name="sourceGuid"></param>
         /// <returns></returns>
@@ -89,7 +88,7 @@ namespace UFLT.Editor.Importer
             }
 
             CustomImporter importerInstance = objInstance as CustomImporter;
-            ( importerInstance as CustomImporter ).guid = sourceGuid;
+            importerInstance.guid = sourceGuid;
 
             // Save to asset file.
             string assetFilePath = sourceFilePath.Replace( sourceFileExtension, "(Importer Settings).asset" );
@@ -99,9 +98,9 @@ namespace UFLT.Editor.Importer
         }
 
         /// <summary>
-        /// 
+        /// Returns a derived CustomImporter class that supports the file extension. 
         /// </summary>
-        /// <param name="fileExt"></param>
+        /// <param name="fileExt">File extension including the dot. E.G ".rgb", ".sgi".</param>
         /// <returns></returns>
         static Type FindImporter( string fileExt )
         {
@@ -113,10 +112,14 @@ namespace UFLT.Editor.Importer
                 if( currentType.IsSubclassOf( typeToFind ) )
                 {
                     var pi = currentType.GetProperty( "Extensions" );
-                    if( pi == null ) break;
-                    
+                    if( pi == null )
+                    {
+                        Debug.LogWarning( currentType.ToString() + ": class does not contain a property called 'Extensions'" );
+                        break;
+                    }
+
                     string[] supportedExts = ( string[] )pi.GetValue( null, null );
-                    if( supportedExts == null ) break;
+                    if( supportedExts == null ) break;                    
                                         
                     foreach( var currentExt in supportedExts )
                     {

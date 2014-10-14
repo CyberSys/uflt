@@ -507,7 +507,7 @@ namespace UFLT.Records
 			{
 				// Init log
 				Log = new Log();
-                Settings.AdditionalSearchDirectories.ForEach( o => FileFinder.Instance.AddPath( o ) );				
+                Settings.additionalSearchDirectories.ForEach( o => FileFinder.Instance.AddPath( o ) );				
 			}
 			
 			Log.Write( "Loading file: " + file );

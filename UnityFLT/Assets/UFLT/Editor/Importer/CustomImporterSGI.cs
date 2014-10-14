@@ -8,7 +8,7 @@ using System.IO;
 namespace UFLT.Editor.Importer
 {
     /// <summary>
-    /// Importer for loading SGI textures(.rgb, .rgba, .int, .inta, .sgi, .bw)
+    /// Editor importer for loading SGI textures(.rgb, .rgba, .int, .inta, .sgi, .bw).    
     /// </summary>
 	public class CustomImporterSGI : CustomImporter
     {

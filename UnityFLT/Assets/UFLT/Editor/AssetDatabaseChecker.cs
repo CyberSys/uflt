@@ -20,9 +20,9 @@ namespace UFLT.Editor
         /// <param name="movedFromAssetPaths"></param>
 		static void OnPostprocessAllAssets( string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths )
 	    {
-            List<CustomImporter> importerTasks = GenerateCustomImportList( importedAssets );
-            List<CustomImporter> deleteTasks = GenerateCustomImportList( deletedAssets );
-            List<CustomImporter> moveTasks = GenerateCustomImportList( movedFromAssetPaths );
+            List<CustomImporter> importerTasks = GenerateCustomImportList( importedAssets, false );
+            List<CustomImporter> deleteTasks = GenerateCustomImportList( deletedAssets, true );
+            List<CustomImporter> moveTasks = GenerateCustomImportList( movedFromAssetPaths, true );
             
             importerTasks.ForEach( o => o.OnSourceFileImported() );
             deleteTasks.ForEach( o => o.OnSourceFileDeleted() );
@@ -33,14 +33,15 @@ namespace UFLT.Editor
         /// Checks for a custom importer for each file and returns any found custom importers sorted by priority (highest to lowest).
         /// </summary>
         /// <param name="assets"></param>
+        /// <param name="existingOnly">Create a new importer if one can not be found?</param>
         /// <returns></returns>
-        static List<CustomImporter> GenerateCustomImportList( string[] assets )
+        static List<CustomImporter> GenerateCustomImportList( string[] assets, bool existingOnly )
         {
             List<CustomImporter> importers = new List<CustomImporter>();
             foreach( var file in assets )
             {
                 string guid = AssetDatabase.AssetPathToGUID( file );
-                CustomImporter ci = CustomImporter.FindOrCreateImporter( guid );
+                CustomImporter ci = existingOnly ? CustomImporter.FindImporter( guid ) : CustomImporter.FindOrCreateImporter( guid );
                 if( ci != null )
                     importers.Add( ci );
             }

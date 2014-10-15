@@ -50,19 +50,33 @@ namespace UFLT.Editor.Importer
         #endregion Properties
 
         /// <summary>
+        /// Finds the new importer for the file or returns null.
+        /// </summary>
+        /// <param name="sourceGuid">guid of the file which needs an importer.</param>
+        /// <returns></returns>
+        public static CustomImporter FindImporter( string sourceGuid )
+        {
+            var foundObjectImporters = Resources.FindObjectsOfTypeAll( typeof( CustomImporter ) );
+            foreach( var obj in foundObjectImporters )
+            {
+                CustomImporter ci = obj as CustomImporter;
+                if( ci.guid == sourceGuid )
+                    return ci;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Finds or creates a new importer for the file.
         /// </summary>
         /// <param name="sourceGuid">guid of the file which needs an importer.</param>
         /// <returns></returns>
         public static CustomImporter FindOrCreateImporter( string sourceGuid )
         {
-            var foundObjectImporters = Resources.FindObjectsOfTypeAll( typeof( CustomImporter ) );
-            foreach( var obj in foundObjectImporters )
-            {
-                CustomImporter ci = obj as CustomImporter;
-                if( ci.guid == sourceGuid )                
-                    return ci;                
-            }
+            CustomImporter found = FindImporter( sourceGuid );
+            if( found != null )
+                return found;
 
             return CreateImporter( sourceGuid );
         }
@@ -77,7 +91,7 @@ namespace UFLT.Editor.Importer
             // Find an importer for this file type
             string sourceFilePath = AssetDatabase.GUIDToAssetPath( sourceGuid );
             string sourceFileExtension = Path.GetExtension( sourceFilePath );
-            Type importerType = FindImporter( sourceFileExtension );
+            Type importerType = FindImporterType( sourceFileExtension );
             if( importerType == null ) return null;
 
             var objInstance = ScriptableObject.CreateInstance( importerType.Name );
@@ -114,7 +128,7 @@ namespace UFLT.Editor.Importer
         /// </summary>
         /// <param name="fileExt">File extension including the dot. E.G ".rgb", ".sgi".</param>
         /// <returns></returns>
-        static Type FindImporter( string fileExt )
+        static Type FindImporterType( string fileExt )
         {
             // Find an implementation of CustomImporter that supports our file type.
             Type typeToFind = typeof( CustomImporter );

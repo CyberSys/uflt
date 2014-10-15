@@ -2,6 +2,7 @@
 using UnityEditor;
 using System.Collections;
 using UFLT.Textures;
+using System.IO;
 
 namespace UFLT.Editor.Importer
 {
@@ -78,7 +79,14 @@ namespace UFLT.Editor.Importer
             EditorGUI.BeginChangeCheck();
             Importer.textureFormat = ( CustomImporterSGI.OutputFormat )EditorGUILayout.EnumPopup( "Converted Texture Format", Importer.textureFormat );
             if( EditorGUI.EndChangeCheck() )
+            {
+                // Delete the old file
+                string sourceFilePath = AssetDatabase.GUIDToAssetPath( Importer.guid );
+                string textureOutFilePath = sourceFilePath.Replace( Path.GetExtension( sourceFilePath ), Importer.textureFormat != CustomImporterSGI.OutputFormat.PNG ? "_Converted.png" : "_Converted.jpg" );
+                AssetDatabase.DeleteAsset( textureOutFilePath );          
+     
                 Importer.OnSourceFileImported();
+            }
         }
     }
 }

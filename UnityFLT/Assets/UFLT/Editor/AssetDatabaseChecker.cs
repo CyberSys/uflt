@@ -25,13 +25,7 @@ namespace UFLT.Editor
             List<CustomImporter> moveTasks = GenerateCustomImportList( movedFromAssetPaths );
             
             importerTasks.ForEach( o => o.OnSourceFileImported() );
-            
-            foreach( var o in deleteTasks )
-            {
-                o.OnSourceFileDeleted();
-                CustomImporter.DestroyImmediate( o );
-            }
-
+            deleteTasks.ForEach( o => o.OnSourceFileDeleted() );
             moveTasks.ForEach( o => o.OnSourceFileMoved() );
 		}
         

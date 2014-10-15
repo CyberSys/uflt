@@ -98,6 +98,18 @@ namespace UFLT.Editor.Importer
         }
 
         /// <summary>
+        /// Attempts to destroy the asset file for this importer, returns true if successful. 
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
+        public bool DeleteImporter()
+        {
+            string sourceFilePath = AssetDatabase.GUIDToAssetPath( guid );
+            string importerFilePath = sourceFilePath.Replace( Path.GetExtension( sourceFilePath ), "(Importer Settings).asset" );
+            return AssetDatabase.DeleteAsset( importerFilePath );
+        }
+
+        /// <summary>
         /// Returns a derived CustomImporter class that supports the file extension. 
         /// </summary>
         /// <param name="fileExt">File extension including the dot. E.G ".rgb", ".sgi".</param>
@@ -140,11 +152,17 @@ namespace UFLT.Editor.Importer
         /// <summary>
         /// Called when the source file has been moved to an other section of the Assets directory.
         /// </summary>
-        public abstract void OnSourceFileMoved();
+        public virtual void OnSourceFileMoved()
+        {
+            // TODO: You are here!!!!
+        }
 
         /// <summary>
-        /// Called when the source file is deleted.
+        /// Called when the source file is deleted, removes the importer settings asset file.
         /// </summary>
-        public abstract void OnSourceFileDeleted();
+        public virtual void OnSourceFileDeleted()
+        {
+            DeleteImporter();
+        }
     }
 }

@@ -158,9 +158,6 @@ namespace UFLT.Records
 
         #endregion Handlers
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
         public Record()
         {		
             RootHandler = new RecordHandler();

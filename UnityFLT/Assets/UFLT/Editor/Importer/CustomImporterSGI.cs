@@ -65,14 +65,19 @@ namespace UFLT.Editor.Importer
 
         public override void OnSourceFileMoved()
         {
+            // TODO: Move converted file.
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Removes the converted texture and the import settings file.
+        /// </summary>
         public override void OnSourceFileDeleted()
-        {
+        {            
             string sourceFilePath = AssetDatabase.GUIDToAssetPath( guid );
             string textureOutFilePath = sourceFilePath.Replace( Path.GetExtension( sourceFilePath ), textureFormat == OutputFormat.PNG ? "_Converted.png" : "_Converted.jpg" );
             AssetDatabase.DeleteAsset( textureOutFilePath );
+            base.OnSourceFileDeleted();
         }
     }
 }

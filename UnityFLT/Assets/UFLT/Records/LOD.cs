@@ -185,22 +185,18 @@ namespace UFLT.Records
 		public override void ImportIntoScene ()
 		{
             base.ImportIntoScene();
-            if( !string.IsNullOrEmpty( Header.Settings.LevelOfDetailComponent ) )
-            {
-                Component c = UnityGameObject.AddComponent( Header.Settings.LevelOfDetailComponent );
-                if( c != null && c is LevelOfDetail )
-                {
-                    LevelOfDetail lod = c as LevelOfDetail;
-                    lod.switchInDistance = ( float )SwitchInDistance;
-                    lod.switchOutDistance = ( float )SwitchOutDistance;
-                    lod.usePreviousSlantRange = FlagsUsePreviousSlantRange;
-                    lod.additive = FlagsAdditiveLODsBelow;
-                    lod.freezeCenter = FlagsFreezeCenter;
-                    lod.center = new Vector3( ( float )Center[0], ( float )Center[1], ( float )Center[2] );
-                    lod.transitionRange = ( float )TransitionRange;
-                    lod.significantSize = ( float )SignificantSize;        
-                }
-            }
+
+            Component lodComp = null;
+
+            if( string.IsNullOrEmpty( Header.Settings.levelOfDetailComponent ) )
+                lodComp = UnityGameObject.AddComponent<LevelOfDetail>();
+            else
+                lodComp = UnityGameObject.AddComponent( Header.Settings.levelOfDetailComponent );
+
+            if( lodComp != null )
+                lodComp.SendMessage( "OnLODNode", this );
+            else
+                Debug.LogWarning( "LOD node is null, something has gone wrong. Does the " + Header.Settings.levelOfDetailComponent + " class exist and inherit from MonoBehaviour?" );
 		}
 	}
 }

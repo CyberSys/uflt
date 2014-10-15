@@ -17,6 +17,7 @@ namespace UFLT.Records
 		
 		/// <summary>
 		/// Log file containing messages generated from parsing and importing.
+        /// Good for debugging.
 		/// </summary>		
 		public Log Log
 		{

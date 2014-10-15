@@ -22,12 +22,8 @@ namespace UFLT
 		
 		#endregion Properties	
 		
-		/// <summary>
-		/// Constructor
-		/// </summary>
 		public Log()
-		{
-			// Create a new log
+		{			
 			LogBuilder = new StringBuilder();
 		}
 		
@@ -44,7 +40,7 @@ namespace UFLT
 		/// </summary>
 		public void WriteWarning( string line )
 		{
-			LogBuilder.AppendFormat( "WARNING: {0}\n", line );			
+			LogBuilder.AppendLine( "WARNING: " + line );			
 		}
 		
 		/// <summary>
@@ -52,12 +48,12 @@ namespace UFLT
 		/// </summary>
 		public void WriteError( string line )
 		{
-			LogBuilder.AppendFormat( "ERROR: {0}\n", line );			
+			LogBuilder.AppendLine( "ERROR: " + line );			
 		}		
 		
 		/// <summary>
-		/// Returns log data as string.
-		/// </summary>
+		/// Returns log data as one string.
+		/// </summary>        
 		public new string ToString ()
 		{
 			return LogBuilder.ToString();

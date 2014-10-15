@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using LOD = UFLT.Records.LOD;
 
 namespace UFLT.MonoBehaviours
 {
@@ -7,7 +8,7 @@ namespace UFLT.MonoBehaviours
     public class LevelOfDetail : MonoBehaviour
     {
         #region Properties
-        
+
         /// <summary>
         /// The distance to switch the model into view.
         /// </summary>
@@ -27,7 +28,7 @@ namespace UFLT.MonoBehaviours
         /// false for replacement LOD, true for additive LOD.
         /// </summary>
         public bool additive;
- 
+
         /// <summary>
         /// Flags value
         /// </summary>
@@ -46,7 +47,7 @@ namespace UFLT.MonoBehaviours
         /// switch-in distance(far).
         /// </summary>
         public float transitionRange;
-  
+
         /// <summary>
         /// Used to calculate switch in and out distances based on viewing 
         /// parameters of your simulation display system
@@ -55,27 +56,53 @@ namespace UFLT.MonoBehaviours
 
         #endregion
 
-		private bool _previousEnable = true;
+        private bool _previousEnable = true;
 
-		private void Start() {
-			for (int i=0;i<transform.childCount;i++) {
-				transform.GetChild(i).gameObject.SetActive(true);
-			}
-		}
+        /// <summary>
+        /// Called by the LOD class when creating an OpenFlight LOD node from file.
+        /// </summary>
+        /// <param name="switchData"></param>
+        public virtual void OnSwitchNode( LOD switchData )
+        {
+            switchInDistance = ( float )switchData.SwitchInDistance;
+            switchOutDistance = ( float )switchData.SwitchOutDistance;
+            usePreviousSlantRange = switchData.FlagsUsePreviousSlantRange;
+            additive = switchData.FlagsAdditiveLODsBelow;
+            freezeCenter = switchData.FlagsFreezeCenter;
+            center = new Vector3( ( float )switchData.Center[0], ( float )switchData.Center[1], ( float )switchData.Center[2] );
+            transitionRange = ( float )switchData.TransitionRange;
+            significantSize = ( float )switchData.SignificantSize;
+            InitLOD();
+        }
+
+        private void Start()
+        {
+            InitLOD();            
+        }
+
+        private void InitLOD()
+        {
+            for( int i = 0; i < transform.childCount; i++ )
+            {
+                transform.GetChild( i ).gameObject.SetActive( true );
+            }
+        }
 
         private void Update()
         {
-			if (!Camera.current)
-				return;
-			Vector3 pos = transform.position - Camera.current.transform.position;
-			float distance = pos.magnitude;
-			bool enable = (distance >= switchOutDistance) && (distance < switchInDistance);
-			if ((enable && !_previousEnable) || (!enable && _previousEnable)) {
-				_previousEnable = enable;
-				for (int i=0;i<transform.childCount;i++) {
-					transform.GetChild(i).gameObject.SetActive(enable);
-				}
-			}
+            if( !Camera.current )
+                return;
+
+            float distance = Vector3.Distance( transform.position, Camera.current.transform.position );
+            bool enable = ( distance >= switchOutDistance ) && ( distance < switchInDistance );
+            if( enable != _previousEnable )
+            {
+                _previousEnable = enable;
+                for( int i = 0; i < transform.childCount; i++ )
+                {                    
+                    transform.GetChild( i ).gameObject.SetActive( enable );
+                }
+            }
         }
     }
 }

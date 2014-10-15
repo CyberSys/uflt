@@ -19,6 +19,8 @@ External Ref
 
 -Some notes to myself:-
 
+LOD node center, is this relative to position or is it the actual position? Check it and adjust the LOD comments and update function.
+
 Level field could be used to set level in model?
 
 Use the face lit field to set the shader that the material uses..

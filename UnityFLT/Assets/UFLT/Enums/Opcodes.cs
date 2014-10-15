@@ -2,7 +2,7 @@
 namespace UFLT.DataTypes.Enums
 {
     /// <summary>
-    /// The type of record.
+    /// The type of OpenFlight record.
     /// </summary>
     public enum Opcodes : short
     {

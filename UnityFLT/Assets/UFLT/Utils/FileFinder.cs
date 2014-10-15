@@ -61,10 +61,16 @@ namespace UFLT.Utils
         public void AddPath( string fileName )
         {
             string dir = Path.GetDirectoryName( fileName );
-            if( !_Paths.Contains( dir ) ) // Dont add duplicates
-            {
-                _Paths.Add( dir );
-            }            
+            if( !_Paths.Contains( dir ) ) // Dont add duplicates            
+                _Paths.Add( dir );            
+        }
+
+        /// <summary>
+        /// Clears all known paths.
+        /// </summary>
+        public void ClearPaths()
+        {
+            _Paths.Clear();
         }
 
         /// <summary>

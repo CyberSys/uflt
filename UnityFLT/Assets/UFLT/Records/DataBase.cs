@@ -507,6 +507,8 @@ namespace UFLT.Records
 			{
 				// Init log
 				Log = new Log();
+
+                // Add any additional directorties to our file finder. 
                 Settings.additionalSearchDirectories.ForEach( o => FileFinder.Instance.AddPath( o ) );				
 			}
 			

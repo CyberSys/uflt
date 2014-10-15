@@ -22,7 +22,7 @@ namespace UFLT.Editor
 	    {
             List<CustomImporter> importerTasks = GenerateCustomImportList( importedAssets, false );
             List<CustomImporter> deleteTasks = GenerateCustomImportList( deletedAssets, true );
-            List<CustomImporter> moveTasks = GenerateCustomImportList( movedFromAssetPaths, true );
+            List<CustomImporter> moveTasks = GenerateCustomImportList( movedAssets, false );
             
             importerTasks.ForEach( o => o.OnSourceFileImported() );
             deleteTasks.ForEach( o => o.OnSourceFileDeleted() );

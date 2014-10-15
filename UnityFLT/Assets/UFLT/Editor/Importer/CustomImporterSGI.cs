@@ -22,6 +22,17 @@ namespace UFLT.Editor.Importer
         public OutputFormat textureFormat = OutputFormat.PNG;
 
         /// <summary>
+        /// Text appened onto the original file name to create the converted file name. Includes file extension.
+        /// </summary>
+        public string ConvertedFileAppendName
+        {
+            get
+            {
+                return textureFormat == OutputFormat.PNG ? "_Converted.png" : "_Converted.jpg";
+            }
+        }
+
+        /// <summary>
         /// File extension/s supported by this importer.
         /// </summary>
         public new static string[] Extensions
@@ -45,10 +56,13 @@ namespace UFLT.Editor.Importer
 
         #endregion Properties
 
+        /// <summary>
+        /// Import the sgi texture.
+        /// </summary>
         public override void OnSourceFileImported()
         {            
             string sourceFilePath = AssetDatabase.GUIDToAssetPath( guid );
-            string textureOutFilePath = sourceFilePath.Replace( Path.GetExtension( sourceFilePath ), textureFormat == OutputFormat.PNG ? "_Converted.png" : "_Converted.jpg" );
+            string textureOutFilePath = sourceFilePath.Replace( Path.GetExtension( sourceFilePath ), ConvertedFileAppendName );
 
             try
             {
@@ -63,10 +77,19 @@ namespace UFLT.Editor.Importer
             }            
         }
 
+        /// <summary>
+        /// Move the converted texture.
+        /// </summary>
         public override void OnSourceFileMoved()
         {
-            // TODO: Move converted file.
-            throw new NotImplementedException();
+            string currentPath = AssetDatabase.GetAssetPath( this );
+            string oldFile = currentPath.Replace( "(Importer Settings).asset", ConvertedFileAppendName );
+            
+            string sourceFilePath = AssetDatabase.GUIDToAssetPath( guid );
+            string newPath = sourceFilePath.Replace( Path.GetExtension( sourceFilePath ), ConvertedFileAppendName );
+            AssetDatabase.MoveAsset( oldFile, newPath );
+
+            base.OnSourceFileMoved();
         }
 
         /// <summary>
@@ -75,8 +98,9 @@ namespace UFLT.Editor.Importer
         public override void OnSourceFileDeleted()
         {            
             string sourceFilePath = AssetDatabase.GUIDToAssetPath( guid );
-            string textureOutFilePath = sourceFilePath.Replace( Path.GetExtension( sourceFilePath ), textureFormat == OutputFormat.PNG ? "_Converted.png" : "_Converted.jpg" );
+            string textureOutFilePath = sourceFilePath.Replace( Path.GetExtension( sourceFilePath ), ConvertedFileAppendName );
             AssetDatabase.DeleteAsset( textureOutFilePath );
+
             base.OnSourceFileDeleted();
         }
     }

@@ -167,10 +167,15 @@ namespace UFLT.Editor.Importer
         /// Called when the source file has been moved to an other section of the Assets directory.
         /// </summary>
         public virtual void OnSourceFileMoved()
-        {
-            // TODO: You are here!!!!
+        {            
+            // Move the importer settings asset file.
+            string currentPath = AssetDatabase.GetAssetPath( this );
+            
+            string sourceFilePath = AssetDatabase.GUIDToAssetPath( guid );
+            string newPath = sourceFilePath.Replace( Path.GetExtension( sourceFilePath ), "(Importer Settings).asset" );
+            AssetDatabase.MoveAsset( currentPath, newPath );            
         }
-
+            
         /// <summary>
         /// Called when the source file is deleted, removes the importer settings asset file.
         /// </summary>

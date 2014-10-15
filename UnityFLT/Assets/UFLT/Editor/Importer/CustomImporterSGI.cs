@@ -70,7 +70,9 @@ namespace UFLT.Editor.Importer
 
         public override void OnSourceFileDeleted()
         {
-            throw new NotImplementedException();
+            string sourceFilePath = AssetDatabase.GUIDToAssetPath( guid );
+            string textureOutFilePath = sourceFilePath.Replace( Path.GetExtension( sourceFilePath ), textureFormat == OutputFormat.PNG ? "_Converted.png" : "_Converted.jpg" );
+            AssetDatabase.DeleteAsset( textureOutFilePath );
         }
     }
 }

@@ -12,7 +12,7 @@ namespace UFLT.Editor
 	public class AssetDatabaseChecker : AssetPostprocessor
 	{
         /// <summary>
-        /// Collects custom importers and executes them in order of priority(highest to lowest). 
+        /// Collects custom importers and executes them in order of priority (highest to lowest). 
         /// </summary>
         /// <param name="importedAssets"></param>
         /// <param name="deletedAssets"></param>
@@ -25,12 +25,18 @@ namespace UFLT.Editor
             List<CustomImporter> moveTasks = GenerateCustomImportList( movedFromAssetPaths );
             
             importerTasks.ForEach( o => o.OnSourceFileImported() );
-            deleteTasks.ForEach( o => o.OnSourceFileDeleted() );
+            
+            foreach( var o in deleteTasks )
+            {
+                o.OnSourceFileDeleted();
+                CustomImporter.DestroyImmediate( o );
+            }
+
             moveTasks.ForEach( o => o.OnSourceFileMoved() );
 		}
         
         /// <summary>
-        /// Checks for a custom importer for each file and returns any found custom importers sorted by priority(highest to lowest).
+        /// Checks for a custom importer for each file and returns any found custom importers sorted by priority (highest to lowest).
         /// </summary>
         /// <param name="assets"></param>
         /// <returns></returns>

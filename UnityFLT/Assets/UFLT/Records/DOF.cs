@@ -317,7 +317,7 @@ namespace UFLT.Records
             if( string.IsNullOrEmpty( Header.Settings.degreeOfFreedomComponent ) )
                 dofComp = UnityGameObject.AddComponent<DegreeOfFreedom>();
             else
-                dofComp = UnityGameObject.AddComponent( Header.Settings.degreeOfFreedomComponent );
+                dofComp = UnityEngineInternal.APIUpdaterRuntimeServices.AddComponent( UnityGameObject, "Assets/UFLT/Records/DOF.cs (320,27)", Header.Settings.degreeOfFreedomComponent );
 
             if( dofComp != null )
                 dofComp.SendMessage( "OnDOFNode", this );

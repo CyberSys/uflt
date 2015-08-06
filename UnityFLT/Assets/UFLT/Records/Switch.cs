@@ -89,19 +89,9 @@ namespace UFLT.Records
 		/// </summary>
 		public override void ImportIntoScene ()
         {
-            base.ImportIntoScene();
-            
-            Component switchComp = null;
-            
-            if( string.IsNullOrEmpty( Header.Settings.switchComponent ) )            
-                switchComp = UnityGameObject.AddComponent<SwitchNode>();
-            else
-                switchComp = UnityGameObject.AddComponent( Header.Settings.switchComponent );
-            
-            if( switchComp != null )
-                switchComp.SendMessage( "OnSwitchNode", this );    
-            else 
-                Debug.LogWarning( "Switch node is null, something has gone wrong. Does the " + Header.Settings.switchComponent +" class exist and inherit from MonoBehaviour?" );
+            base.ImportIntoScene();            
+            var switchComp = UnityGameObject.AddComponent<SwitchNode>();
+            switchComp.OnSwitchNode( this );
         }
 	}
 }

@@ -149,20 +149,28 @@ namespace UFLT.Textures
 			{
 				if( _Texture == null )
 				{
-                    if( PixelsBPC1 == null && PixelsBPC2 == null )
-                        ReadPixels();
+                    try
+                    {
+                        if( PixelsBPC1 == null && PixelsBPC2 == null )
+                            ReadPixels();
 
-                    _Texture = new Texture2D( Size[0], Size[1], Size[2] == 4 ? TextureFormat.ARGB32 : TextureFormat.RGB24, true );
-					_Texture.hideFlags = HideFlags.DontSave;
+                        _Texture = new Texture2D( Size[0], Size[1], Size[2] == 4 ? TextureFormat.ARGB32 : TextureFormat.RGB24, true );
+                        _Texture.hideFlags = HideFlags.DontSave;
 
-					if( BPC == 1 )
-                        _Texture.SetPixels32( PixelsBPC1 );
-					else 
-                        _Texture.SetPixels( PixelsBPC2 );
+                        if( BPC == 1 )
+                            _Texture.SetPixels32( PixelsBPC1 );
+                        else
+                            _Texture.SetPixels( PixelsBPC2 );
 
-					_Texture.Apply();
-					//_Texture.Compress( true ); // Compress into DXT format
-					_Texture.name = Name;
+                        _Texture.Apply();
+                        //_Texture.Compress( true ); // Compress into DXT format
+                        _Texture.name = Name;
+                    }
+                    catch( Exception e )
+                    {
+                        Debug.LogError( "Failed to load texture: " + File );
+                        Debug.LogException( e );
+                    }
 				}
 				return _Texture;										
 			}

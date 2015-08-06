@@ -62,7 +62,7 @@ namespace UFLT.MonoBehaviours
         /// Called by the LOD class when creating an OpenFlight LOD node from file.
         /// </summary>
         /// <param name="switchData"></param>
-        public virtual void OnSwitchNode( LOD switchData )
+        public virtual void OnLODNode( LOD switchData )
         {
             switchInDistance = ( float )switchData.SwitchInDistance;
             switchOutDistance = ( float )switchData.SwitchOutDistance;

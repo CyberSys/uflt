@@ -305,24 +305,13 @@ namespace UFLT.Records
         }
 		
 		/// <summary>
-		/// Converts the record/s into a Unity GameObject structure with meshes, materials etc and imports into the scene. 
-		/// Adds a Component to the DOF GameObject if one is assigned in the Settings.
+		/// Converts the record/s into a Unity GameObject structure with meshes, materials etc and imports into the scene. 		
 		/// </summary>
 		public override void ImportIntoScene ()
 		{
             base.ImportIntoScene();
-
-            Component dofComp = null;
-
-            if( string.IsNullOrEmpty( Header.Settings.degreeOfFreedomComponent ) )
-                dofComp = UnityGameObject.AddComponent<DegreeOfFreedom>();
-            else
-                dofComp = UnityGameObject.AddComponent( Header.Settings.degreeOfFreedomComponent );
-
-            if( dofComp != null )
-                dofComp.SendMessage( "OnDOFNode", this );
-            else
-                Debug.LogWarning( "DOF node is null, something has gone wrong. Does the " + Header.Settings.degreeOfFreedomComponent + " class exist and inherit from MonoBehaviour?" );
+            var dofComp = UnityGameObject.AddComponent<DegreeOfFreedom>();
+            dofComp.OnDOFNode( this );            
 		}
 	}
 }

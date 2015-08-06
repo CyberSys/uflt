@@ -185,18 +185,8 @@ namespace UFLT.Records
 		public override void ImportIntoScene ()
 		{
             base.ImportIntoScene();
-
-            Component lodComp = null;
-
-            if( string.IsNullOrEmpty( Header.Settings.levelOfDetailComponent ) )
-                lodComp = UnityGameObject.AddComponent<LevelOfDetail>();
-            else
-                lodComp = UnityGameObject.AddComponent( Header.Settings.levelOfDetailComponent );
-
-            if( lodComp != null )
-                lodComp.SendMessage( "OnLODNode", this );
-            else
-                Debug.LogWarning( "LOD node is null, something has gone wrong. Does the " + Header.Settings.levelOfDetailComponent + " class exist and inherit from MonoBehaviour?" );
+            var lodComp = UnityGameObject.AddComponent<LevelOfDetail>();
+            lodComp.OnLODNode( this );            
 		}
 	}
 }

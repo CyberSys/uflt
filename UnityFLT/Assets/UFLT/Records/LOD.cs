@@ -191,7 +191,7 @@ namespace UFLT.Records
             if( string.IsNullOrEmpty( Header.Settings.levelOfDetailComponent ) )
                 lodComp = UnityGameObject.AddComponent<LevelOfDetail>();
             else
-                lodComp = UnityEngineInternal.APIUpdaterRuntimeServices.AddComponent( UnityGameObject, "Assets/UFLT/Records/LOD.cs (194,27)", Header.Settings.levelOfDetailComponent );
+                lodComp = UnityGameObject.AddComponent( Header.Settings.levelOfDetailComponent );
 
             if( lodComp != null )
                 lodComp.SendMessage( "OnLODNode", this );

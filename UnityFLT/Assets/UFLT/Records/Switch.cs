@@ -96,7 +96,7 @@ namespace UFLT.Records
             if( string.IsNullOrEmpty( Header.Settings.switchComponent ) )            
                 switchComp = UnityGameObject.AddComponent<SwitchNode>();
             else
-                switchComp = UnityEngineInternal.APIUpdaterRuntimeServices.AddComponent( UnityGameObject, "Assets/UFLT/Records/Switch.cs (99,30)", Header.Settings.switchComponent );
+                switchComp = UnityGameObject.AddComponent( Header.Settings.switchComponent );
             
             if( switchComp != null )
                 switchComp.SendMessage( "OnSwitchNode", this );    

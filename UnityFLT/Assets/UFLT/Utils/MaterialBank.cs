@@ -50,14 +50,33 @@ namespace UFLT.Utils
 		/// </returns>
 		/// <param name='f'>The face to find a material for.</param>
 		public IntermediateMaterial FindOrCreateMaterial( Face f )
-		{				
-			// TODO: A faster lookup data structure, currently using a linear search.
-		
-			// Fetch palettes
-			MaterialPalette mp = f.MaterialIndex != -1 ? f.Header.MaterialPalettes[f.MaterialIndex] : null;									
-			TexturePalette mainTex = f.TexturePattern != -1 ? f.Header.TexturePalettes[f.TexturePattern] : null;
-			TexturePalette detailTex = f.DetailTexturePattern != -1 ? f.Header.TexturePalettes[f.DetailTexturePattern] : null;
-			lock( this )
+		{
+            // TODO: A faster lookup data structure, currently using a linear search.
+
+            // Fetch palettes
+            // Fetch palettes
+            MaterialPalette mp = null;
+            if (f.MaterialIndex != -1)
+            {
+                if (!f.Header.MaterialPalettes.TryGetValue(f.MaterialIndex, out mp))
+                    f.Log.WriteError("FindOrCreateMaterial:Could not find material palette: " + f.MaterialIndex);
+            }
+
+            TexturePalette mainTex = null;
+            if (f.TexturePattern != -1)
+            {
+                if (!f.Header.TexturePalettes.TryGetValue(f.TexturePattern, out mainTex))
+                    f.Log.WriteError("FindOrCreateMaterial:Could not find texture palette: " + f.TexturePattern);
+            }
+
+            TexturePalette detailTex = null;
+            if (f.DetailTexturePattern != -1)
+            {
+                if (!f.Header.TexturePalettes.TryGetValue(f.DetailTexturePattern, out detailTex))
+                    f.Log.WriteError("FindOrCreateMaterial:Could not find detail texture palette: " + f.DetailTexturePattern);
+            }
+
+            lock ( this )
 			{
 				foreach( IntermediateMaterial current in Materials )
 				{

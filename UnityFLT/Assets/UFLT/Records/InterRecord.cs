@@ -236,12 +236,29 @@ namespace UFLT.Records
         /// </summary>        
         /// <param name='f'>The face to find a submesh for.</param>
         public KeyValuePair<IntermediateMaterial, List<int>> FindOrCreateSubMesh( Face f )
-        {            
+        {
             // Fetch palettes
-            MaterialPalette mp = f.MaterialIndex != -1 ? f.Header.MaterialPalettes[f.MaterialIndex] : null;
-            TexturePalette mainTex = f.TexturePattern != -1 ? f.Header.TexturePalettes[f.TexturePattern] : null;
-            TexturePalette detailTex = f.DetailTexturePattern != -1 ? f.Header.TexturePalettes[f.DetailTexturePattern] : null;
+            MaterialPalette mp = null;
+            if (f.MaterialIndex != -1)
+            {
+                if (!f.Header.MaterialPalettes.TryGetValue(f.MaterialIndex, out mp))
+                    Log.WriteError("FindOrCreateSubMesh:Could not find material palette: " + f.MaterialIndex);                
+            }
 
+            TexturePalette mainTex = null;
+            if (f.TexturePattern != -1)
+            {
+                if (!f.Header.TexturePalettes.TryGetValue(f.TexturePattern, out mainTex))
+                    Log.WriteError("FindOrCreateSubMesh:Could not find texture palette: " + f.TexturePattern);
+            }
+
+            TexturePalette detailTex = null;
+            if (f.DetailTexturePattern != -1)
+            {
+                if (!f.Header.TexturePalettes.TryGetValue(f.DetailTexturePattern, out detailTex))
+                    Log.WriteError("FindOrCreateSubMesh:Could not find detail texture palette: " + f.DetailTexturePattern);
+            }
+            
             // Check locally
             foreach( KeyValuePair<IntermediateMaterial, List<int>> mesh in SubMeshes )
             {				

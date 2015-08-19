@@ -14,7 +14,7 @@ namespace UFLT.Editor
 		GUIContent outputDirLbl = new GUIContent("Output Directory", "Where to save the converted file and its dependencies(Materials/Textures). Must be inside the Unity project");
 
 		// The full file path to the flt file
-		string openflightFile;
+		string openflightFile = EditorPrefs.GetString("uflt-importWiz-lastFile", "");
 		string exportDirectory = "Assets/";
 
 		// Our import settings.
@@ -107,7 +107,9 @@ namespace UFLT.Editor
 			UFLT.Records.Database db = new Records.Database(openflightFile);
 			db.ParsePrepareAndImport();
 			log = "Loading completed.\nDetails:\n" + db.Log.ToString();
-		}
+
+			EditorPrefs.SetString("uflt-importWiz-lastFile", openflightFile);
+        }
 
 
 	}

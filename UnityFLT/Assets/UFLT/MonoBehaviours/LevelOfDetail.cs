@@ -12,13 +12,41 @@ namespace UFLT.MonoBehaviours
 		/// <summary>
 		/// The distance to switch the model into view.
 		/// </summary>
-		public float switchInDistance;
+		public float SwitchInDistance
+		{
+			get
+			{
+				return switchInDistance;
+			}
+			set
+			{
+				switchInDistance = value;
+				if (Application.isPlaying) switchInDistanceSqr = value * value;
+			}
+		}
+		[SerializeField]
+		private float switchInDistance;
+		private float switchInDistanceSqr;
 
 		/// <summary>
 		/// The distance to switch the model out of view.
 		/// </summary>
-		public float switchOutDistance;
-
+		public float SwitchOutDistance
+		{
+			get
+			{
+				return switchOutDistance;
+			}
+			set
+			{
+				switchOutDistance = value;
+				if (Application.isPlaying) switchOutDistanceSqr = value * value;
+			}
+		}
+		[SerializeField]
+		private float switchOutDistance;
+		public float switchOutDistanceSqr;
+		
 		/// <summary>
 		/// Use previous slant range.
 		/// </summary>
@@ -55,8 +83,8 @@ namespace UFLT.MonoBehaviours
 		public float significantSize;
 
 		#endregion
-
-		private bool _previousEnable = true;
+		
+		private bool _currentState = true;
 
 		/// <summary>
 		/// Called by the LOD class when creating an OpenFlight LOD node from file.
@@ -78,6 +106,8 @@ namespace UFLT.MonoBehaviours
 		private void Start()
 		{
 			InitLOD();
+			switchInDistanceSqr = switchInDistance * switchInDistance;
+			switchOutDistanceSqr = switchOutDistance * switchOutDistance;
 		}
 
 		private void InitLOD()
@@ -87,22 +117,51 @@ namespace UFLT.MonoBehaviours
 				transform.GetChild(i).gameObject.SetActive(true);
 			}
 		}
-
+		
 		private void Update()
 		{
-			if (!Camera.current)
+			if (Camera.main == null)
 				return;
 
-			float distance = Vector3.Distance(transform.position, Camera.current.transform.position);
-			bool enable = (distance >= switchOutDistance) && (distance < switchInDistance);
-			if (enable != _previousEnable)
+			bool enable = _currentState;
+			
+			if(Application.isPlaying)
+			{				
+				float distSqr = Vector3.SqrMagnitude(transform.TransformPoint(center) - Camera.main.transform.position);
+				enable = (distSqr >= switchOutDistanceSqr) && (distSqr < switchInDistanceSqr);
+			}
+			else
 			{
-				_previousEnable = enable;
+				float dist = Vector3.Distance(transform.TransformPoint(center), Camera.main.transform.position);
+				enable = (dist >= switchOutDistance) && (dist < switchInDistance);
+			}					
+			
+			if (enable != _currentState)
+			{
+				_currentState = enable;
 				for (int i = 0; i < transform.childCount; i++)
 				{
 					transform.GetChild(i).gameObject.SetActive(enable);
 				}
 			}
 		}
+
+		#region Editor
+
+		private void OnDrawGizmosSelected()
+		{
+			Gizmos.color = Color.green;
+			Vector3 pos = transform.TransformPoint(center);
+			Gizmos.DrawRay(pos, Vector3.up * 1000);						
+		}
+
+		private void OnDrawGizmos()
+		{
+			Gizmos.color = _currentState ? Color.blue : Color.black;
+			Vector3 pos = transform.TransformPoint(center);
+			Gizmos.DrawRay(pos, Vector3.up * 100);							
+        }
+
+		#endregion Editor
 	}
 }

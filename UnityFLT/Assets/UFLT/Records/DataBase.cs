@@ -55,10 +55,10 @@ namespace UFLT.Records
             set;
         }
 
-        /// <summary>
-        /// Vertex palette for this database.
-        /// </summary>
-        public VertexPalette VertexPalette
+		/// <summary>
+		/// Vertex palette for this database.
+		/// </summary>
+		public VertexPalette VertexPalette
         {
             get;
             set;
@@ -73,24 +73,23 @@ namespace UFLT.Records
             set;
         }
 
-        /// <summary>
-        /// Material palettes with index as key.
-        /// </summary>
-        public Dictionary<int, MaterialPalette> MaterialPalettes
+		/// <summary>
+		/// Material palettes with index as key.
+		/// </summary>
+		public Dictionary<int, MaterialPalette> MaterialPalettes
         {
             get;
             set;
         }
 
+		#endregion Palettes
 
-        #endregion Palettes
+		#region Header
 
-        #region Header
-
-        /// <summary>
-        /// The version of OpenFlight, e.g 1640 = 16.4
-        /// </summary>
-        public int FormatRevisionLevel
+		/// <summary>
+		/// The version of OpenFlight, e.g 1640 = 16.4
+		/// </summary>
+		public int FormatRevisionLevel
         {
             get;
             set;
@@ -692,15 +691,6 @@ namespace UFLT.Records
         /// <returns></returns>
         private bool HandleColorPalette()
         {
-			// Ignore if the palette is overriden
-			if( Parent != null && Parent is ExternalReference )
-			{
-				if( ( Parent as ExternalReference ).FlagsColorPaletteOverridden )
-				{
-					return true;
-				}
-			}
-			
         	ColorPalette = new ColorPalette( this );
         	ColorPalette.Parse();
 		    return true;
@@ -712,15 +702,6 @@ namespace UFLT.Records
         /// <returns></returns>
         private bool HandleTexturePalette()
         {
-			// Ignore if the palette is overriden
-			if( Parent != null && Parent is ExternalReference )
-			{
-				if( ( Parent as ExternalReference ).FlagsTexturePaletteOverridden )
-				{
-					return true;
-				}
-			}
-			
         	TexturePalette t = new TexturePalette();
         	t.Parse( Header );
         	TexturePalettes[t.Index] = t;		
@@ -744,15 +725,6 @@ namespace UFLT.Records
         /// <returns></returns>
         private bool HandleMaterialPalette()
         {
-			// Ignore if the palette is overriden
-			if( Parent != null && Parent is ExternalReference )
-			{
-				if( ( Parent as ExternalReference ).FlagsMaterialPaletteOverridden )
-				{
-					return true;
-				}
-			}
-			
             MaterialPalette m = new MaterialPalette();
             m.Parse( Header );
             MaterialPalettes[m.Index] = m;

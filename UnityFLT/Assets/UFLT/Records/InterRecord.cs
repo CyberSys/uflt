@@ -115,8 +115,8 @@ namespace UFLT.Records
 		/// </summary>
 		/// <param name="parent"></param>
 		/// <param name="header"></param>
-		public InterRecord( Record parent, Database header ) :
-			base( parent, header )
+		public InterRecord(Record parent, Database header) :
+			base(parent, header)
 		{
 			Scale = Vector3.one;
 		}
@@ -127,7 +127,7 @@ namespace UFLT.Records
 		public override void PrepareForImport()
 		{
 			// Do we have any faces?
-			if( Children.Find( o => o is Face ) != null )
+			if (Children.Find(o => o is Face) != null)
 			{
 				Vertices = new List<VertexWithColor>();
 				SubMeshes = new List<KeyValuePair<IntermediateMaterial, List<int>>>();
@@ -135,41 +135,41 @@ namespace UFLT.Records
 				base.PrepareForImport();
 
 				// Do we have any verts, we may have just processed hidden faces.
-				if( Vertices.Count > 0 )
+				if (Vertices.Count > 0)
 				{
 					// TODO: Remove doubles. Check for duplicate verts and merge if possible. dont forget to change triangle indexes.
 
 					// Now setup for mesh
-					VertexPositions = new List<Vector3>( Vertices.Count );
-					Normals = new List<Vector3>( Vertices.Count );
-					UVS = new List<Vector2>( Vertices.Count );
+					VertexPositions = new List<Vector3>(Vertices.Count);
+					Normals = new List<Vector3>(Vertices.Count);
+					UVS = new List<Vector2>(Vertices.Count);
 
-					foreach( VertexWithColor vwc in Vertices )
+					foreach (VertexWithColor vwc in Vertices)
 					{
-						VertexPositions.Add( new Vector3( ( float )vwc.Coordinate[0], ( float )vwc.Coordinate[1], ( float )vwc.Coordinate[2] ) );
+						VertexPositions.Add(new Vector3((float)vwc.Coordinate[0], (float)vwc.Coordinate[1], (float)vwc.Coordinate[2]));
 
 						// Normals
-						if( vwc is VertexWithColorNormal )
+						if (vwc is VertexWithColorNormal)
 						{
-							Normals.Add( ( vwc as VertexWithColorNormal ).Normal );
+							Normals.Add((vwc as VertexWithColorNormal).Normal);
 						}
 						else
 						{
-							Normals.Add( Vector3.zero );
+							Normals.Add(Vector3.zero);
 						}
 
 						// Uvs
-						if( vwc is VertexWithColorNormalUV )
+						if (vwc is VertexWithColorNormalUV)
 						{
-							UVS.Add( ( vwc as VertexWithColorNormalUV ).UV );
+							UVS.Add((vwc as VertexWithColorNormalUV).UV);
 						}
-						else if( vwc is VertexWithColorUV )
+						else if (vwc is VertexWithColorUV)
 						{
-							UVS.Add( ( vwc as VertexWithColorUV ).UV );
+							UVS.Add((vwc as VertexWithColorUV).UV);
 						}
 						else
 						{
-							UVS.Add( Vector2.zero );
+							UVS.Add(Vector2.zero);
 						}
 					}
 				}
@@ -187,7 +187,7 @@ namespace UFLT.Records
 		public override void ImportIntoScene()
 		{
 			// Create an empty gameobject
-			UnityGameObject = new GameObject( ID );
+			UnityGameObject = new GameObject(ID);
 			UnityGameObject.transform.localScale = Vector3.one;
 
 			// Apply transformations
@@ -196,16 +196,16 @@ namespace UFLT.Records
 			UnityGameObject.transform.localScale = Scale;
 
 			// Assign parent
-			if( Parent != null && Parent is InterRecord )
+			if (Parent != null && Parent is InterRecord)
 			{
-				UnityGameObject.transform.parent = ( Parent as InterRecord ).UnityGameObject.transform;
+				UnityGameObject.transform.parent = (Parent as InterRecord).UnityGameObject.transform;
 			}
 
 			// Processes children
 			base.ImportIntoScene();
 
 			// Create mesh
-			if( Vertices != null && Vertices.Count > 0 )
+			if (Vertices != null && Vertices.Count > 0)
 			{
 				Mesh m = new Mesh();
 				m.name = ID;
@@ -219,12 +219,12 @@ namespace UFLT.Records
 
 				// Set submeshes
 				m.subMeshCount = SubMeshes.Count;
-				for( int i = 0; i < SubMeshes.Count; i++ )
+				for (int i = 0; i < SubMeshes.Count; i++)
 				{
 					mats[i] = SubMeshes[i].Key.UnityMaterial;
-					m.SetTriangles( SubMeshes[i].Value.ToArray(), i );
+					m.SetTriangles(SubMeshes[i].Value.ToArray(), i);
 				}
-				
+
 				mr.materials = mats;
 				m.Optimize();
 				mf.mesh = m;
@@ -235,43 +235,65 @@ namespace UFLT.Records
 		/// Returns the submesh for this face based on material info.
 		/// </summary>        
 		/// <param name='f'>The face to find a submesh for.</param>
-		public KeyValuePair<IntermediateMaterial, List<int>> FindOrCreateSubMesh( Face f )
+		public KeyValuePair<IntermediateMaterial, List<int>> FindOrCreateSubMesh(Face f)
 		{
+			ExternalReference externalRef = null;
+			if (Header.Parent != null)
+				externalRef = Header.Parent as ExternalReference;
+
 			// Fetch palettes
 			MaterialPalette mp = null;
 			if (f.MaterialIndex != -1)
 			{
-				if (!f.Header.MaterialPalettes.TryGetValue(f.MaterialIndex, out mp))
-					Log.WriteError("FindOrCreateSubMesh:Could not find material palette: " + f.MaterialIndex);
+				if (externalRef != null)
+					externalRef.Header.MaterialPalettes.TryGetValue(f.MaterialIndex, out mp);
+
+				if (mp == null)
+					Header.MaterialPalettes.TryGetValue(f.MaterialIndex, out mp);
+
+				if (mp == null)
+					Log.WriteError("Could not find material palette: " + f.MaterialIndex);
 			}
 
 			TexturePalette mainTex = null;
 			if (f.TexturePattern != -1)
 			{
-				if (!f.Header.TexturePalettes.TryGetValue(f.TexturePattern, out mainTex))
-					Log.WriteError("FindOrCreateSubMesh:Could not find texture palette: " + f.TexturePattern);
+				if (externalRef != null)
+					externalRef.Header.TexturePalettes.TryGetValue(f.TexturePattern, out mainTex);
+
+				if (mainTex == null)
+					Header.TexturePalettes.TryGetValue(f.TexturePattern, out mainTex);
+
+				if (mainTex == null)
+					Log.WriteError("Could not find texture pattern: " + f.TexturePattern);
 			}
 
 			TexturePalette detailTex = null;
 			if (f.DetailTexturePattern != -1)
 			{
-				if (!f.Header.TexturePalettes.TryGetValue(f.DetailTexturePattern, out detailTex))
-					Log.WriteError("FindOrCreateSubMesh:Could not find detail texture palette: " + f.DetailTexturePattern);
+				if (externalRef != null)
+					externalRef.Header.TexturePalettes.TryGetValue(f.DetailTexturePattern, out detailTex);
+
+				if (mainTex == null)
+					Header.TexturePalettes.TryGetValue(f.DetailTexturePattern, out detailTex);
+
+				if (mainTex == null)
+					Log.WriteError("Could not find detail texture pattern: " + f.DetailTexturePattern);
 			}
-			
+
 			// Check locally
-			foreach( KeyValuePair<IntermediateMaterial, List<int>> mesh in SubMeshes )
+			foreach (KeyValuePair<IntermediateMaterial, List<int>> mesh in SubMeshes)
 			{
-				if( mesh.Key.Equals( mp, mainTex, detailTex, f.Transparency, f.LightMode ) )
+				if (mesh.Key.Equals(mp, mainTex, detailTex, f.Transparency, f.LightMode))
 				{
 					return mesh;
 				}
 			}
 
 			// Create a new submesh
-			IntermediateMaterial im = Header.MaterialBank.FindOrCreateMaterial( f );
-			KeyValuePair<IntermediateMaterial, List<int>> newMesh = new KeyValuePair<IntermediateMaterial, List<int>>( im, new List<int>() );
-			SubMeshes.Add( newMesh );
+			IntermediateMaterial im = Header.MaterialBank.FindOrCreateMaterial(f);
+			KeyValuePair<IntermediateMaterial, List<int>> newMesh = new KeyValuePair<IntermediateMaterial, List<int>>(im, new List<int>());
+			SubMeshes.Add(newMesh);
 			return newMesh;
 		}
 
@@ -286,14 +308,14 @@ namespace UFLT.Records
 		protected bool HandleMatrix()
 		{
 			Matrix4x4 m = new Matrix4x4();
-			for( int i = 0; i < 4; i++ )
+			for (int i = 0; i < 4; i++)
 			{
-				for( int j = 0; j < 4; ++j )
+				for (int j = 0; j < 4; ++j)
 				{
 					m[i, j] = Header.Stream.Reader.ReadSingle();
 				}
 			}
-			
+
 			// Convert to position, rotation & scale
 			Position = m.GetPosition();
 			Rotation = m.GetRotation();
@@ -307,7 +329,7 @@ namespace UFLT.Records
 		/// <returns></returns>
 		protected bool HandleUnhandled()
 		{
-			Unhandled uh = new Unhandled( this );
+			Unhandled uh = new Unhandled(this);
 			uh.Parse();
 			return true;
 		}
@@ -318,7 +340,7 @@ namespace UFLT.Records
 		/// <returns></returns>
 		protected bool HandleObject()
 		{
-			Object o = new Object( this );
+			Object o = new Object(this);
 			o.Parse();
 			return true;
 		}
@@ -329,7 +351,7 @@ namespace UFLT.Records
 		/// <returns></returns>
 		protected bool HandleGroup()
 		{
-			Group g = new Group( this );
+			Group g = new Group(this);
 			g.Parse();
 			return true;
 		}
@@ -340,7 +362,7 @@ namespace UFLT.Records
 		/// <returns></returns>
 		protected bool HandleSwitch()
 		{
-			Switch s = new Switch( this );
+			Switch s = new Switch(this);
 			s.Parse();
 			return true;
 		}
@@ -351,7 +373,7 @@ namespace UFLT.Records
 		/// <returns></returns>
 		protected bool HandleDOF()
 		{
-			DOF d = new DOF( this );
+			DOF d = new DOF(this);
 			d.Parse();
 			return true;
 		}
@@ -362,7 +384,7 @@ namespace UFLT.Records
 		/// <returns></returns>
 		protected bool HandleExternalReference()
 		{
-			ExternalReference e = new ExternalReference( this );
+			ExternalReference e = new ExternalReference(this);
 			e.Parse();
 			return true;
 		}
@@ -373,7 +395,7 @@ namespace UFLT.Records
 		/// <returns></returns>
 		protected bool HandleLevelOfDetail()
 		{
-			LOD l = new LOD( this );
+			LOD l = new LOD(this);
 			l.Parse();
 			return true;
 		}

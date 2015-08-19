@@ -8,152 +8,107 @@ namespace UFLT.Editor
 	public class ImportWizard : ScriptableWizard
 	{
 		#region Properties
-	
+
+		// Labels
+		GUIContent fltFileLbl = new GUIContent("File(.flt)", "The root openflight database file.");
+		GUIContent outputDirLbl = new GUIContent("Output Directory", "Where to save the converted file and its dependencies(Materials/Textures). Must be inside the Unity project");
+
 		// The full file path to the flt file
-		public string openflightFile;
-		private bool _validFile = false;
-		
-		// The relative file path to where the converted file will be stored.
-		public string exportDirectory = "Assets/";
-		private bool _validDir = true;
-			
+		string openflightFile;
+		string exportDirectory = "Assets/";
+
 		// Our import settings.
 		public ImportSettings settings = new ImportSettings();
-		
-		//
-		// Editor only features
-		//
-		
-		// Generate UV2.
-		public bool generateLightmapUVs = false;
-		public UnwrapParam lightmapParams = new UnwrapParam();
-		
-		private Texture2D _fltIcon = AssetPreview.GetMiniTypeThumbnail( typeof( Light ) );
-			    	
-	    #endregion
-		
-	    [MenuItem( "Assets/Import OpenFlight(.flt) Advanced" )]
-	    static void CreateWizard()
-	    {
-	        ScriptableWizard.DisplayWizard<ImportWizard>( "Import Openflight", "Import" );
-	    }
-	
-		/// <summary>
-		/// Custom GUI.
-		/// </summary>
-	    private void OnGUI()
-		{			
+
+		Vector2 logScroll;
+		string log;
+
+		#endregion
+
+		[MenuItem("Assets/Import OpenFlight(.flt)")]
+		static void CreateWizard()
+		{
+			ScriptableWizard.DisplayWizard<ImportWizard>("Import Openflight", "Import");
+		}
+
+		private void OnGUI()
+		{
 			// Title
-			GUILayout.Label( "Import & Convert Openflight Settings", EditorStyles.boldLabel );			
-            GUILayout.Space( 20 );
-			
+			GUILayout.Label("Import & Convert Openflight Settings", EditorStyles.boldLabel);
+			GUILayout.Space(20);
+
 			// Settings
-			EditorGUILayout.BeginVertical( GUI.skin.box );
-			
+			EditorGUILayout.BeginVertical(GUI.skin.box);
+
 			FileSelectionField();
 			FileExportDirectoryField();
-						
-			GUILayout.Space( 10 );
-            EditorGUILayout.EndVertical();
+
+			GUILayout.Space(10);
+			EditorGUILayout.EndVertical();
+
+			if (!string.IsNullOrEmpty(log))
+			{
+				logScroll = EditorGUILayout.BeginScrollView(logScroll);
+				GUILayout.Label(log);
+				EditorGUILayout.EndScrollView();
+			}
+			else if (GUILayout.Button("Start Import"))
+				OnWizardCreate();
 		}
-		
-		/// <summary>
-		/// Field to display the selected flt file, validates if the file exists and if its ext is flt.
-		/// </summary>
+
 		private void FileSelectionField()
 		{
 			// Store the default GUI color so we can revert back.
 			Color defaultGUICol = GUI.contentColor;
-						
+
 			EditorGUILayout.BeginHorizontal();
-			EditorGUI.BeginChangeCheck();			
-			EditorGUILayout.LabelField( "File", GUILayout.Width( 100 ) );
-			openflightFile = EditorGUILayout.TextField( openflightFile, GUILayout.ExpandWidth( true ) );									
-			
+			EditorGUI.BeginChangeCheck();
+
+			EditorGUILayout.LabelField(fltFileLbl, GUILayout.Width(100));
+			openflightFile = EditorGUILayout.TextField(openflightFile, GUILayout.ExpandWidth(true));
+
 			// Select file dlg
-			if( GUILayout.Button( "...", EditorStyles.toolbarButton, GUILayout.Width( 50 ) ) )
+			if (GUILayout.Button("...", EditorStyles.toolbarButton, GUILayout.Width(50)))
 			{
-				string selectedFile = EditorUtility.OpenFilePanel( "Import OpenFlight", Application.dataPath, "flt" );	
-				if( !string.IsNullOrEmpty( selectedFile ) )
+				string selectedFile = EditorUtility.OpenFilePanel("Import OpenFlight", Application.dataPath, "flt");
+				if (!string.IsNullOrEmpty(selectedFile))
 				{
-					openflightFile  = selectedFile;	
-				}
-			}			
-			
-			// Validate the file
-			if( EditorGUI.EndChangeCheck() )
-			{				
-				_validFile = File.Exists( openflightFile );		
-				if( _validFile )
-				{
-					if( !Path.GetExtension( openflightFile ).Equals( ".flt", System.StringComparison.OrdinalIgnoreCase ) )
-					{
-						_validFile = false;
-					}
+					openflightFile = selectedFile;
 				}
 			}
-			
-			// Indicate if the file is good
-			GUI.contentColor = _validFile ? Color.green : Color.red;
-			EditorGUILayout.LabelField( new GUIContent( _fltIcon ), GUILayout.Width( 50 ) );			
-			GUI.contentColor = defaultGUICol;
 			EditorGUILayout.EndHorizontal();
 		}
-		
+
 		private void FileExportDirectoryField()
 		{
 			// Store the default GUI color so we can revert back.
 			Color defaultGUICol = GUI.contentColor;
-						
+
 			EditorGUILayout.BeginHorizontal();
-			EditorGUI.BeginChangeCheck();			
-			EditorGUILayout.LabelField( "Output Directory", GUILayout.Width( 100 ) );
-			exportDirectory = EditorGUILayout.TextField( exportDirectory, GUILayout.ExpandWidth( true ) );									
-			
+			EditorGUI.BeginChangeCheck();
+			EditorGUILayout.LabelField("Output Directory", GUILayout.Width(100));
+			exportDirectory = EditorGUILayout.TextField(exportDirectory, GUILayout.ExpandWidth(true));
+
 			// Select dir dlg
-			if( GUILayout.Button( "...", EditorStyles.toolbarButton, GUILayout.Width( 50 ) ) )
+			if (GUILayout.Button("...", EditorStyles.toolbarButton, GUILayout.Width(50)))
 			{
-				string outDir = EditorUtility.SaveFolderPanel( "Save Asset", Application.dataPath, "Converted OpenFlight" );
-				if( !string.IsNullOrEmpty( outDir ) )
+				string outDir = EditorUtility.SaveFolderPanel("Save Asset", Application.dataPath, "Converted OpenFlight");
+				if (!string.IsNullOrEmpty(outDir))
 				{
-					exportDirectory  = outDir;	
+					exportDirectory = outDir;
 					AssetDatabase.Refresh();
 				}
-			}			
-			
-			// Validate the file
-			if( EditorGUI.EndChangeCheck() )
-			{				
-				// Make sure the path is inside the unity project assets folder
-				if( !exportDirectory.Contains( Application.dataPath ) )
-				{
-					_validDir = false;					
-				}			
-				else
-				{
-					_validDir = true;
-				}
-		
-				if( _validDir )
-				{												
-					// Make relative
-					exportDirectory = "Assets" + exportDirectory.Replace( Application.dataPath, "" );						
-					_validDir = true;
-				}
 			}
-			
-			// Indicate if the file is good
-			GUI.contentColor = _validDir ? Color.green : Color.red;
-			EditorGUILayout.LabelField( new GUIContent( _fltIcon ), GUILayout.Width( 50 ) );			
-			GUI.contentColor = defaultGUICol;
 			EditorGUILayout.EndHorizontal();
-		}		
-		
+		}
+
 		void OnWizardCreate()
-	    {
-	       
-	    }  
-		
-		
+		{
+			UFLT.Records.Database db = new Records.Database(openflightFile);
+			db.ParsePrepareAndImport();
+			log = "Loading completed.\nDetails:\n" + db.Log.ToString();
+		}
+
+
 	}
 }

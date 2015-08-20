@@ -161,20 +161,29 @@ namespace UFLT.Editor
 					string name = string.IsNullOrEmpty(mat.name) ? "material.mat" : mat.name + ".mat";
 					string fileName = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(outDirRelative + "/Materials/", name));
 					savedMaterials[mat.GetInstanceID()] = mat;
-                    AssetDatabase.CreateAsset(mat, fileName);
-					if (t != null)
+
+					try
 					{
-						Texture assetTex = null;
-						if (savedTextures.TryGetValue(t.GetInstanceID(), out assetTex))
+						AssetDatabase.CreateAsset(mat, fileName);
+						if (t != null)
 						{
-							mat.mainTexture = assetTex;
+							Texture assetTex = null;
+							if (savedTextures.TryGetValue(t.GetInstanceID(), out assetTex))
+							{
+								mat.mainTexture = assetTex;
+							}
+							else
+							{
+								assetTex = ExportUtility.SaveTextureToDisc(t, exportDirectory);
+								mat.mainTexture = assetTex;
+								savedTextures[t.GetInstanceID()] = assetTex;
+							}
 						}
-						else
-						{
-							assetTex = ExportUtility.SaveTextureToDisc(t, exportDirectory);
-							mat.mainTexture = assetTex;
-							savedTextures[t.GetInstanceID()] = assetTex;
-						}
+					}
+					catch(System.Exception e)
+					{
+						Debug.LogError("Failed on material: " + mat.ToString());
+						Debug.LogException(e);
 					}
 				}				
 			}

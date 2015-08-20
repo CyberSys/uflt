@@ -170,6 +170,13 @@ namespace UFLT.Textures
 					{
 						Debug.LogError("Failed to load texture: " + File);
 						Debug.LogException(e);
+
+						// Assign an error texture
+						_Texture = new Texture2D(2, 2);
+						_Texture.SetPixels(new Color[] { Color.black, Color.white, Color.white, Color.black });
+						_Texture.Apply();
+						_Texture.name = "Failed To Import Texture: " + Name; 
+						Debug.Log(_Texture.name);
 					}
 				}
 				return _Texture;

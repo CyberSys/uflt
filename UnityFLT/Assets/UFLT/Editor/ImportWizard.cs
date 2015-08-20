@@ -159,6 +159,13 @@ namespace UFLT.Editor
 
 					Texture t = mat.mainTexture; // The connection to the texture will be lost when we create the asset so we will need to re-assign it
 					string name = string.IsNullOrEmpty(mat.name) ? "material.mat" : mat.name + ".mat";
+
+					// Check filename is valid
+					if(name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+					{
+						name = System.Guid.NewGuid().ToString() + ".mat";
+					}
+
 					string fileName = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(outDirRelative + "/Materials/", name));
 					savedMaterials[mat.GetInstanceID()] = mat;
 

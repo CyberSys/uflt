@@ -2,6 +2,7 @@
 using UnityEditor;
 using System.Collections;
 using System.IO;
+using System.Collections.Generic;
 
 namespace UFLT.Editor
 {
@@ -17,6 +18,8 @@ namespace UFLT.Editor
 		string openflightFile = EditorPrefs.GetString("uflt-importWiz-lastFile", "");
 		string exportDirectory = "Assets/";
 
+		bool loadIntoScene = true;
+
 		// Our import settings.
 		public ImportSettings settings = new ImportSettings();
 
@@ -30,6 +33,8 @@ namespace UFLT.Editor
 		{
 			ScriptableWizard.DisplayWizard<ImportWizard>("Import Openflight", "Import");
 		}
+
+		#region GUI
 
 		private void OnGUI()
 		{
@@ -102,15 +107,94 @@ namespace UFLT.Editor
 			EditorGUILayout.EndHorizontal();
 		}
 
+		#endregion GUI
+
 		void OnWizardCreate()
 		{
 			UFLT.Records.Database db = new Records.Database(openflightFile);
-			db.ParsePrepareAndImport();
+			EditorUtility.DisplayProgressBar("Importing", "Parsing flt file", 0);
+			db.Parse();
+			EditorUtility.DisplayProgressBar("Importing", "Preparing for import", 0.2f);
+			db.PrepareForImport();
+			EditorUtility.DisplayProgressBar("Importing", "Importing into scene", 0.4f);
+			db.ImportIntoScene();
+			
 			log = "Loading completed.\nDetails:\n" + db.Log.ToString();
 
+			// Make relative
+			string fltName = Path.GetFileNameWithoutExtension(openflightFile);
+			string outDirRelative = ExportUtility.MakePathRelative(exportDirectory);
+
+			// Create materials directory
+			if(!AssetDatabase.IsValidFolder(exportDirectory + "/Materials"))
+			{
+				AssetDatabase.CreateFolder(outDirRelative, "Materials"); // Create materials dir	
+				AssetDatabase.Refresh(); // Refresh for new directories that may have been created.
+			}
+
+			// Create our asset/s														
+			EditorUtility.DisplayProgressBar("Importing", "Saving meshes", 0.5f);
+			var meshFilters = db.UnityGameObject.GetComponentsInChildren<MeshFilter>();			
+			if(meshFilters.Length > 0)
+			{
+				string meshAssetPath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(outDirRelative + "/", fltName + "_Meshes.asset"));
+				Mesh mainMeshAsset = meshFilters[0].sharedMesh;
+				AssetDatabase.CreateAsset(mainMeshAsset, meshAssetPath);
+				for (int i = 1; i < meshFilters.Length; ++i)
+				{
+					AssetDatabase.AddObjectToAsset(meshFilters[i].sharedMesh, mainMeshAsset);
+				}
+			}
+
+			EditorUtility.DisplayProgressBar("Importing", "Saving materials and textures", 0.6f);
+			Dictionary<int, Texture> savedTextures = new Dictionary<int, Texture>();
+			Dictionary<int, Material> savedMaterials = new Dictionary<int, Material>();
+			var meshRenderers = db.UnityGameObject.GetComponentsInChildren<MeshRenderer>();
+			foreach(var renderer in meshRenderers)
+			{
+				foreach(var mat in renderer.sharedMaterials)
+				{
+					if (savedMaterials.ContainsKey(mat.GetInstanceID()))
+						continue;
+
+					Texture t = mat.mainTexture; // The connection to the texture will be lost when we create the asset so we will need to re-assign it
+					string name = string.IsNullOrEmpty(mat.name) ? "material.mat" : mat.name + ".mat";
+					string fileName = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(outDirRelative + "/Materials/", name));
+					savedMaterials[mat.GetInstanceID()] = mat;
+                    AssetDatabase.CreateAsset(mat, fileName);
+					if (t != null)
+					{
+						Texture assetTex = null;
+						if (savedTextures.TryGetValue(t.GetInstanceID(), out assetTex))
+						{
+							mat.mainTexture = assetTex;
+						}
+						else
+						{
+							assetTex = ExportUtility.SaveTextureToDisc(t, exportDirectory);
+							mat.mainTexture = assetTex;
+							savedTextures[t.GetInstanceID()] = assetTex;
+						}
+					}
+				}				
+			}
+
+			EditorUtility.DisplayProgressBar("Importing", "Creating prefab", 0.9f);
+			GameObject prefab = PrefabUtility.CreatePrefab(Path.Combine(outDirRelative, fltName + ".prefab").Replace("\\", "/"), db.UnityGameObject);
+			EditorUtility.ClearProgressBar();
+
+			// Create a prefab from the asset			
+			AssetDatabase.SaveAssets();
+
+			DestroyImmediate(db.UnityGameObject);
+			EditorUtility.UnloadUnusedAssetsImmediate(); // cleanup old textures
+
+			if(loadIntoScene)
+			{
+				PrefabUtility.InstantiatePrefab(prefab);
+			}
+
 			EditorPrefs.SetString("uflt-importWiz-lastFile", openflightFile);
-        }
-
-
+		}
 	}
 }

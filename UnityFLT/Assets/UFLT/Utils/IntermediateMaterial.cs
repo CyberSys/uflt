@@ -184,6 +184,7 @@ namespace UFLT.Utils
 					if (t != null)
 					{
 						mat.SetTexture("_MainTex", t);
+						mat.name = t.name;
 					}
 				}
 			}

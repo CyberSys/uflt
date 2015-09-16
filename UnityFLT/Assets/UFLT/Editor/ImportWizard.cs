@@ -16,7 +16,7 @@ namespace UFLT.Editor
 
 		// The full file path to the flt file
 		string openflightFile = EditorPrefs.GetString("uflt-importWiz-lastFile", "");
-		string exportDirectory = "Assets/";
+		string exportDirectory = Application.dataPath;
 
 		bool loadIntoScene = true;
 
@@ -127,7 +127,7 @@ namespace UFLT.Editor
 
 			// Create materials directory
 			if(!AssetDatabase.IsValidFolder(exportDirectory + "/Materials"))
-			{
+			{				
 				AssetDatabase.CreateFolder(outDirRelative, "Materials"); // Create materials dir	
 				AssetDatabase.Refresh(); // Refresh for new directories that may have been created.
 			}

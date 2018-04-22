@@ -61,7 +61,7 @@ namespace UFLT.Utils
 		public void AddPath(string fileName)
 		{
 			string dir = Path.GetDirectoryName(fileName);
-			if (!_Paths.Contains(dir)) // Dont add duplicates            
+			if (!_Paths.Contains(dir)) // Dont add duplicates
 				_Paths.Add(dir);
 		}
 
@@ -84,7 +84,7 @@ namespace UFLT.Utils
 			// TODO: Always return an absolute path, we can then check if a texture is already loaded without
 			// worrying about relative paths which may be different but point to the same file.            							
 
-			// Is the path absolute?			
+			// Is the path absolute?
 			if (Path.IsPathRooted(fullPath))
 			{
 				if (File.Exists(fullPath))

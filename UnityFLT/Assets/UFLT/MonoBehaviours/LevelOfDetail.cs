@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using LOD = UFLT.Records.LOD;
 
 namespace UFLT.MonoBehaviours
@@ -120,19 +119,19 @@ namespace UFLT.MonoBehaviours
 		
 		private void Update()
 		{
-			if (Camera.main == null)
+			if (Camera.current == null)
 				return;
 
 			bool enable = _currentState;
 			
 			if(Application.isPlaying)
 			{				
-				float distSqr = Vector3.SqrMagnitude(transform.TransformPoint(center) - Camera.main.transform.position);
+				float distSqr = Vector3.SqrMagnitude(transform.TransformPoint(center) - Camera.current.transform.position);
 				enable = (distSqr >= switchOutDistanceSqr) && (distSqr < switchInDistanceSqr);
 			}
 			else
 			{
-				float dist = Vector3.Distance(transform.TransformPoint(center), Camera.main.transform.position);
+				float dist = Vector3.Distance(transform.TransformPoint(center), Camera.current.transform.position);
 				enable = (dist >= switchOutDistance) && (dist < switchInDistance);
 			}					
 			
@@ -160,7 +159,7 @@ namespace UFLT.MonoBehaviours
 			Gizmos.color = _currentState ? Color.blue : Color.black;
 			Vector3 pos = transform.TransformPoint(center);
 			Gizmos.DrawRay(pos, Vector3.up * 100);							
-        }
+		}
 
 		#endregion Editor
 	}

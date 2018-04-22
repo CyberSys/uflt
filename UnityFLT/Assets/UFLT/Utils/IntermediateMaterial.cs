@@ -153,8 +153,6 @@ namespace UFLT.Utils
 				}
 			}
 
-
-
 			// Specular
 
 			// Diffuse
@@ -162,13 +160,6 @@ namespace UFLT.Utils
 			// Unlit
 
 			// Transparent
-
-
-
-
-
-
-
 
 			if (mat == null)
 			{

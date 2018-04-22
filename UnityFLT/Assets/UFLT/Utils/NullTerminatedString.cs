@@ -6,7 +6,7 @@ namespace UFLT.Utils
 	{
 		/// <summary>
 		/// Reads a bytes array of null terminated ASCII characters.
-		/// </summary>		
+		/// </summary>
 		/// <param name='bytes'>Null terminated ASCII bytes</param>
 		public static string GetAsString(byte[] bytes)
 		{

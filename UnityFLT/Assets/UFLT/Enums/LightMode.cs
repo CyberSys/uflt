@@ -13,7 +13,7 @@ namespace UFLT.DataTypes.Enums
 
         /// <summary>
         /// Use vertex colors, not illuminated (Gouraud)
-        /// </summary>        
+        /// </summary>
         Gouraud = 1,
 
         /// <summary>

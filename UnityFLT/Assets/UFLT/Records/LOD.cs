@@ -1,11 +1,7 @@
-using UnityEngine;
-using System.Collections;
 using System.IO;
-using System.Text;
 using UFLT.DataTypes.Enums;
 using UFLT.Utils;
 using UFLT.MonoBehaviours;
-using System;
 
 namespace UFLT.Records
 {

@@ -1,5 +1,3 @@
-using UnityEngine;
-using System.Collections;
 using System.Text;
 
 namespace UFLT
@@ -12,8 +10,8 @@ namespace UFLT
 		#region Properties
 
 		/// <summary>
-		/// Gets or sets the log builder.		
-		/// </summary>		
+		/// Gets or sets the log builder.
+		/// </summary>
 		public StringBuilder LogBuilder
 		{
 			get;

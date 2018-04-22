@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UFLT.Records;
-using UFLT.DataTypes.Enums;
 using System.IO;
 using UFLT.Textures;
 using System.Collections;
@@ -104,7 +103,7 @@ namespace UFLT.Utils
 				string path = FileFinder.Instance.Find(im.MainTexture.FileName);
 				if (path != string.Empty)
 				{
-					// Have we already loaded this texture?					
+					// Have we already loaded this texture?
 					if (_Textures.ContainsKey(path))
 					{
 						// Dont need to load it.
@@ -125,7 +124,6 @@ namespace UFLT.Utils
 						{
 							_Textures[path] = tex;
 							tex.name = Path.GetFileNameWithoutExtension(path);
-							return tex;
 						}
 					}
 					else
@@ -138,8 +136,6 @@ namespace UFLT.Utils
 							_Textures[path] = www.texture;
 							_Textures[path].hideFlags = HideFlags.DontSave;
 							www.texture.name = Path.GetFileNameWithoutExtension(path);
-
-							return www.texture;
 						}
 						else
 						{

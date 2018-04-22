@@ -226,7 +226,7 @@ namespace UFLT.Records
 				}
 
 				mr.materials = mats;
-				m.Optimize();
+				;
 				mf.mesh = m;
 			}
 		}

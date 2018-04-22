@@ -1,0 +1,10 @@
+{
+    "name": "uflt.editor",
+    "references": [
+        "uflt"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

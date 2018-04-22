@@ -28,7 +28,11 @@ namespace UFLT.Editor
                 Mesh mainMeshAsset = meshFilters[0].sharedMesh;
                 for (int i = 1; i < meshFilters.Length; ++i)
                 {
+                    #if UNITY_2017_3_Or_Newer1
                     ctx.AddObjectToAsset(meshFilters[i].sharedMesh.name, meshFilters[i].sharedMesh);
+                    #else
+                    ctx.AddSubAsset(meshFilters[i].sharedMesh.name, meshFilters[i].sharedMesh);
+                    #endif
                 }
             }
 
@@ -42,12 +46,21 @@ namespace UFLT.Editor
                         continue;
 
                     savedMaterials[mat.GetInstanceID()] = mat;
+
+                    #if UNITY_2017_3_Or_Newer1
                     ctx.AddObjectToAsset(mat.name, mat);
+                    #else
+                    ctx.AddSubAsset(mat.name, mat);
+                    #endif
                 }
             }
 
+            #if UNITY_2017_3_Or_Newer
             ctx.AddObjectToAsset(db.UnityGameObject.name, db.UnityGameObject);
             ctx.SetMainObject(db.UnityGameObject);
+            #else
+            ctx.SetMainAsset(db.UnityGameObject.name, db.UnityGameObject);
+            #endif
         }
     }
 }

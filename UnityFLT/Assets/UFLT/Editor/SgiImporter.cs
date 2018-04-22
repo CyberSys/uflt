@@ -9,8 +9,13 @@ namespace UFLT.Editor
         public override void OnImportAsset(AssetImportContext ctx)
         {
             var importer = new TextureSGI(ctx.assetPath);
+
+            #if UNITY_2017_3_Or_Newer
             ctx.AddObjectToAsset(importer.Texture.name, importer.Texture);
             ctx.SetMainObject(importer.Texture);
+            #else
+            ctx.SetMainAsset(importer.Texture.name, importer.Texture);
+            #endif
         }
     }
 }

@@ -1,0 +1,16 @@
+{
+    "name": "Unity.Images.SGI.Editor",
+    "references": [
+        "Unity.Images.SGI"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

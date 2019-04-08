@@ -1,0 +1,10 @@
+{
+	"name": "com.unity.images.sgi",
+	"displayName":"SGI Image Importer",
+	"version": "0.1.0-preview",
+	"unity": "2018.3",
+	"description": "Import Silicon Graphics Image (SGI) files(.sgi, .rgb, .rgba, .bw, .int, .inta).",
+	"dependencies": 
+	{
+	}
+}

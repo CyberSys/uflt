@@ -259,7 +259,7 @@ namespace Unity.Images.SGI
         /// </summary>
         void ReadOffsets()
         {
-            int count = Size[0] * Size[2]; // Scanline len * num channels
+            int count = Size[1] * Size[2]; // Scanline len * num channels
             RowStart = new int[count];
             RowSize = new int[count];
 

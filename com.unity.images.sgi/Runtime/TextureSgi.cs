@@ -299,7 +299,15 @@ namespace Unity.Images.SGI
                 {
                     for (int channel = 0; channel < Size[2]; ++channel)
                     {
-                        ReadRowBPC1(y, channel);
+                        try
+                        {
+                            ReadRowBPC1(y, channel);
+                        }
+                        catch(Exception e)
+                        {
+                            Debug.LogError("Error decoding row " + y + " for channel " + channel);
+                            Debug.LogException(e);
+                        }
                     }
                 }
 

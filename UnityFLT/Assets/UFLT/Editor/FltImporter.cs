@@ -25,8 +25,7 @@ namespace UFLT.Editor
             var meshFilters = db.UnityGameObject.GetComponentsInChildren<MeshFilter>();
             if (meshFilters.Length > 0)
             {
-                Mesh mainMeshAsset = meshFilters[0].sharedMesh;
-                for (int i = 1; i < meshFilters.Length; ++i)
+                for (int i = 0; i < meshFilters.Length; ++i)
                 {
                     #if UNITY_2017_3_OR_NEWER
                     ctx.AddObjectToAsset(meshFilters[i].sharedMesh.name, meshFilters[i].sharedMesh);
